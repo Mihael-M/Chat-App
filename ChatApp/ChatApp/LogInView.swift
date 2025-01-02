@@ -11,6 +11,7 @@ struct LogInView: View {
     
     @State private var email: String = ""
     @State private var password: String = ""
+    @State private var isEditing: Bool = true
     var body: some View {
         VStack(alignment: .center, spacing: 15, content: {
             Spacer()
@@ -40,14 +41,20 @@ struct LogInView: View {
             
             Button(action: {}, label: {
                 VStack {
-                    ZStack{
-                        Circle()
-                            .fill(.blue)
-                            .frame(width:60, height: 60)
-                        Image(systemName: "plus")
-                            .font(.title3)
-                            .foregroundStyle(.white)
-                    }
+                   
+                        NavigationLink{
+                            ProfileView(isEditing: $isEditing,newUser: $isEditing)
+                        }
+                        label:{
+                            ZStack{
+                                Circle()
+                                    .fill(.blue)
+                                    .frame(width:60, height: 60)
+                            Image(systemName: "plus")
+                                .font(.title3)
+                                .foregroundStyle(.white)
+                            }
+                        }
                     Text("Sign Up")
                         .font(.callout)
                 }
