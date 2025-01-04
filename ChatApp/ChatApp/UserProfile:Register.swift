@@ -1,11 +1,7 @@
 import SwiftUI
 
 struct ProfileView: View {
-    // Трябва всички тези имена,имейли и т.н. да се прехвърлят в един общ обект user и да се пренапише...
-    @State private var username: String = ""
-    @State private var email: String = ""
-    @State private var number: String = ""
-    @State private var dateOfBirth: Date = Date()
+    @ObservedObject var user: User
     @State private var messagesSent: Int = 0
     @State private var messagesReceived: Int = 0
     @State private var showAlert = false
@@ -17,7 +13,7 @@ struct ProfileView: View {
     private var formattedDate: String {
             let formatter = DateFormatter()
             formatter.dateFormat = "d/MM/yyyy"
-            return formatter.string(from: dateOfBirth)
+            return formatter.string(from: user.date_of_birth)
         }
     
     var body: some View {
@@ -83,27 +79,28 @@ struct ProfileView: View {
             Divider()
             if isEditing {
                 VStack(alignment: .leading, spacing: 12) {
-                    TextField("Enter username:",text: $username)
-                    TextField("Enter email: \(email)",text: $email)
-                    TextField("Enter number: \(number)",text:$number)
-                    DatePicker("Date of Birth:", selection: $dateOfBirth, displayedComponents: .date)
+                    TextField("Enter username:",text: $user.username)
+                    TextField("Enter email: \(user.email)",text: $user.email)
+                    TextField("Enter number: \($user.phone_number)",text:$user.phone_number)
+                    DatePicker("Date of Birth:", selection: $user.date_of_birth, displayedComponents: .date)
                                            .datePickerStyle(GraphicalDatePickerStyle())
                 }
                 .font(.body)
                 .padding(.horizontal)
                 if newUser{
-                    Button{
+                    Button(action:{
+                        showRegisterAlert = true
+                        newUser = false
                         isEditing.toggle()
-                        showRegisterAlert = true;
-                    }
-                    label:{
+                    })
+                    {
                         Text("Register")
                     }
-                    .padding()
+
                     .alert("Profile Created", isPresented: $showRegisterAlert) {
                         Button("Great", role: .cancel) {}
                     } message: {
-                        Text("Welcome to 'our app' \(username)!")
+                        Text("Welcome to 'our app' \(user.username)!")
                     }
                 }
                 else {
@@ -119,9 +116,9 @@ struct ProfileView: View {
             }
             else{
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Username: \(username)")
-                    Text("Email: \(email)")
-                    Text("Number: \(number)")
+                    Text("Username: \(user.username)")
+                    Text("Email: \(user.email)")
+                    Text("Number: \(user.phone_number)")
                     Text("Date of Birth: \(formattedDate)")
                 }
                 .font(.body)
@@ -151,5 +148,5 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView(isEditing: .constant(true),newUser: .constant(true))
+    ProfileView(user: User(),isEditing: .constant(false),newUser: .constant(true))
 }

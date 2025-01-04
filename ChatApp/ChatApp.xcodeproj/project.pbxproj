@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		535533CC2D29E3B3001F232E /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535533CB2D29E3B3001F232E /* User.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		534F2A3E2D1DFE7800A3F168 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		535533CB2D29E3B3001F232E /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -34,6 +39,7 @@
 			children = (
 				534F2A402D1DFE7800A3F168 /* ChatApp */,
 				534F2A3F2D1DFE7800A3F168 /* Products */,
+				535533CA2D29E39D001F232E /* Models */,
 			);
 			sourceTree = "<group>";
 		};
@@ -43,6 +49,14 @@
 				534F2A3E2D1DFE7800A3F168 /* ChatApp.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		535533CA2D29E39D001F232E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				535533CB2D29E3B3001F232E /* User.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -119,6 +133,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				535533CC2D29E3B3001F232E /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

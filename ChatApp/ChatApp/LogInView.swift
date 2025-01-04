@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct LogInView: View {
-    
-    @State private var email: String = ""
-    @State private var password: String = ""
+    @ObservedObject var user: User
     @State private var isEditing: Bool = true
+    @State private var newUser: Bool = true
+
     var body: some View {
         VStack(alignment: .center, spacing: 15, content: {
             Spacer()
@@ -22,11 +22,13 @@ struct LogInView: View {
             
             Spacer()
             
-            CustomTextField(icon: "at", prompt: "Email", value: $email)
-            CustomTextField(icon: "key", prompt: "Password",isPassword: true, value: $password)
+            CustomTextField(icon: "at", prompt: "Email", value: $user.email)
+            CustomTextField(icon: "key", prompt: "Password",isPassword: true, value: $user.password)
             
             
-            Button(action: {}, label: {
+            Button(action: {
+                //login logic
+            }, label: {
                 ZStack{
                     Circle()
                         .fill(.blue)
@@ -43,7 +45,7 @@ struct LogInView: View {
                 VStack {
                    
                         NavigationLink{
-                            ProfileView(isEditing: $isEditing,newUser: $isEditing)
+                            ProfileView(user: user,isEditing: $isEditing,newUser: $newUser)
                         }
                         label:{
                             ZStack{

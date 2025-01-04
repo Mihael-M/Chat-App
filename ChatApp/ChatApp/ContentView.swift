@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct ContentView : View {
+    @StateObject private var user = User() 
+
     var body: some View {
         NavigationStack {
-            LogInView()
+            LogInView(user: user)
         }
     }
 }
