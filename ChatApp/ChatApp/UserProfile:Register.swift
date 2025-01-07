@@ -148,5 +148,5 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView(user: User(),isEditing: .constant(false),newUser: .constant(true))
+    ProfileView(user: User(),isEditing: .constant(false),newUser: .constant(false))
 }
