@@ -11,6 +11,7 @@ struct LogInView: View {
     @ObservedObject var user: User
     @State private var isEditing: Bool = true
     @State private var newUser: Bool = true
+    @State private var showForgottenPasswordView: Bool = false
 
     var body: some View {
         VStack(alignment: .center, spacing: 15, content: {
@@ -25,47 +26,27 @@ struct LogInView: View {
             CustomTextField(icon: "at", prompt: "Email", value: $user.email)
             CustomTextField(icon: "key", prompt: "Password",isPassword: true, value: $user.password)
             
+            Button("Forgot your password?") {
+                showForgottenPasswordView.toggle()
+            }
+                .font(.callout)
             
-            Button(action: {
-                //login logic
-            }, label: {
-                ZStack{
-                    Circle()
-                        .fill(.blue)
-                        .frame(width:60, height: 60)
-                    Image(systemName: "arrow.right")
-                        .font(.title3)
-                        .foregroundStyle(.white)
-                }
-            })
+            CustomNavigatingButton(content: .icon(name: "arrow.right"), action: {}, destination: ChatHomePageView(), hideBackButton: true)
+            
             
             Spacer()
             
-            Button(action: {}, label: {
-                VStack {
-                   
-                        NavigationLink{
-                            ProfileView(user: user,isEditing: $isEditing,newUser: $newUser)
-                        }
-                        label:{
-                            ZStack{
-                                Circle()
-                                    .fill(.blue)
-                                    .frame(width:60, height: 60)
-                            Image(systemName: "plus")
-                                .font(.title3)
-                                .foregroundStyle(.white)
-                            }
-                        }
-                    Text("Sign Up")
-                        .font(.callout)
-                }
-            })
-            
+            CustomNavigatingButton(content: .icon(name:"plus"), action: {}, destination: ProfileView(user: user,isEditing: $isEditing,newUser: $newUser), hideBackButton: false)
+            Text("Don't have an account?")
+                .font(.callout)
             
         })
         .padding(.horizontal, 25)
         .padding(.vertical, 15)
+        .sheet(isPresented: $showForgottenPasswordView, content: {
+            ForgottenPasswordView()
+                .presentationDetents([.height(400)])
+        })
     }
 }
 
