@@ -36,7 +36,7 @@ struct LogInView: View {
             
             Spacer()
             
-            CustomNavigatingButton(content: .icon(name:"plus"), action: {}, destination: ProfileView(user: user,isEditing: $isEditing,newUser: $newUser), hideBackButton: false)
+            CustomNavigatingButton(content: .icon(name:"plus"), action: {}, destination: ProfileView(user: user,isEditing: $isEditing,newUser: $newUser), hideBackButton: true)
             Text("Don't have an account?")
                 .font(.callout)
             
