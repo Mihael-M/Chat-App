@@ -109,10 +109,11 @@ struct ProfileEdit : View{
     }
     
 }
+
+//                                  Main view code ->
+ 
 struct ProfileView: View {
     @ObservedObject var user: User
-    @State private var messagesSent: Int = 0
-    @State private var messagesReceived: Int = 0
     @State private var showAlert = false
     @State private var showRegisterAlert = false
     @State private var profileImage: Image = Image(systemName: "person.circle")
@@ -154,7 +155,7 @@ struct ProfileView: View {
                             }) {
                                 Image(systemName: "bubble")
                                     .resizable()
-                                    .foregroundStyle(Color.secondary)
+                                    .foregroundStyle(user.active ? Color.green : Color.red)
                                     .frame(width: 24, height: 24)
                                 
                             }
@@ -170,7 +171,7 @@ struct ProfileView: View {
                     }
                     Spacer()
                     VStack {
-                        Text("\(messagesSent)")
+                        Text("\(user.messagesSent)")
                             .font(.headline)
                             .fontWeight(.bold)
                         Text("Sent Messages")
@@ -178,7 +179,7 @@ struct ProfileView: View {
                     }
                     Spacer()
                     VStack {
-                        Text("\(messagesReceived)")
+                        Text("\(user.messagesReceived)")
                             .font(.headline)
                             .fontWeight(.bold)
                         Text("Received Messages")

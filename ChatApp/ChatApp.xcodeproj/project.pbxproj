@@ -8,11 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		535533CC2D29E3B3001F232E /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535533CB2D29E3B3001F232E /* User.swift */; };
+		53C41A972D346F4E000378B6 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C41A962D346F4E000378B6 /* Message.swift */; };
+		53C41A9F2D347249000378B6 /* ChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C41A9E2D347249000378B6 /* ChatManager.swift */; };
+		53C41AA12D347265000378B6 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C41AA02D347265000378B6 /* Chat.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		534F2A3E2D1DFE7800A3F168 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		535533CB2D29E3B3001F232E /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		53C41A962D346F4E000378B6 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		53C41A9E2D347249000378B6 /* ChatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatManager.swift; sourceTree = "<group>"; };
+		53C41AA02D347265000378B6 /* Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -55,6 +61,9 @@
 			isa = PBXGroup;
 			children = (
 				535533CB2D29E3B3001F232E /* User.swift */,
+				53C41A962D346F4E000378B6 /* Message.swift */,
+				53C41A9E2D347249000378B6 /* ChatManager.swift */,
+				53C41AA02D347265000378B6 /* Chat.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -134,6 +143,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				535533CC2D29E3B3001F232E /* User.swift in Sources */,
+				53C41AA12D347265000378B6 /* Chat.swift in Sources */,
+				53C41A9F2D347249000378B6 /* ChatManager.swift in Sources */,
+				53C41A972D346F4E000378B6 /* Message.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

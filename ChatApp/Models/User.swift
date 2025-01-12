@@ -13,4 +13,7 @@ class User: ObservableObject {
     @Published var username: String = ""
     @Published var phone_number: String = ""
     @Published var date_of_birth: Date = .now
+    @Published var active: Bool = true
+    @Published var messagesSent: Int = 0
+    @Published var messagesReceived: Int = 0
 }
