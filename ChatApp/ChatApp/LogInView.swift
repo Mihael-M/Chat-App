@@ -8,7 +8,11 @@
 import SwiftUI
 
 struct LogInView: View {
-    @ObservedObject var user: User
+    @State private var email: String = ""
+    @State private var password: String = ""
+    @EnvironmentObject var userManager: UserManager
+    @EnvironmentObject var chatManager: ChatManager
+
     @State private var isEditing: Bool = true
     @State private var newUser: Bool = true
     @State private var showForgottenPasswordView: Bool = false
@@ -23,20 +27,24 @@ struct LogInView: View {
             
             Spacer()
             
-            CustomTextField(icon: "at", prompt: "Email", value: $user.email)
-            CustomTextField(icon: "key", prompt: "Password",isPassword: true, value: $user.password)
+            CustomTextField(icon: "at", prompt: "Email", value: $email)
+            CustomTextField(icon: "key", prompt: "Password",isPassword: true, value: $password)
             
             Button("Forgot your password?") {
                 showForgottenPasswordView.toggle()
             }
                 .font(.callout)
             
-            CustomNavigatingButton(content: .icon(name: "arrow.right"), action: {}, destination: ChatHomePageView(), hideBackButton: true)
             
+            CustomNavigatingButton(content: .icon(name: "arrow.right"), action: {}, destination: ChatHomePageView()
+                .environmentObject(userManager)
+                .environmentObject(chatManager), hideBackButton: true)
             
             Spacer()
             
-            CustomNavigatingButton(content: .icon(name:"plus"), action: {}, destination: ProfileView(user: user,isEditing: $isEditing,newUser: $newUser), hideBackButton: true)
+            CustomNavigatingButton(content: .icon(name:"plus"), action: {}, destination: ProfileView(isEditing: $isEditing,newUser: $newUser)
+                .environmentObject(userManager)
+                .environmentObject(chatManager), hideBackButton: true)
             Text("Don't have an account?")
                 .font(.callout)
             
@@ -51,5 +59,10 @@ struct LogInView: View {
 }
 
 #Preview {
-    ContentView()
+    let chatManager = ChatManager()
+    let userManager = UserManager()
+    
+    LogInView()
+        .environmentObject(chatManager)
+        .environmentObject(userManager)
 }

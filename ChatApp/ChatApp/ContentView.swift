@@ -8,15 +8,19 @@
 import SwiftUI
 
 struct ContentView : View {
-    @StateObject private var user = User() 
-
+    @EnvironmentObject private var chatManager: ChatManager
+    @EnvironmentObject private var userManager: UserManager
     var body: some View {
         NavigationStack {
-            LogInView(user: user)
+            LogInView()
+                .environmentObject(userManager)
+                .environmentObject(chatManager)
         }
     }
 }
 
 #Preview {
     ContentView()
+        .environmentObject(ChatManager())
+        .environmentObject(UserManager())
 }

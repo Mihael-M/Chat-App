@@ -11,6 +11,8 @@
 		53C41A972D346F4E000378B6 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C41A962D346F4E000378B6 /* Message.swift */; };
 		53C41A9F2D347249000378B6 /* ChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C41A9E2D347249000378B6 /* ChatManager.swift */; };
 		53C41AA12D347265000378B6 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C41AA02D347265000378B6 /* Chat.swift */; };
+		53F795BB2D3543290002C840 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F795BA2D3543290002C840 /* UserManager.swift */; };
+		53F795DD2D3555960002C840 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F795DC2D3555960002C840 /* Account.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +21,8 @@
 		53C41A962D346F4E000378B6 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		53C41A9E2D347249000378B6 /* ChatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatManager.swift; sourceTree = "<group>"; };
 		53C41AA02D347265000378B6 /* Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
+		53F795BA2D3543290002C840 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
+		53F795DC2D3555960002C840 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -61,9 +65,11 @@
 			isa = PBXGroup;
 			children = (
 				535533CB2D29E3B3001F232E /* User.swift */,
+				53F795DC2D3555960002C840 /* Account.swift */,
 				53C41A962D346F4E000378B6 /* Message.swift */,
 				53C41A9E2D347249000378B6 /* ChatManager.swift */,
 				53C41AA02D347265000378B6 /* Chat.swift */,
+				53F795BA2D3543290002C840 /* UserManager.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -145,7 +151,9 @@
 				535533CC2D29E3B3001F232E /* User.swift in Sources */,
 				53C41AA12D347265000378B6 /* Chat.swift in Sources */,
 				53C41A9F2D347249000378B6 /* ChatManager.swift in Sources */,
+				53F795DD2D3555960002C840 /* Account.swift in Sources */,
 				53C41A972D346F4E000378B6 /* Message.swift in Sources */,
+				53F795BB2D3543290002C840 /* UserManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

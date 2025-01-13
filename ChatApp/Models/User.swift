@@ -7,13 +7,15 @@
 
 import SwiftUI
 
-class User: ObservableObject {
-    @Published var email: String = ""
-    @Published var password: String = ""
-    @Published var username: String = ""
-    @Published var phone_number: String = ""
-    @Published var date_of_birth: Date = .now
-    @Published var active: Bool = true
-    @Published var messagesSent: Int = 0
-    @Published var messagesReceived: Int = 0
+struct User: Identifiable {
+    let id = UUID()
+    var email: String = ""
+    var password: String = ""
+    var currentAccount: Account?
+
+    mutating func setAccount(account: Account) {
+        self.currentAccount = account
+    }
 }
+
+

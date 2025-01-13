@@ -8,10 +8,11 @@
 import Foundation
 
 
-struct Chat : Identifiable,Hashable{
+struct Chat : Identifiable{
     let id = UUID()
     var title: String
-    var messages: [Message]
+    var lastMessage: String
+    var iconName: String
 }
 
 

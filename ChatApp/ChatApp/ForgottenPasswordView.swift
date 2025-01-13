@@ -16,7 +16,7 @@ struct ForgottenPasswordView: View {
             Button(action: {
                 dismiss()
             }, label: {
-                Image(systemName: "arrow.left")
+                Image(systemName: "arrow.down")
                     .font(.title2)
                     .foregroundStyle(.gray)
             })
