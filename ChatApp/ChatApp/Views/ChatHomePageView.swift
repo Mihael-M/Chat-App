@@ -11,6 +11,8 @@ struct ChatHomePageView: View {
     @EnvironmentObject var chatManager : ChatManager
     @EnvironmentObject var userManager : UserManager
     @State private var showAddChatView : Bool = false
+    @State private var isEditing : Bool = false
+    @State private var newUser : Bool = false
     var body: some View {
         NavigationStack{
             VStack{
@@ -65,10 +67,11 @@ struct ChatHomePageView: View {
                 Button(action: {
                     
                 }) {
-                    Image(systemName: "person.crop.circle")
-                        .font(.title2)
-                        .foregroundStyle(Color.secondary)
-                        
+                    NavigationLink(destination: ProfileView(isEditing: $isEditing, newUser: $newUser)) {
+                        Image(systemName: "person.crop.circle")
+                            .font(.title2)
+                            .foregroundStyle(Color.secondary)
+                    }
                 }
                 
             }

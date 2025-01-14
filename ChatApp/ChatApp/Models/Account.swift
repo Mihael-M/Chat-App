@@ -12,6 +12,7 @@ struct Account: Identifiable{
     var username: String = ""
     var phone_number: String = ""
     var date_of_birth: Date = .now
+    //var ProfilePicture: Data? = nil
     var active: Bool = true
     var messagesSent: Int = 0
     var messagesReceived: Int = 0

@@ -13,13 +13,20 @@ struct AddGroupChatView: View {
     @EnvironmentObject var userManager: UserManager
     var body: some View {
         VStack {
-            
-            
+          
             CustomTextField_Circle(icon: "magnifyingglass", prompt: "Search user...", value: $userID)
+            List(){
+                HStack{
+                    //currently added users
+//                    CustomUserView(userManager.currentUser?.currentAccount?.ProfilePicture)
+                    
+                }
+            }
         }
     }
 }
 
 #Preview {
     AddGroupChatView()
+        .environmentObject(UserManager())
 }
