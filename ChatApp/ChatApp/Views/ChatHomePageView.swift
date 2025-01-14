@@ -55,11 +55,8 @@ struct ChatHomePageView: View {
                     showAddChatView.toggle()
                 }) {
                     Image(systemName: "plus")
-                        .bold()
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
+                        .font(.title2)
+                        .foregroundStyle(Color.secondary)
                 }
                 
             }

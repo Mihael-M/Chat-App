@@ -8,8 +8,15 @@
 import SwiftUI
 
 struct AddGroupChatView: View {
+    @State private var userID: String = ""
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var userManager: UserManager
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            
+            
+            CustomTextField_Circle(icon: "magnifyingglass", prompt: "Search user...", value: $userID)
+        }
     }
 }
 
