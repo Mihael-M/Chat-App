@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct User: Identifiable {
-    let id = UUID()
+    var id: String { uid }
+    var uid: String
     var email: String = ""
     var password: String = ""
     var currentAccount: Account?
