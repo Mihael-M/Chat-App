@@ -12,7 +12,6 @@ struct CustomTextField_Circle: View {
     var iconColor : Color = .secondary
     var prompt : String
     @Binding var value: String
-    @State private var showPassword: Bool = false
     var body: some View {
         HStack(alignment: .top, spacing: 1, content: {
             Image(systemName: icon)
