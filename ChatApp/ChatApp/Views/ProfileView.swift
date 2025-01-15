@@ -22,7 +22,7 @@ struct ProfileView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             if newUser {
-                RegisterView(newUser: $newUser)
+                RegisterView()
                     .environmentObject(userManager)
                     .environmentObject(chatManager)
             }

@@ -3,7 +3,7 @@ import SwiftUI
 struct AddChatView: View {
     @State private var userID: String = ""
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject var userManager: UserManager
+    //@EnvironmentObject var userManager: UserManager
     @State private var groupChat: Bool = false
     var body: some View {
         NavigationStack{
@@ -31,25 +31,25 @@ struct AddChatView: View {
                         .foregroundColor(.primary)
                         
                     }
-                    if userManager.friends.isEmpty {
-                        Text("No users found")
-                            .font(.callout)
-                            .foregroundColor(.gray)
-                            .padding()
-                        Spacer()
-                    } else {
-                        List(userManager.friends) { friend in
-                            VStack {
-                                Text(friend.currentAccount!.username.isEmpty ? "Unnamed User" : friend.currentAccount!.username)
-                            }
-                        }
-                    }
+//                    if userManager.friends.isEmpty {
+//                        Text("No users found")
+//                            .font(.callout)
+//                            .foregroundColor(.gray)
+//                            .padding()
+//                        Spacer()
+//                    } else {
+//                        List(userManager.friends) { friend in
+//                            VStack {
+//                                Text(friend.currentAccount!.username.isEmpty ? "Unnamed User" : friend.currentAccount!.username)
+//                            }
+//                        }
+//                    }
                 }
                 .padding(.horizontal, 25)
                 .padding(.vertical, 15)
                 .sheet(isPresented: $groupChat, content: {
                     AddGroupChatView()
-                        .environmentObject(userManager)
+                        //.environmentObject(userManager)
                         .presentationDetents([.height(500)])
                 })
         }

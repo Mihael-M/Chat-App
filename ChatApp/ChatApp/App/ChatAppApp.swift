@@ -1,8 +1,8 @@
 //
-//  AppDelegate.swift
+//  ChatAppApp.swift
 //  ChatApp
 //
-//  Created by Kamelia Toteva on 8.01.25.
+//  Created by Mishoni Mihaylov on 26.12.24.
 //
 
 import SwiftUI
@@ -19,5 +19,13 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 }
 
-
-
+@main
+struct ChatAppApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+    }
+}

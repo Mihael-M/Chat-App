@@ -15,7 +15,7 @@ enum ButtonContent {
 struct CustomNavigatingButton<Destination : View> : View {
     
     let content: ButtonContent
-    let action: () -> ()
+    let action: () -> Void
     let destination: Destination
     var hideBackButton: Bool
 

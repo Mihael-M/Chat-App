@@ -48,6 +48,7 @@ struct ForgottenPasswordView: View {
         .padding(.horizontal, 25)
         .padding(.vertical, 15)
         .interactiveDismissDisabled()
+        .navigationBarBackButtonHidden()
     }
 }
 

@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct ChatHomePageView: View {
-    @EnvironmentObject var chatManager : ChatManager
-    @EnvironmentObject var userManager : UserManager
+    @StateObject var chatManager : ChatManager
+    //@EnvironmentObject var userManager : UserManager
     @State private var showAddChatView : Bool = false
     @State private var isEditing : Bool = false
     @State private var newUser : Bool = false
@@ -32,7 +32,7 @@ struct ChatHomePageView: View {
             }
             .sheet(isPresented: $showAddChatView, content: {
                 AddChatView()
-                    .environmentObject(userManager)
+                    //.environmentObject(userManager)
                     .presentationDetents([.height(300)])
             })
         }
@@ -81,14 +81,14 @@ struct ChatHomePageView: View {
 }
 
 #Preview {
-    let chatManager = ChatManager()
-    let userManager = UserManager()
-    chatManager.chats = [
-        Chat(title: "Alice", lastMessage: "Hi there!",iconName: "person.circle.fill"),
-        Chat(title: "Bob", lastMessage: "How's it going?",iconName: "person.circle.fill")
-    ]
-
-    return ChatHomePageView()
-        .environmentObject(chatManager)
-        .environmentObject(userManager)
+//    let chatManager = ChatManager()
+//    let userManager = UserManager()
+//    chatManager.chats = [
+//        Chat(title: "Alice", lastMessage: "Hi there!",iconName: "person.circle.fill"),
+//        Chat(title: "Bob", lastMessage: "How's it going?",iconName: "person.circle.fill")
+//    ]
+//
+//    ChatHomePageView()
+//        .environmentObject(chatManager)
+//        .environmentObject(userManager)
 }
