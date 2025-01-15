@@ -86,26 +86,6 @@ struct RegisterView : View{
             
             Text("Already have an account?")
                 .font(.callout)
-            
-//            Button(action:{
-//            })
-//            {
-//                NavigationLink("Already have an account", destination: LogInView())
-//                    .font(.headline)
-//                    .foregroundColor(.white)
-//                    .padding(.vertical, 12)
-//                    .padding(.horizontal, 24)
-//                    .background(
-//                        LinearGradient(gradient: Gradient(colors: [.blue, .purple]), startPoint: .leading, endPoint: .trailing)
-//                    )
-//                    .cornerRadius(25)
-//                    .shadow(radius: 10)
-//                    .scaleEffect(isPressed ? 0.98 : 1.0)
-//                    .animation(.spring(), value: isPressed)
-//            }
-//            .onLongPressGesture(minimumDuration: 0.1, pressing: { pressing in
-//                isPressed = pressing
-//            }, perform: {})
         }
         .padding()
         .alert(isPresented: $showRegisterAlert) {

@@ -14,7 +14,6 @@ struct ContentView : View {
     @StateObject var viewModel = ContentViewModel()
     
     var body: some View {
-        
         Group {
             if viewModel.userSession != nil {
                 ChatHomePageView(chatManager: chatManager)
@@ -29,6 +28,7 @@ struct ContentView : View {
 //        .environmentObject(userManager)
 //        .environmentObject(chatManager)
     }
+
 }
 
 #Preview {

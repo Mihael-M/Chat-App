@@ -12,6 +12,6 @@ class RegistrationViewModel : ObservableObject {
     @Published var password: String = ""
     
     func register() async throws{
-        try await AuthenticationService().register(withEmail: email, password: password)
+        try await AuthenticationService.authenticator.register(withEmail: email, password: password)
     }
 }

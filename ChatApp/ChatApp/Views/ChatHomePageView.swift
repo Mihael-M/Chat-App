@@ -18,6 +18,9 @@ struct ChatHomePageView: View {
             VStack{
                 Divider()
                 Spacer()
+                Button("Log out"){
+                    AuthenticationService.authenticator.signOut()
+                }
                 if chatManager.chats.isEmpty{
                     Text("No chats yet")
                         .font(.callout)
@@ -28,7 +31,6 @@ struct ChatHomePageView: View {
                     CustomChatView_List(chats: chatManager.chats)
                     
                 }
-               
             }
             .sheet(isPresented: $showAddChatView, content: {
                 AddChatView()

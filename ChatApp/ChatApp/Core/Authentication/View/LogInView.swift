@@ -17,6 +17,7 @@ struct LogInView: View {
     @StateObject var viewModel = LoginViewModel()
     
     @State private var showForgottenPasswordView: Bool = false
+    @State private var isPressed: Bool = false
 
     var body: some View {
         NavigationStack {
@@ -38,16 +39,21 @@ struct LogInView: View {
                 .font(.callout)
                 
                 Button {
-                    Task { try await viewModel.login() }
+                    Task { try await viewModel.login()}
                 } label: {
                     ZStack {
                         Circle()
-                            .fill(.blue)
+                            .fill(LinearGradient(gradient: Gradient(colors: [.blue, .purple]), startPoint: .leading, endPoint: .trailing))
                             .frame(width:60, height: 60)
+                            .scaleEffect(isPressed ? 0.98 : 1.0)
+                            .animation(.spring(), value: isPressed)
                         Image(systemName: "arrow.right")
                             .font(.title3)
                             .foregroundStyle(.white)
                     }
+                }
+                .onTapGesture {
+                    isPressed.toggle()
                 }
                 
                 Spacer()
@@ -58,12 +64,17 @@ struct LogInView: View {
                 } label: {
                     ZStack {
                         Circle()
-                            .fill(.blue)
+                            .fill(LinearGradient(gradient: Gradient(colors: [.blue, .purple]), startPoint: .leading, endPoint: .trailing))
                             .frame(width:60, height: 60)
+                            .scaleEffect(isPressed ? 0.98 : 1.0)
+                            .animation(.spring(), value: isPressed)
                         Image(systemName: "plus")
                             .font(.title3)
                             .foregroundStyle(.white)
                     }
+                }
+                .onTapGesture {
+                    isPressed.toggle()
                 }
                 
                 Text("Don't have an account?")
