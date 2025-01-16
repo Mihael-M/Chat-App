@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ChatRowView: View {
+struct ChatRowComponent: View {
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
             Image(systemName: "person.circle.fill")
@@ -40,5 +40,5 @@ struct ChatRowView: View {
 }
 
 #Preview {
-    ChatRowView()
+    ChatRowComponent()
 }

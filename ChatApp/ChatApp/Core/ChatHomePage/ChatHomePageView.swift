@@ -21,7 +21,7 @@ struct ChatHomePageView: View {
                 
                 List {
                     ForEach(0...10, id: \.self) { message in
-                        ChatRowView()
+                        ChatRowComponent()
                     }
                 }
                 .listStyle(PlainListStyle())

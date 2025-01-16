@@ -13,8 +13,8 @@ struct ProfileView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
             HStack {
-                ProfilePictureView(profileImageURL: $profileImageURL, activityStatus: $activityStatus)
-                MessagesCountView()
+                ProfilePictureComponent(profileImageURL: $profileImageURL, activityStatus: $activityStatus)
+                MessagesCountComponent()
                 
             }
             VStack(alignment: .leading) {

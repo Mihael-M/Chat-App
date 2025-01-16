@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ProfilePictureView: View {
+struct ProfilePictureComponent: View {
     
     @State private var showPictureEditAlert = false
     @Binding var profileImageURL: String
@@ -53,5 +53,5 @@ struct ProfilePictureView: View {
 
 #Preview {
     @Previewable @State var exampleProfilePictureURL: String = "picture"
-    ProfilePictureView(profileImageURL: $exampleProfilePictureURL, activityStatus: .constant(true))
+    ProfilePictureComponent(profileImageURL: $exampleProfilePictureURL, activityStatus: .constant(true))
 }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MessagesCountView: View {
+struct MessagesCountComponent: View {
     
     var body: some View {
         HStack {
@@ -33,5 +33,5 @@ struct MessagesCountView: View {
 }
 
 #Preview {
-    MessagesCountView()
+    MessagesCountComponent()
 }
