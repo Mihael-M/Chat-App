@@ -13,7 +13,6 @@ struct LogInView: View {
     
     //@EnvironmentObject var userManager: UserManager
     //@EnvironmentObject var chatManager: ChatManager
-    
     @StateObject var viewModel = LoginViewModel()
     
     @State private var showForgottenPasswordView: Bool = false
@@ -32,14 +31,22 @@ struct LogInView: View {
                 
                 CustomTextField(icon: "at", prompt: "Email", value: $viewModel.email)
                 CustomTextField(icon: "key", prompt: "Password",isPassword: true, value: $viewModel.password)
+                if let error = viewModel.loginError {
+                    HStack{
+                        Text(error)
+                            .foregroundColor(.red)
+                            .font(.callout)
+                        Spacer()
+                    }
+                }
                 
                 Button("Forgot your password?") {
                     showForgottenPasswordView.toggle()
                 }
                 .font(.callout)
-                
+            
                 Button {
-                    Task { try await viewModel.login()}
+                    Task {try await viewModel.login()}
                 } label: {
                     ZStack {
                         Circle()
@@ -55,6 +62,7 @@ struct LogInView: View {
                 .onTapGesture {
                     isPressed.toggle()
                 }
+           
                 
                 Spacer()
                 

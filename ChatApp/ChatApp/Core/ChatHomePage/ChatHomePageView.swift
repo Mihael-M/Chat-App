@@ -99,14 +99,14 @@ struct ChatHomePageView: View {
 }
 
 #Preview {
-    //    let chatManager = ChatManager()
-    //    let userManager = UserManager()
-    //    chatManager.chats = [
-    //        Chat(title: "Alice", lastMessage: "Hi there!",iconName: "person.circle.fill"),
-    //        Chat(title: "Bob", lastMessage: "How's it going?",iconName: "person.circle.fill")
-    //    ]
-    //
-    //    ChatHomePageView()
-    //        .environmentObject(chatManager)
-    //        .environmentObject(userManager)
+//        let chatManager = ChatManager()
+//        let userManager = UserManager()
+//        chatManager.chats = [
+//            Chat(title: "Alice", lastMessage: "Hi there!",iconName: "person.circle.fill"),
+//            Chat(title: "Bob", lastMessage: "How's it going?",iconName: "person.circle.fill")
+//        ]
+//    
+//    ChatHomePageView(chatManager: chatManager)
+//            .environmentObject(chatManager)
+//            .environmentObject(userManager)
 }

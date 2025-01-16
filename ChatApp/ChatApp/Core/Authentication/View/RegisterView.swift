@@ -31,7 +31,7 @@ struct RegisterView : View{
                 CustomTextField(icon: "at", prompt: "Email", value: $viewModel.email)
                 HStack {
                     Image(systemName: viewModel.isEmailValid ? "checkmark.circle.fill" : "xmark.circle.fill")
-                        .foregroundColor(viewModel.isPasswordLengthValid ? .green : .red)
+                        .foregroundColor(viewModel.isEmailValid ? .green : .red)
                     Text("Must be a valid email format (e.g. user@example.com)")
                         .font(.footnote)
                         .textSelection(.disabled)
