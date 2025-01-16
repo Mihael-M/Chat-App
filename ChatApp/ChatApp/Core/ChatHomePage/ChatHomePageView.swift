@@ -47,7 +47,7 @@ struct ChatHomePageView: View {
                 
             }
             .navigationDestination(for: UserModel.self, destination: { user in
-                ProfileView(isEditing: .constant(false))
+                ProfileSettingsView()
             })
             .sheet(isPresented: $showAddChatView, content: {
                 AddChatView()
@@ -83,10 +83,10 @@ struct ChatHomePageView: View {
                         }
                         
                         NavigationLink(value: user) {
-                            Image(systemName: user.account.profilePictureURL ?? "")
+                            Image(user.account.profilePictureURL ?? "")
                                 .resizable()
                                 .scaledToFill()
-                                .frame(width: 24, height: 24)
+                                .frame(width: 32, height: 32)
                                 .clipShape(Circle())
                         }
                     }

@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct EditView : View{
+struct EditProfileView : View{
     @State private var username: String = ""
     @State private var phone_number: String = ""
     @State private var date_of_birth: Date = Date()
     
     @EnvironmentObject var chatManager: ChatManager
-    @Binding var isEditing: Bool
+    
     
     var body: some View{
         VStack(alignment: .leading, spacing: 12) {
@@ -28,7 +28,7 @@ struct EditView : View{
         .padding(.horizontal)
         
         Button{
-            isEditing.toggle()
+            // Goes to profile view
         }
         label:{
             Text("Save")
@@ -39,5 +39,5 @@ struct EditView : View{
 }
 
 #Preview {
-    EditView(isEditing: .constant(false))
+    EditProfileView()
 }
