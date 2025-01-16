@@ -41,14 +41,14 @@ struct ChatHomePageView: View {
                 //
                 //                }
                 //            }
-                //            .sheet(isPresented: $showAddChatView, content: {
-                //                AddChatView()
-                //                //.environmentObject(userManager)
-                //                    .presentationDetents([.height(300)])
-                //            })
-                //        }
+                      
+                //       }
                 
             }
+            .sheet(isPresented: $showAddChatView, content: {
+                AddChatView()
+                    .presentationDetents([.height(300)])
+            })
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     

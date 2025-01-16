@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ContentView : View {
     @StateObject var chatManager: ChatManager = ChatManager()
-    @StateObject var userManager: UserManager = UserManager()
 
     @StateObject var viewModel = ContentViewModel()
     
@@ -21,12 +20,6 @@ struct ContentView : View {
                 LogInView()
             }
         }
-        
-//        NavigationStack {
-//            LogInView()
-//        }
-//        .environmentObject(userManager)
-//        .environmentObject(chatManager)
     }
 
 }

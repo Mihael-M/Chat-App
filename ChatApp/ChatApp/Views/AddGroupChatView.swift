@@ -11,7 +11,6 @@ struct AddGroupChatView: View {
     @State private var userID: String = ""
     @State private var groupName: String = ""
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject var userManager: UserManager
     @State private var profileImage: Image = Image(systemName: "person.circle")
     var body: some View {
         VStack(spacing: 12) {
@@ -47,5 +46,4 @@ struct AddGroupChatView: View {
 
 #Preview {
     AddGroupChatView()
-        .environmentObject(UserManager())
 }

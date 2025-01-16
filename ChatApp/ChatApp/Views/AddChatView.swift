@@ -3,7 +3,6 @@ import SwiftUI
 struct AddChatView: View {
     @State private var userID: String = ""
     @Environment(\.dismiss) private var dismiss
-    //@EnvironmentObject var userManager: UserManager
     @State private var groupChat: Bool = false
     var body: some View {
         NavigationStack{
@@ -44,6 +43,7 @@ struct AddChatView: View {
 //                            }
 //                        }
 //                    }
+                    
                 }
                 .padding(.horizontal, 25)
                 .padding(.vertical, 15)
@@ -58,5 +58,4 @@ struct AddChatView: View {
 
 #Preview {
     AddChatView()
-        .environmentObject(UserManager())
 }

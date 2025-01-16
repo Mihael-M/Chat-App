@@ -44,6 +44,7 @@ struct LogInView: View {
                     showForgottenPasswordView.toggle()
                 }
                 .font(.callout)
+                
             
                 Button {
                     Task {try await viewModel.login()}

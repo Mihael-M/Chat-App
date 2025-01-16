@@ -11,11 +11,10 @@ import FirebaseAuth
 
 struct RegisterView : View{
     @StateObject var viewModel = RegistrationViewModel()
-    
+    @State private var navigate:Bool = false
     @State private var showRegisterAlert = false
     @State private var isPressed = false
     var body: some View {
-        
         VStack(alignment: .center, spacing: 15) {
             
             Spacer()
@@ -119,12 +118,19 @@ struct RegisterView : View{
             
             Text("Already have an account?")
                 .font(.callout)
+            NavigationLink(
+                destination: ProfileView(isEditing: .constant(true)),
+                               isActive: $navigate,
+                               label: { EmptyView() }
+                           )
         }
         .alert(isPresented: $showRegisterAlert) {
             Alert(
                 title: Text("Registered succesfully!"),
                 message: Text("Welcome to our app!"),
-                dismissButton: .default(Text("OK"))
+                dismissButton: .default(Text("OK"),action: {
+                    navigate = true
+                })
             )
         }
         .navigationBarBackButtonHidden()

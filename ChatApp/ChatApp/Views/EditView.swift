@@ -29,7 +29,6 @@ struct EditView : View{
         
         Button{
             isEditing.toggle()
-           // user.setAccount(account: account)
         }
         label:{
             Text("Save")
