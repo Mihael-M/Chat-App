@@ -9,7 +9,8 @@ import SwiftUI
 
 struct ChatHomePageView: View {
     @StateObject var chatManager : ChatManager
-    //@EnvironmentObject var userManager : UserManager
+    
+    @State private var user = UserModel.emptyUser
     @State private var showAddChatView : Bool = false
     @State private var isEditing : Bool = false
     @State private var newUser : Bool = false
@@ -41,10 +42,13 @@ struct ChatHomePageView: View {
                 //
                 //                }
                 //            }
-                      
+                
                 //       }
                 
             }
+            .navigationDestination(for: UserModel.self, destination: { user in
+                ProfileView(isEditing: .constant(false))
+            })
             .sheet(isPresented: $showAddChatView, content: {
                 AddChatView()
                     .presentationDetents([.height(300)])
@@ -52,46 +56,40 @@ struct ChatHomePageView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     
-                    Button(action: {
-                        // Add search functionality here
-                    }) {
-                        Image(systemName: "magnifyingglass")
-                            .font(.title2)
-                            .foregroundStyle(Color.secondary)
-                        
+                    HStack {
+                        Button(action: {
+                            // Add search functionality here
+                        }) {
+                            Image(systemName: "magnifyingglass")
+                                .font(.title2)
+                                .foregroundStyle(Color.secondary)
+                            
+                        }
+                        Text("Your chats")
+                            .font(.title)
+                            .fontWeight(.semibold)
                     }
                     
                 }
                 
-                ToolbarItem(placement: .topBarLeading, content: {
-                    Text("Your chats")
-                        .font(.title)
-                        .fontWeight(.semibold)
-                })
-                
                 ToolbarItem(placement: .topBarTrailing) {
-                    
-                    Button {
-                        showAddChatView.toggle()
-                    } label: {
-                        Image(systemName: "plus")
-                            .font(.title2)
-                            .foregroundStyle(Color.secondary)
-                    }
-                    
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    
-                    Button {
-                        
-                    } label: {
-                        NavigationLink(destination: ProfileView(isEditing: $isEditing)) {
-                            Image(systemName: "person.crop.circle")
+                    HStack {
+                        Button {
+                            showAddChatView.toggle()
+                        } label: {
+                            Image(systemName: "plus")
                                 .font(.title2)
                                 .foregroundStyle(Color.secondary)
                         }
+                        
+                        NavigationLink(value: user) {
+                            Image(systemName: user.account.profilePictureURL ?? "")
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 24, height: 24)
+                                .clipShape(Circle())
+                        }
                     }
-                    
                 }
             }
         }
@@ -99,14 +97,15 @@ struct ChatHomePageView: View {
 }
 
 #Preview {
-//        let chatManager = ChatManager()
-//        let userManager = UserManager()
-//        chatManager.chats = [
-//            Chat(title: "Alice", lastMessage: "Hi there!",iconName: "person.circle.fill"),
-//            Chat(title: "Bob", lastMessage: "How's it going?",iconName: "person.circle.fill")
-//        ]
-//    
-//    ChatHomePageView(chatManager: chatManager)
-//            .environmentObject(chatManager)
-//            .environmentObject(userManager)
+    //        let chatManager = ChatManager()
+    //        let userManager = UserManager()
+    //        chatManager.chats = [
+    //            Chat(title: "Alice", lastMessage: "Hi there!",iconName: "person.circle.fill"),
+    //            Chat(title: "Bob", lastMessage: "How's it going?",iconName: "person.circle.fill")
+    //        ]
+    //
+    //    ChatHomePageView(chatManager: chatManager)
+    //            .environmentObject(chatManager)
+    //            .environmentObject(userManager)
 }
+

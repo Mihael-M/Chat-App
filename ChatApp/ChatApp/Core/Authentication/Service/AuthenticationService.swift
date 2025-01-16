@@ -50,6 +50,11 @@ class AuthenticationService {
             print("Failed to sign out user with error \(error.localizedDescription)")
         }
     }
+    
+    func uploadUserData(email: String, username: String, userID: String) async throws {
+        
+    }
+    
     private func mapFirebaseError(_ error: NSError) -> Error {
             guard let errorCode = AuthErrorCode(rawValue: error.code) else {
                 return NSError(domain: "AuthError", code: -1, userInfo: [NSLocalizedDescriptionKey: "An unknown error occurred. Please try again."])
