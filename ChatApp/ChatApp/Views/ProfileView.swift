@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @EnvironmentObject var chatManager: ChatManager
     @State private var status: Bool = false
     @State private var showPictureEditAlert = false
     @State private var profileImage: Image = Image(systemName: "person.circle")
@@ -75,12 +74,11 @@ struct ProfileView: View {
             Divider()
             if isEditing {
                 EditView(isEditing: $isEditing)
-                    .environmentObject(chatManager)
             }
             else{
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Username: username")
-                    Text("Phone number: XXX XXX XXXX")
+                    Text("Phone Number: +XXX XXXX XXXX")
                     Text("Date of Birth: \(formattedDate)")
                 }
                 .font(.body)
@@ -106,8 +104,6 @@ struct ProfileView: View {
                             .foregroundStyle(.gray)
                     }
                 }
-                
-                
             }
         }
         
@@ -117,5 +113,4 @@ struct ProfileView: View {
 
 #Preview {
     ProfileView(isEditing: .constant(false))
-        .environmentObject(ChatManager())
 }
