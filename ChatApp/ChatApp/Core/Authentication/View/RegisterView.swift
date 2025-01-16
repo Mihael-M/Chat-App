@@ -16,7 +16,7 @@ struct RegisterView : View{
     @State private var isPressed = false
     var body: some View {
         
-        VStack(alignment: .center, spacing: 15){
+        VStack(alignment: .center, spacing: 15) {
             
             Spacer()
             
@@ -29,19 +29,46 @@ struct RegisterView : View{
             VStack(alignment: .leading, spacing: 20) {
                 
                 CustomTextField(icon: "at", prompt: "Email", value: $viewModel.email)
-                Text("Must be valid email")
-                    .font(.footnote)
-                    .foregroundStyle(.red)
+                HStack {
+                    Image(systemName: viewModel.isEmailValid ? "checkmark.circle.fill" : "xmark.circle.fill")
+                        .foregroundColor(viewModel.isPasswordLengthValid ? .green : .red)
+                    Text("Must be a valid email format (e.g. user@example.com)")
+                        .font(.footnote)
+                        .textSelection(.disabled)
+                        .foregroundColor(viewModel.isEmailValid ? .green : .red)
+                }
+                
+                
                 
                 CustomTextField(icon: "key", prompt: "Password", value: $viewModel.password)
-                Text("Must be at least 8 characters")
-                    .font(.footnote)
-                    .foregroundStyle(.red)
+                VStack(alignment: .leading, spacing: 5) {
+                    HStack {
+                        Image(systemName: viewModel.isPasswordLengthValid ? "checkmark.circle.fill" : "xmark.circle.fill")
+                            .foregroundColor(viewModel.isPasswordLengthValid ? .green : .red)
+                        Text("At least 8 characters")
+                            .foregroundColor(viewModel.isPasswordLengthValid ? .green : .red)
+                    }
+                    HStack {
+                        Image(systemName: viewModel.containsUppercase ? "checkmark.circle.fill" : "xmark.circle.fill")
+                            .foregroundColor(viewModel.containsUppercase ? .green : .red)
+                        Text("At least one uppercase letter")
+                            .foregroundColor(viewModel.containsUppercase ? .green : .red)
+                    }
+                    HStack {
+                        Image(systemName: viewModel.containsNumber ? "checkmark.circle.fill" : "xmark.circle.fill")
+                            .foregroundColor(viewModel.containsNumber ? .green : .red)
+                        Text("At least one number")
+                            .foregroundColor(viewModel.containsNumber ? .green : .red)
+                    }
+                }
+                .font(.footnote)
                 
                 
             }
             .font(.body)
-            .padding(.horizontal)
+            .padding()
+            
+            
             Button(action:{
                 Task{ try await viewModel.register() }
                 showRegisterAlert = true
@@ -60,6 +87,12 @@ struct RegisterView : View{
                     .scaleEffect(isPressed ? 0.98 : 1.0)
                     .animation(.spring(), value: isPressed)
             }
+            .disabled(
+                !viewModel.isEmailValid ||
+                !viewModel.isPasswordLengthValid ||
+                !viewModel.containsUppercase ||
+                !viewModel.containsNumber
+            )
             .onTapGesture {
                 isPressed.toggle()
             }
@@ -87,11 +120,10 @@ struct RegisterView : View{
             Text("Already have an account?")
                 .font(.callout)
         }
-        .padding()
         .alert(isPresented: $showRegisterAlert) {
             Alert(
                 title: Text("Registered succesfully!"),
-                message: Text("You can now edit your profile"),
+                message: Text("Welcome to our app!"),
                 dismissButton: .default(Text("OK"))
             )
         }
