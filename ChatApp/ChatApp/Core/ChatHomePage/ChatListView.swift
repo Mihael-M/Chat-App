@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CustomChatView_List: View {
+struct ChatListView: View {
     
     @State var chats = [
         Chat(title: "Item 1",lastMessage: "This is the first item.", iconName: "star.fill"),
@@ -45,5 +45,5 @@ struct CustomChatView_List: View {
 }
 
 #Preview {
-    CustomChatView_List()
+    ChatListView()
 }

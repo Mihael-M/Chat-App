@@ -12,11 +12,8 @@ struct EditView : View{
     @State private var phone_number: String = ""
     @State private var date_of_birth: Date = Date()
     
-    @EnvironmentObject var userManager: UserManager
     @EnvironmentObject var chatManager: ChatManager
     @Binding var isEditing: Bool
-    
- 
     
     var body: some View{
         VStack(alignment: .leading, spacing: 12) {
