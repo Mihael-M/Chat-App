@@ -24,8 +24,6 @@ class RegistrationViewModel : ObservableObject {
     @Published var containsUppercase: Bool = false
     @Published var containsNumber: Bool = false
     
-
-    
     private func validateEmail() {
         isEmailValid = isValidEmail(email)
     }
@@ -45,4 +43,9 @@ class RegistrationViewModel : ObservableObject {
     func register() async throws {
         try await AuthenticationService.authenticator.register(withEmail: email, password: password)
     }
+    
+    func verifyEmail() async throws {
+        try await AuthenticationService.authenticator.sendRegisterLink(withEmail: email)
+    }
+    
 }

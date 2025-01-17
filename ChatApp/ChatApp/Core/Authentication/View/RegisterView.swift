@@ -4,16 +4,18 @@
 //
 //  Created by Mishoni Mihaylov on 13.01.25.
 //
-
+//to finish the send link to email function need to figure out a name for the app
 import SwiftUI
 import Firebase
 import FirebaseAuth
 
 struct RegisterView : View{
     @StateObject var viewModel = RegistrationViewModel()
-    @State private var navigate:Bool = false
+    @State private var navigate: Bool = false
     @State private var showRegisterAlert = false
     @State private var isPressed = false
+    @State private var showEmailVerify: Bool = false
+   
     var body: some View {
         VStack(alignment: .center, spacing: 15) {
             
@@ -71,6 +73,8 @@ struct RegisterView : View{
             Button(action:{
                 Task{ try await viewModel.register() }
                 showRegisterAlert = true
+                showEmailVerify = true
+                navigate = true
             })
             {
                 Text("Register")
@@ -124,15 +128,19 @@ struct RegisterView : View{
                                label: { EmptyView() }
                            )
         }
-        .alert(isPresented: $showRegisterAlert) {
-            Alert(
-                title: Text("Registered succesfully!"),
-                message: Text("Welcome to our app!"),
-                dismissButton: .default(Text("OK"),action: {
-                    navigate = true
-                })
-            )
-        }
+        .sheet(isPresented: $showEmailVerify, content: {
+            EmailVerificationView()
+                .presentationDetents([.height(200)])
+        })
+//        .alert(isPresented: $showRegisterAlert) {
+//            Alert(
+//                title: Text("Registered succesfully!"),
+//                message: Text("Welcome to our app!"),
+//                dismissButton: .default(Text("OK"),action: {
+//                    navigate = true
+//                })
+//            )
+//        }
         .navigationBarBackButtonHidden()
         
     }
@@ -141,5 +149,6 @@ struct RegisterView : View{
 
 
 #Preview {
+    
     RegisterView()
 }

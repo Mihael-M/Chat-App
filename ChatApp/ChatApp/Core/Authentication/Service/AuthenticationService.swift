@@ -4,7 +4,7 @@
 //
 //  Created by Kamelia Toteva on 15.01.25.
 //
-
+import SwiftUI
 import Firebase
 import FirebaseAuth
 import Combine
@@ -12,6 +12,7 @@ import Combine
 class AuthenticationService {
     
     @Published var userSession: FirebaseAuth.User?
+    @AppStorage("email-link") var emailLink: String?
     
     static let authenticator = AuthenticationService()
     
@@ -39,6 +40,20 @@ class AuthenticationService {
         } catch {
             print("Failed to create user with error \(error.localizedDescription)")
         }
+    }
+    // need finish
+    func sendRegisterLink(withEmail email: String) async throws {
+        let actionCodeSettings = ActionCodeSettings()
+        actionCodeSettings.handleCodeInApp = true
+        actionCodeSettings.url = URL(string: "https://example.com/")
+        do{
+            try await Auth.auth().sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings)
+        }
+        catch{
+            print(error.localizedDescription)
+            emailLink = email
+        }
+        
     }
     
     func signOut() {
