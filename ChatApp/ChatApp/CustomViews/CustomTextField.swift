@@ -26,15 +26,18 @@ struct CustomTextField: View {
                     Group {
                         if showPassword {
                             TextField(prompt, text: $value)
-                                .autocapitalization(.none)
+                                .textInputAutocapitalization(.never)
+                                .disableAutocorrection(true)
                         } else {
                             SecureField(prompt, text: $value)
-                                .autocapitalization(.none)
+                                .textInputAutocapitalization(.never)
+                                .disableAutocorrection(true)
                         }
                     }
                 } else {
                     TextField(prompt, text: $value)
-                        .autocapitalization(.none)
+                        .textInputAutocapitalization(.never)
+                        .disableAutocorrection(true)
                 }
                 
                 Divider()

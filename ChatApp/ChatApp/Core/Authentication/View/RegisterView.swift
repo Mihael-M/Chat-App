@@ -9,13 +9,24 @@ import SwiftUI
 import Firebase
 import FirebaseAuth
 
+private enum FocusableField: Hashable {
+    case email
+    case password
+    case repeatPassword
+}
+
 struct RegisterView : View{
     @StateObject var viewModel = RegistrationViewModel()
+    @Environment(\.dismiss) var dismiss
+    
     @State private var navigate: Bool = false
     @State private var showRegisterAlert = false
+    @State private var showErrorAlert = false
     @State private var isPressed = false
     @State private var showEmailVerify: Bool = false
-   
+    
+    @FocusState private var focus: FocusableField?
+    
     var body: some View {
         VStack(alignment: .center, spacing: 15) {
             
@@ -30,6 +41,11 @@ struct RegisterView : View{
             VStack(alignment: .leading, spacing: 20) {
                 
                 CustomTextField(icon: "at", prompt: "Email", value: $viewModel.email)
+                    .focused($focus, equals: .email)
+                    .onSubmit {
+                        self.focus = .password
+                    }
+                
                 HStack {
                     Image(systemName: viewModel.isEmailValid ? "checkmark.circle.fill" : "xmark.circle.fill")
                         .foregroundColor(viewModel.isEmailValid ? .green : .red)
@@ -42,6 +58,18 @@ struct RegisterView : View{
                 
                 
                 CustomTextField(icon: "key", prompt: "Password", value: $viewModel.password)
+                    .focused($focus, equals: .password)
+                    .onSubmit {
+                        self.focus = .repeatPassword
+                    }
+                CustomTextField(icon: "key", prompt: "Repeat password", value: $viewModel.repeatedPassword)
+                    .focused($focus, equals: .repeatPassword)
+                    .onSubmit {
+                        Task {
+                            try await viewModel.register()
+                        }
+                    }
+                
                 VStack(alignment: .leading, spacing: 5) {
                     HStack {
                         Image(systemName: viewModel.isPasswordLengthValid ? "checkmark.circle.fill" : "xmark.circle.fill")
@@ -61,6 +89,13 @@ struct RegisterView : View{
                         Text("At least one number")
                             .foregroundColor(viewModel.containsNumber ? .green : .red)
                     }
+                    
+                    HStack {
+                        Image(systemName: viewModel.passwordMatches ? "checkmark.circle.fill" : "xmark.circle.fill")
+                            .foregroundColor(viewModel.passwordMatches ? .green : .red)
+                        Text("Password must match")
+                            .foregroundColor(viewModel.passwordMatches ? .green : .red)
+                    }
                 }
                 .font(.footnote)
                 
@@ -69,12 +104,18 @@ struct RegisterView : View{
             .font(.body)
             .padding()
             
-            
             Button(action:{
-                Task{ try await viewModel.register() }
-                showRegisterAlert = true
-                showEmailVerify = true
-                navigate = true
+                Task {
+                    try await viewModel.register()
+                    if viewModel.registerError != nil {
+                        showErrorAlert = true
+                    }
+                    else {
+                        showRegisterAlert = true
+                        //showEmailVerify = true
+                        navigate = true
+                    }
+                }
             })
             {
                 Text("Register")
@@ -122,16 +163,23 @@ struct RegisterView : View{
             
             Text("Already have an account?")
                 .font(.callout)
-            NavigationLink(
-                destination: ProfileView(isEditing: .constant(true)),
-                               isActive: $navigate,
-                               label: { EmptyView() }
-                           )
+            //            NavigationLink(
+            //                destination: ProfileView(isEditing: .constant(true)),
+            //                               isActive: $navigate,
+            //                               label: { EmptyView() }
+            //                           )
         }
         .sheet(isPresented: $showEmailVerify, content: {
             EmailVerificationView()
                 .presentationDetents([.height(200)])
         })
+        .alert(isPresented: $showErrorAlert) {
+            Alert(
+                title: Text("Error!"),
+                message: Text((viewModel.registerError?.description)!),
+                dismissButton: .default(Text("Try again"), action: {viewModel.clearFields()})
+            )
+        }
 //        .alert(isPresented: $showRegisterAlert) {
 //            Alert(
 //                title: Text("Registered succesfully!"),

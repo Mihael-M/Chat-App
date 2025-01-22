@@ -26,7 +26,7 @@ class AuthenticationService {
             let result = try await Auth.auth().signIn(withEmail: email, password: password)
             self.userSession = result.user
             print("Logged in user with uid \(result.user.uid) successfully")
-        } catch let error as NSError{
+        } catch let error as NSError {
             print("Failed to log in user with error \(error.code)")
             throw mapFirebaseError(error)
         }
@@ -35,10 +35,12 @@ class AuthenticationService {
     func register(withEmail email: String, password: String) async throws {
         do {
             let result = try await Auth.auth().createUser(withEmail: email, password: password)
-//            self.userSession = result.user
+            self.userSession = result.user
+            try await self.uploadUserData(email: email, uid: result.user.uid)
             print("Created user with uid \(result.user.uid) successfully.")
-        } catch {
+        } catch let error as NSError {
             print("Failed to create user with error \(error.localizedDescription)")
+            throw mapFirebaseError(error)
         }
     }
     // need finish
@@ -66,8 +68,10 @@ class AuthenticationService {
         }
     }
     
-    func uploadUserData(email: String, username: String, userID: String) async throws {
-        
+    func uploadUserData(email: String, uid: String) async throws {
+        let user = User(email: email)
+        guard let encodedUser = try? Firestore.Encoder().encode(user) else { return }
+        try await Firestore.firestore().collection("users").document(uid).setData(encodedUser)
     }
     
     private func mapFirebaseError(_ error: NSError) -> Error {

@@ -9,14 +9,20 @@ import SwiftUI
 import Firebase
 import FirebaseAuth
 
+private enum FocusableField: Hashable {
+    case email
+    case password
+}
+
 struct LogInView: View {
-    
-    //@EnvironmentObject var userManager: UserManager
-    //@EnvironmentObject var chatManager: ChatManager
     @StateObject var viewModel = LoginViewModel()
+    @Environment(\.dismiss) var dismiss
     
     @State private var showForgottenPasswordView: Bool = false
     @State private var isPressed: Bool = false
+    @State private var showErrorAlert: Bool = false
+    
+    @FocusState private var focus: FocusableField?
 
     var body: some View {
         NavigationStack {
@@ -30,15 +36,18 @@ struct LogInView: View {
                 Spacer()
                 
                 CustomTextField(icon: "at", prompt: "Email", value: $viewModel.email)
-                CustomTextField(icon: "key", prompt: "Password",isPassword: true, value: $viewModel.password)
-                if let error = viewModel.loginError {
-                    HStack{
-                        Text(error)
-                            .foregroundColor(.red)
-                            .font(.callout)
-                        Spacer()
+                    .focused($focus, equals: .email)
+                    .onSubmit {
+                        self.focus = .password
                     }
-                }
+                CustomTextField(icon: "key", prompt: "Password",isPassword: true, value: $viewModel.password)
+                    .focused($focus, equals: .password)
+                    .onSubmit {
+                        Task {
+                            try await viewModel.login()
+                        }
+                    }
+
                 
                 Button("Forgot your password?") {
                     showForgottenPasswordView.toggle()
@@ -47,7 +56,13 @@ struct LogInView: View {
                 
             
                 Button {
-                    Task {try await viewModel.login()}
+                    Task {
+                        try await viewModel.login()
+                        if viewModel.loginError != nil {
+                            showErrorAlert = true
+                        }
+                        
+                    }
                 } label: {
                     ZStack {
                         Circle()
@@ -96,6 +111,13 @@ struct LogInView: View {
                 ForgottenPasswordView()
                     .presentationDetents([.height(400)])
             })
+            .alert(isPresented: $showErrorAlert) {
+                Alert(
+                    title: Text("Error!"),
+                    message: Text((viewModel.loginError?.description)!),
+                    dismissButton: .default(Text("Try again"), action: {})
+                )
+            }
             .navigationBarBackButtonHidden()
         }
     }

@@ -14,7 +14,7 @@ class LoginViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var loginError: String? = nil
     
-    func login() async {
+    func login() async throws{
         do {
             try await AuthenticationService.authenticator.login(withEmail: email, password: password)
             loginError = nil // Clear error on successful login

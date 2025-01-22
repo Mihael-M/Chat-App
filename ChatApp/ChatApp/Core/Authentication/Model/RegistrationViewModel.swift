@@ -18,11 +18,19 @@ class RegistrationViewModel : ObservableObject {
             validatePassword()
         }
     }
+    @Published var repeatedPassword: String = "" {
+        didSet {
+            validatePassword()
+        }
+    }
     
     @Published var isEmailValid: Bool = false
     @Published var isPasswordLengthValid: Bool = false
     @Published var containsUppercase: Bool = false
     @Published var containsNumber: Bool = false
+    @Published var passwordMatches: Bool = false
+    
+    @Published var registerError: String? = nil
     
     private func validateEmail() {
         isEmailValid = isValidEmail(email)
@@ -32,6 +40,7 @@ class RegistrationViewModel : ObservableObject {
         isPasswordLengthValid = password.count >= 8
         containsUppercase = password.contains(where: { $0.isUppercase })
         containsNumber = password.contains(where: { $0.isNumber })
+        passwordMatches = (password == repeatedPassword) && !password.isEmpty
     }
     
     private func isValidEmail(_ email: String) -> Bool {
@@ -40,12 +49,23 @@ class RegistrationViewModel : ObservableObject {
         return emailPredicate.evaluate(with: email)
     }
     
-    func register() async throws {
-        try await AuthenticationService.authenticator.register(withEmail: email, password: password)
+    func register() async throws{
+        do {
+            try await AuthenticationService.authenticator.register(withEmail: email, password: password)
+            registerError = nil // Clear error on successful register
+        } catch let error as NSError {
+            registerError = error.localizedDescription // Update error to show in UI
+        }
     }
     
     func verifyEmail() async throws {
         try await AuthenticationService.authenticator.sendRegisterLink(withEmail: email)
+    }
+    
+    func clearFields() {
+        email = ""
+        password = ""
+        repeatedPassword = ""
     }
     
 }
