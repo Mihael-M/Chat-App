@@ -10,8 +10,6 @@ import PhotosUI
 import FirebaseFirestore
 
 class EditProfileViewModel: ObservableObject {
-    @Published var newUser = false
-    
     @Published var account: Account
     
     @Published var selectedImage: PhotosPickerItem? {
@@ -27,8 +25,7 @@ class EditProfileViewModel: ObservableObject {
     @Published var phone_number = ""
     @Published var date_of_birth = Date.now
     
-    init(newUser: Bool = false, account: Account) {
-        self.newUser = newUser
+    init(account: Account) {
         self.account = account
     }
     
@@ -56,10 +53,10 @@ class EditProfileViewModel: ObservableObject {
         }
         
         if !data.isEmpty {
-            if newUser {
-                try await AccountService.accountService.uploadAccountData(data: data)
+            if AuthenticationService.authenticator.account == nil {
+                try await AuthenticationService.authenticator.uploadAccountData(data: data)
             } else {
-                try await AccountService.accountService.updateAccountData(data: data)
+                try await AuthenticationService.authenticator.updateAccountData(data: data)
             }
         }
     }

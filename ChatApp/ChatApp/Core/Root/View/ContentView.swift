@@ -15,7 +15,7 @@ struct ContentView : View {
             Group {
                 if viewModel.userSession == nil {
                     LogInView()
-                } else if let currentUser = viewModel.currentUser {
+                } else {
                     ChatHomePageView()
                 }
             }

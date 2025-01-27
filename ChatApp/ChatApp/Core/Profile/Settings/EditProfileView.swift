@@ -10,54 +10,62 @@ import PhotosUI
 
 struct EditProfileView : View {
     @StateObject var viewModel: EditProfileViewModel
+    @State var navigateToHome = false
     @Environment(\.dismiss) var dismiss
     
-    init(newUser: Bool = false, account: Account) {
-        self._viewModel = StateObject(wrappedValue:     EditProfileViewModel(newUser: newUser, account: account))
+    init(account: Account) {
+        self._viewModel = StateObject(wrappedValue:     EditProfileViewModel(account: account))
     }
     
-    var body: some View{
+    var body: some View {
         VStack {
-            PhotosPicker(selection: $viewModel.selectedImage) {
-                if let image = viewModel.profileImage {
-                    image
-                        .resizable()
-                        .frame(width:200, height: 200)
-                        .scaledToFit()
-                        .clipShape(Circle())
-                } else {
-                    Image("picture")
-                        .resizable()
-                        .frame(width:200, height: 200)
-                        .scaledToFit()
-                        .clipShape(Circle())
+            VStack {
+                PhotosPicker(selection: $viewModel.selectedImage) {
+                    if let image = viewModel.profileImage {
+                        image
+                            .resizable()
+                            .frame(width:200, height: 200)
+                            .scaledToFit()
+                            .clipShape(Circle())
+                    } else {
+                        Image("picture")
+                            .resizable()
+                            .frame(width:200, height: 200)
+                            .scaledToFit()
+                            .clipShape(Circle())
+                    }
                 }
-            }
-            
-            VStack(alignment: .leading, spacing: 12) {
-
-                CustomTextField(icon: "person.fill", prompt: "Username", value: $viewModel.username)
-                CustomTextField(icon: "hands.sparkles.fill", prompt: "Nickname", value: $viewModel.nickname)
-                CustomTextField(icon: "phone.badge.plus.fill", prompt: "Phone number", value: $viewModel.phone_number)
-                    .keyboardType(.numberPad)
-                DatePicker("Date of Birth: ", selection: $viewModel.date_of_birth, displayedComponents: .date)
-                    .datePickerStyle(.automatic)
-                    .foregroundStyle(Color(.systemGray))
+                
+                VStack(alignment: .leading, spacing: 12) {
+                    
+                    CustomTextField(icon: "person.fill", prompt: "Username", value: $viewModel.username)
+                    CustomTextField(icon: "hands.sparkles.fill", prompt: "Nickname", value: $viewModel.nickname)
+                    CustomTextField(icon: "phone.badge.plus.fill", prompt: "Phone number", value: $viewModel.phone_number)
+                        .keyboardType(.numberPad)
+                    DatePicker("Date of Birth: ", selection: $viewModel.date_of_birth, displayedComponents: .date)
+                        .datePickerStyle(.automatic)
+                        .foregroundStyle(Color(.systemGray))
+                    
+                }
+                .font(.body)
+                .padding()
                 
             }
-            .font(.body)
-            .padding()
             
-        }
-        Button {
-            Task {
-                try await viewModel.updateAccountData()
-                dismiss()
+            Button {
+                Task {
+                    try await viewModel.updateAccountData()
+                    navigateToHome = true
+                }
+            } label:{
+                Text("Save")
             }
-        } label:{
-            Text("Save")
+            .padding()
         }
-        .padding()
+        .navigationDestination(
+            isPresented: $navigateToHome,
+            destination: { ChatHomePageView()} )
+        .navigationBarBackButtonHidden()
     }
 }
 

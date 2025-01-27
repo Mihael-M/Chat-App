@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ProfileSettingsView: View {
-    var accountService = AccountService.accountService
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -18,8 +17,7 @@ struct ProfileSettingsView: View {
                 Section {
                     ForEach(SettingOption.allCases, id: \.self) { option in
                         HStack {
-                            
-                            NavigationLink(destination: destinationView(for: option), label: {
+                            NavigationLink(destination: option.destination , label: {
                                 Image(systemName: option.imageName)
                                     .resizable()
                                     .frame(width: 24, height: 24)
@@ -46,15 +44,6 @@ struct ProfileSettingsView: View {
                         .fontWeight(.semibold)
                 }
             }
-        }
-    }
-    @ViewBuilder
-    private func destinationView(for option: SettingOption) -> some View {
-        switch option {
-        case .editProfile: EditProfileView(account: accountService.account ?? .emptyAccount)
-        case .darkMode: DarkModeSettingsView()
-        case .notifications: NotificationsSettingsView()
-        case .activeStatus: ActiveStatusSettingsView()
         }
     }
 }

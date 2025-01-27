@@ -13,6 +13,7 @@ class AuthenticationService {
     
     @Published var userSession: FirebaseAuth.User?
     @Published var currentUser: User?
+    @Published var account: Account?
     
     //when creating account info toggle
     @Published var newUser = false
@@ -23,6 +24,7 @@ class AuthenticationService {
     init() {
         Task {
             try await loadUserData()
+            try await loadAccountData()
         }
         print("User session id is \(userSession?.uid)")
     }
@@ -33,6 +35,7 @@ class AuthenticationService {
             let result = try await Auth.auth().signIn(withEmail: email, password: password)
             self.userSession = result.user
             try await loadUserData()
+            try await loadAccountData()
             print("Logged in user with uid \(result.user.uid) successfully")
         } catch let error as NSError {
             print("Failed to log in user with error \(error.code)")
@@ -47,6 +50,7 @@ class AuthenticationService {
             self.userSession = result.user
             try await uploadUserData(email: email, uid: result.user.uid)
             print("Created user with uid \(result.user.uid) successfully.")
+            print("Account is \(account)")
         } catch let error as NSError {
             print("Failed to create user with error \(error.localizedDescription)")
             throw mapFirebaseError(error)
@@ -123,6 +127,22 @@ class AuthenticationService {
                 return NSError(domain: "AuthError", code: errorCode.rawValue, userInfo: [NSLocalizedDescriptionKey: "An unknown error occurred: \(error.localizedDescription)"])
             }
         }
+    
+    func uploadAccountData(data: [String: Any]) async throws {
+        try await Firestore.firestore().collection("accounts").document(userSession!.uid).setData(data)
+        AuthenticationService.authenticator.newUser = false
+        print("New user with id \(userSession?.uid) and account data \(account)")
+    }
+    
+    func updateAccountData(data: [String: Any]) async throws {
+        try await Firestore.firestore().collection("accounts").document(userSession!.uid).updateData(data)
+    }
+    
+    func loadAccountData() async throws {
+        guard let currentUID = userSession?.uid else { return }
+        let snapshot = try await Firestore.firestore().collection("accounts").document(currentUID).getDocument()
+        self.account = try? snapshot.data(as: Account.self)
+    }
 }
 
 
