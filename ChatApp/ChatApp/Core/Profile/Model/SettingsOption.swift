@@ -7,7 +7,7 @@
 import Foundation
 import SwiftUI
 
-enum SettingOptionViewModel: Int, CaseIterable, Identifiable{
+enum SettingOption: Int, CaseIterable, Identifiable{
     case editProfile
     case darkMode
     case notifications

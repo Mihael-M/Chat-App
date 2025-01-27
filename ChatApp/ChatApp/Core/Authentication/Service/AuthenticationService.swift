@@ -12,19 +12,27 @@ import Combine
 class AuthenticationService {
     
     @Published var userSession: FirebaseAuth.User?
+    @Published var currentUser: User?
+    
+    //when creating account info toggle
+    @Published var newUser = false
     @AppStorage("email-link") var emailLink: String?
     
     static let authenticator = AuthenticationService()
     
     init() {
-        self.userSession = Auth.auth().currentUser
+        Task {
+            try await loadUserData()
+        }
         print("User session id is \(userSession?.uid)")
     }
     
+    @MainActor
     func login(withEmail email: String, password: String) async throws {
         do {
             let result = try await Auth.auth().signIn(withEmail: email, password: password)
             self.userSession = result.user
+            try await loadUserData()
             print("Logged in user with uid \(result.user.uid) successfully")
         } catch let error as NSError {
             print("Failed to log in user with error \(error.code)")
@@ -32,17 +40,19 @@ class AuthenticationService {
         }
     }
     
+    @MainActor
     func register(withEmail email: String, password: String) async throws {
         do {
             let result = try await Auth.auth().createUser(withEmail: email, password: password)
             self.userSession = result.user
-            try await self.uploadUserData(email: email, uid: result.user.uid)
+            try await uploadUserData(email: email, uid: result.user.uid)
             print("Created user with uid \(result.user.uid) successfully.")
         } catch let error as NSError {
             print("Failed to create user with error \(error.localizedDescription)")
             throw mapFirebaseError(error)
         }
     }
+    
     // need finish
     func sendRegisterLink(withEmail email: String) async throws {
         let actionCodeSettings = ActionCodeSettings()
@@ -62,16 +72,33 @@ class AuthenticationService {
         do {
             try Auth.auth().signOut()
             self.userSession = nil
+            self.currentUser = nil
             print("Logged out successfully!")
         } catch {
             print("Failed to sign out user with error \(error.localizedDescription)")
         }
     }
     
+    
     func uploadUserData(email: String, uid: String) async throws {
         let user = User(email: email)
+        self.currentUser = user
         guard let encodedUser = try? Firestore.Encoder().encode(user) else { return }
         try await Firestore.firestore().collection("users").document(uid).setData(encodedUser)
+    }
+    
+    func updateUserData(email: String, uid: String) async throws {
+        let user = User(email: email)
+        guard let encodedUser = try? Firestore.Encoder().encode(user) else { return }
+        try await Firestore.firestore().collection("users").document(uid).updateData(encodedUser)
+    }
+    
+    @MainActor
+    func loadUserData() async throws {
+        self.userSession = Auth.auth().currentUser
+        guard let currentUID = userSession?.uid else { return }
+        let snapshot = try await Firestore.firestore().collection("users").document(currentUID).getDocument()
+        self.currentUser = try? snapshot.data(as: User.self)
     }
     
     private func mapFirebaseError(_ error: NSError) -> Error {

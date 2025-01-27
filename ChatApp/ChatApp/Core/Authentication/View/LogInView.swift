@@ -25,7 +25,6 @@ struct LogInView: View {
     @FocusState private var focus: FocusableField?
 
     var body: some View {
-        NavigationStack {
             VStack(alignment: .center, spacing: 15) {
                 Spacer()
                 
@@ -120,7 +119,6 @@ struct LogInView: View {
             }
             .navigationBarBackButtonHidden()
         }
-    }
 }
 
 #Preview {

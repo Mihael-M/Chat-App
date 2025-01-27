@@ -5,7 +5,6 @@ struct AddChatView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var groupChat: Bool = false
     var body: some View {
-        NavigationStack{
                 VStack(alignment: .center, spacing: 30) {
                     
                     RoundedRectangle(cornerRadius: 3)
@@ -49,10 +48,8 @@ struct AddChatView: View {
                 .padding(.vertical, 15)
                 .sheet(isPresented: $groupChat, content: {
                     AddGroupChatView()
-                        //.environmentObject(userManager)
                         .presentationDetents([.height(500)])
                 })
-        }
     }
 }
 

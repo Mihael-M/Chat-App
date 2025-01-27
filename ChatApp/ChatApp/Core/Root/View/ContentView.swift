@@ -8,24 +8,22 @@
 import SwiftUI
 
 struct ContentView : View {
-    @StateObject var chatManager: ChatManager = ChatManager()
-
     @StateObject var viewModel = ContentViewModel()
     
     var body: some View {
-        Group {
-            if viewModel.userSession != nil {
-                ChatHomePageView(chatManager: chatManager)
-            } else {
-                LogInView()
+        NavigationStack() {
+            Group {
+                if viewModel.userSession == nil {
+                    LogInView()
+                } else if let currentUser = viewModel.currentUser {
+                    ChatHomePageView()
+                }
             }
         }
     }
-
 }
 
 #Preview {
-    let viewModel = ContentViewModel()
-    
     ContentView()
 }
+

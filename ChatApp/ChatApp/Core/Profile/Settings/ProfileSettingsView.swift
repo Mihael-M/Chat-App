@@ -8,12 +8,15 @@
 import SwiftUI
 
 struct ProfileSettingsView: View {
+    var accountService = AccountService.accountService
+    @Environment(\.dismiss) var dismiss
+    
     var body: some View {
         VStack {
-            ProfileView(isEditing:.constant(false))
+            ProfileHeaderView(isEditing:.constant(false))
             List {
                 Section {
-                    ForEach(SettingOptionViewModel.allCases, id: \.self) { option in
+                    ForEach(SettingOption.allCases, id: \.self) { option in
                         HStack {
                             
                             NavigationLink(destination: destinationView(for: option), label: {
@@ -29,6 +32,7 @@ struct ProfileSettingsView: View {
                 Section {
                     Button("Log out"){
                         AuthenticationService.authenticator.signOut()
+                        dismiss()
                     }
                     .foregroundStyle(.red)
                 }
@@ -45,9 +49,9 @@ struct ProfileSettingsView: View {
         }
     }
     @ViewBuilder
-    private func destinationView(for option: SettingOptionViewModel) -> some View {
+    private func destinationView(for option: SettingOption) -> some View {
         switch option {
-        case .editProfile: EditProfileView()
+        case .editProfile: EditProfileView(account: accountService.account ?? .emptyAccount)
         case .darkMode: DarkModeSettingsView()
         case .notifications: NotificationsSettingsView()
         case .activeStatus: ActiveStatusSettingsView()

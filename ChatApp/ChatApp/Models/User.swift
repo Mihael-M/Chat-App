@@ -6,17 +6,20 @@
 //
 
 import SwiftUI
+import FirebaseFirestore
 
-struct UserModel: Codable, Identifiable, Hashable {
-    var id = NSUUID().uuidString
+struct User: Codable, Identifiable, Hashable {
+    @DocumentID var uid: String?
     let email: String
-    let account: Account
+    
+    var id: String {
+        return uid ?? NSUUID().uuidString
+    }
     
 }
 
-extension UserModel {
-    static var emptyUser: UserModel {
-        UserModel(email: "user@example.com",
-             account: Account.emptyAccount)
+extension User {
+    static var emptyUser: User {
+        User(email: "user@example.com")
     }
 }

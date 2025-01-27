@@ -19,8 +19,7 @@ struct RegisterView : View{
     @StateObject var viewModel = RegistrationViewModel()
     @Environment(\.dismiss) var dismiss
     
-    @State private var navigate: Bool = false
-    @State private var showRegisterAlert = false
+    @State private var registrationComplete: Bool = false
     @State private var showErrorAlert = false
     @State private var isPressed = false
     @State private var showEmailVerify: Bool = false
@@ -103,7 +102,7 @@ struct RegisterView : View{
             }
             .font(.body)
             .padding()
-            
+
             Button(action:{
                 Task {
                     try await viewModel.register()
@@ -111,9 +110,8 @@ struct RegisterView : View{
                         showErrorAlert = true
                     }
                     else {
-                        showRegisterAlert = true
                         //showEmailVerify = true
-                        navigate = true
+                        registrationComplete = true
                     }
                 }
             })
@@ -163,12 +161,11 @@ struct RegisterView : View{
             
             Text("Already have an account?")
                 .font(.callout)
-            //            NavigationLink(
-            //                destination: ProfileView(isEditing: .constant(true)),
-            //                               isActive: $navigate,
-            //                               label: { EmptyView() }
-            //                           )
+            
         }
+        .navigationDestination(
+            isPresented: $registrationComplete,
+            destination: { WelcomeView()} )
         .sheet(isPresented: $showEmailVerify, content: {
             EmailVerificationView()
                 .presentationDetents([.height(200)])
@@ -180,15 +177,6 @@ struct RegisterView : View{
                 dismissButton: .default(Text("Try again"), action: {viewModel.clearFields()})
             )
         }
-//        .alert(isPresented: $showRegisterAlert) {
-//            Alert(
-//                title: Text("Registered succesfully!"),
-//                message: Text("Welcome to our app!"),
-//                dismissButton: .default(Text("OK"),action: {
-//                    navigate = true
-//                })
-//            )
-//        }
         .navigationBarBackButtonHidden()
         
     }

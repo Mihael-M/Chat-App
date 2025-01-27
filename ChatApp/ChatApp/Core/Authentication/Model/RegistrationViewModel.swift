@@ -49,8 +49,9 @@ class RegistrationViewModel : ObservableObject {
         return emailPredicate.evaluate(with: email)
     }
     
-    func register() async throws{
+    func register() async throws {
         do {
+            AuthenticationService.authenticator.newUser = true
             try await AuthenticationService.authenticator.register(withEmail: email, password: password)
             registerError = nil // Clear error on successful register
         } catch let error as NSError {

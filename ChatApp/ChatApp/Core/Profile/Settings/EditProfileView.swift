@@ -6,38 +6,63 @@
 //
 
 import SwiftUI
+import PhotosUI
 
-struct EditProfileView : View{
-    @State private var username: String = ""
-    @State private var phone_number: String = ""
-    @State private var date_of_birth: Date = Date()
+struct EditProfileView : View {
+    @StateObject var viewModel: EditProfileViewModel
+    @Environment(\.dismiss) var dismiss
     
-    @EnvironmentObject var chatManager: ChatManager
-    
+    init(newUser: Bool = false, account: Account) {
+        self._viewModel = StateObject(wrappedValue:     EditProfileViewModel(newUser: newUser, account: account))
+    }
     
     var body: some View{
-        VStack(alignment: .leading, spacing: 12) {
-            CustomTextField(icon: "person.fill", prompt: "Username", value: $username)
-            CustomTextField(icon: "phone.badge.plus.fill", prompt: "Phone", value: $phone_number)
-                .keyboardType(.numberPad)
-            DatePicker("Date of Birth:", selection: $date_of_birth, displayedComponents: .date)
-                .datePickerStyle(.automatic)
-                                   
+        VStack {
+            PhotosPicker(selection: $viewModel.selectedImage) {
+                if let image = viewModel.profileImage {
+                    image
+                        .resizable()
+                        .frame(width:200, height: 200)
+                        .scaledToFit()
+                        .clipShape(Circle())
+                } else {
+                    Image("picture")
+                        .resizable()
+                        .frame(width:200, height: 200)
+                        .scaledToFit()
+                        .clipShape(Circle())
+                }
+            }
+            
+            VStack(alignment: .leading, spacing: 12) {
+
+                CustomTextField(icon: "person.fill", prompt: "Username", value: $viewModel.username)
+                CustomTextField(icon: "hands.sparkles.fill", prompt: "Nickname", value: $viewModel.nickname)
+                CustomTextField(icon: "phone.badge.plus.fill", prompt: "Phone number", value: $viewModel.phone_number)
+                    .keyboardType(.numberPad)
+                DatePicker("Date of Birth: ", selection: $viewModel.date_of_birth, displayedComponents: .date)
+                    .datePickerStyle(.automatic)
+                    .foregroundStyle(Color(.systemGray))
+                
+            }
+            .font(.body)
+            .padding()
+            
         }
-        .font(.body)
-        .padding(.horizontal)
-        
-        Button{
-            // Goes to profile view
-        }
-        label:{
+        Button {
+            Task {
+                try await viewModel.updateAccountData()
+                dismiss()
+            }
+        } label:{
             Text("Save")
         }
         .padding()
     }
-    
 }
 
+
 #Preview {
-    EditProfileView()
+    let account = Account.emptyAccount
+    EditProfileView(account: account)
 }

@@ -7,13 +7,18 @@
 
 import SwiftUI
 
+enum toolbarOption {
+    case search
+    case addChat
+    case userProfile
+}
+
 struct ChatHomePageView: View {
-    @StateObject var chatManager : ChatManager
-    
-    @State private var user = UserModel.emptyUser
+    @State private var account = Account.emptyAccount
     @State private var showAddChatView : Bool = false
     @State private var isEditing : Bool = false
     @State private var newUser : Bool = false
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -46,8 +51,16 @@ struct ChatHomePageView: View {
                 //       }
                 
             }
-            .navigationDestination(for: UserModel.self, destination: { user in
-                ProfileSettingsView()
+            .navigationDestination(for: toolbarOption.self,
+                destination: { destination in
+                switch destination {
+                case .search:
+                    SearchView()
+                case .addChat:
+                    AddChatView()
+                case .userProfile:
+                    ProfileSettingsView()
+                }
             })
             .sheet(isPresented: $showAddChatView, content: {
                 AddChatView()
@@ -57,9 +70,7 @@ struct ChatHomePageView: View {
                 ToolbarItem(placement: .topBarLeading) {
                     
                     HStack {
-                        Button(action: {
-                            // Add search functionality here
-                        }) {
+                        NavigationLink(value: toolbarOption.search) {
                             Image(systemName: "magnifyingglass")
                                 .font(.title2)
                                 .foregroundStyle(Color.secondary)
@@ -82,8 +93,8 @@ struct ChatHomePageView: View {
                                 .foregroundStyle(Color.secondary)
                         }
                         
-                        NavigationLink(value: user) {
-                            Image(user.account.profilePictureURL ?? "")
+                        NavigationLink(value: toolbarOption.userProfile) {
+                            Image(account.profilePictureURL ?? "")
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: 32, height: 32)
@@ -97,15 +108,6 @@ struct ChatHomePageView: View {
 }
 
 #Preview {
-    //        let chatManager = ChatManager()
-    //        let userManager = UserManager()
-    //        chatManager.chats = [
-    //            Chat(title: "Alice", lastMessage: "Hi there!",iconName: "person.circle.fill"),
-    //            Chat(title: "Bob", lastMessage: "How's it going?",iconName: "person.circle.fill")
-    //        ]
-    //
-    //    ChatHomePageView(chatManager: chatManager)
-    //            .environmentObject(chatManager)
-    //            .environmentObject(userManager)
+    ChatHomePageView()
 }
 
