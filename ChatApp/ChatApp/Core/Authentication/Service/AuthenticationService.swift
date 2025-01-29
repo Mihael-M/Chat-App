@@ -50,7 +50,7 @@ class AuthenticationService {
             self.userSession = result.user
             try await uploadUserData(email: email, uid: result.user.uid)
             print("Created user with uid \(result.user.uid) successfully.")
-            print("Account is \(account)")
+            print("Account is \(String(describing: account))")
         } catch let error as NSError {
             print("Failed to create user with error \(error.localizedDescription)")
             throw mapFirebaseError(error)
@@ -58,19 +58,49 @@ class AuthenticationService {
     }
     
     // need finish
-    func sendRegisterLink(withEmail email: String) async throws {
+    func sendRegisterLink(withEmail email: String) async {
         let actionCodeSettings = ActionCodeSettings()
         actionCodeSettings.handleCodeInApp = true
-        actionCodeSettings.url = URL(string: "https://example.com/")
-        do{
-            try await Auth.auth().sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings)
-        }
-        catch{
-            print(error.localizedDescription)
-            emailLink = email
-        }
+        actionCodeSettings.url = URL(string: "https://mishoni.page.link/email-link-register")
+        actionCodeSettings.setIOSBundleID(Bundle.main.bundleIdentifier!)
         
+        do {
+            try await Auth.auth().sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings)
+            print("Verification link sent to \(email)")
+            emailLink = email // Save the email for later verification
+        } catch {
+            print("Failed to send verification link: \(error.localizedDescription)")
+        }
     }
+
+    func verifyEmailLink(_ link: String) async throws {
+        guard let email = emailLink else { throw NSError(domain: "AuthError", code: -1, userInfo: [NSLocalizedDescriptionKey: "No email saved for verification."]) }
+        
+        do {
+            let result = try await Auth.auth().signIn(withEmail: email, link: link)
+            if result.user.isEmailVerified {
+                print("Email verified successfully for \(email)")
+                try await loadUserData()
+            } else {
+                throw NSError(domain: "AuthError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Email verification failed."])
+            }
+        } catch {
+            print("Failed to verify email: \(error.localizedDescription)")
+            throw error
+        }
+    }
+
+    func checkEmailVerification() async throws {
+        guard let user = Auth.auth().currentUser else { throw NSError(domain: "AuthError", code: -1, userInfo: [NSLocalizedDescriptionKey: "No user signed in."]) }
+        
+        try await user.reload()
+        if user.isEmailVerified {
+            print("Email is verified.")
+        } else {
+            throw NSError(domain: "AuthError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Email is not verified. Please check your inbox."])
+        }
+    }
+   
     
     func signOut() {
         do {
@@ -131,7 +161,7 @@ class AuthenticationService {
     func uploadAccountData(data: [String: Any]) async throws {
         try await Firestore.firestore().collection("accounts").document(userSession!.uid).setData(data)
         AuthenticationService.authenticator.newUser = false
-        print("New user with id \(userSession?.uid) and account data \(account)")
+        print("New user with id \(String(describing: userSession?.uid)) and account data \(String(describing: account))")
     }
     
     func updateAccountData(data: [String: Any]) async throws {

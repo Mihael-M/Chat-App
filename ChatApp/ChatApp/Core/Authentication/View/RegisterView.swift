@@ -25,7 +25,6 @@ struct RegisterView : View{
     @State private var showEmailVerify: Bool = false
     
     @FocusState private var focus: FocusableField?
-    
     var body: some View {
         VStack(alignment: .center, spacing: 15) {
             
@@ -110,7 +109,8 @@ struct RegisterView : View{
                         showErrorAlert = true
                     }
                     else {
-                        //showEmailVerify = true
+                        await AuthenticationService.authenticator.sendRegisterLink(withEmail: viewModel.email)
+                                   showEmailVerify = true
                         registrationComplete = true
                     }
                 }
@@ -167,8 +167,13 @@ struct RegisterView : View{
             isPresented: $registrationComplete,
             destination: { WelcomeView()} )
         .sheet(isPresented: $showEmailVerify, content: {
-            EmailVerificationView()
-                .presentationDetents([.height(200)])
+            EmailVerificationView(viewModel: viewModel)
+                .presentationDetents([.height(300)])
+                .onDisappear {
+                    if viewModel.emailVerified {
+                        registrationComplete = true
+                    }
+                }
         })
         .alert(isPresented: $showErrorAlert) {
             Alert(
