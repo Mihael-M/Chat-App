@@ -10,6 +10,14 @@ import SwiftUI
 struct SearchView: View {
     @State private var searchText = ""
     
+    
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    // to do search for specific search requerements and add them to addchatview and add groupchatview
+    //look up messaging logic/views
+    //also nitification/dark/active mode
+    
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     var body: some View {
         ScrollView {
             LazyVStack(spacing: 12) {

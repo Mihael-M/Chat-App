@@ -22,7 +22,7 @@ struct RegisterView : View{
     @State private var registrationComplete: Bool = false
     @State private var showErrorAlert = false
     @State private var isPressed = false
-    @State private var showEmailVerify: Bool = false
+   // @State private var showEmailVerify: Bool = false
     
     @FocusState private var focus: FocusableField?
     var body: some View {
@@ -30,7 +30,7 @@ struct RegisterView : View{
             
             Spacer()
             
-            Text("Our App Name 🌟")
+            Text("Yapper🌟")
                 .font(.largeTitle)
                 .fontWeight(.bold)
             
@@ -109,8 +109,8 @@ struct RegisterView : View{
                         showErrorAlert = true
                     }
                     else {
-                        await AuthenticationService.authenticator.sendRegisterLink(withEmail: viewModel.email)
-                                   showEmailVerify = true
+//                        await AuthenticationService.authenticator.sendRegisterLink(withEmail: viewModel.email)
+//                                   showEmailVerify = true
                         registrationComplete = true
                     }
                 }
@@ -166,15 +166,17 @@ struct RegisterView : View{
         .navigationDestination(
             isPresented: $registrationComplete,
             destination: { WelcomeView()} )
-        .sheet(isPresented: $showEmailVerify, content: {
-            EmailVerificationView(viewModel: viewModel)
-                .presentationDetents([.height(300)])
-                .onDisappear {
-                    if viewModel.emailVerified {
-                        registrationComplete = true
-                    }
-                }
-        })
+        // not enough money for developer account!!!!
+        
+//        .sheet(isPresented: $showEmailVerify, content: {
+//            EmailVerificationView(viewModel: viewModel)
+//                .presentationDetents([.height(200)])
+//                .onDisappear {
+//                    if viewModel.emailVerified {
+//                        registrationComplete = true
+//                    }
+//                }
+//        })
         .alert(isPresented: $showErrorAlert) {
             Alert(
                 title: Text("Error!"),

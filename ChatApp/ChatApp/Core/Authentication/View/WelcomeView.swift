@@ -14,7 +14,7 @@ struct WelcomeView: View {
         VStack(spacing: 10) {
             Spacer()
             
-            Text("Welcome to \"Our App Name\"! ")
+            Text("Welcome to Yapper! ")
                 .font(.title2)
                 .fontWeight(.bold)
             Text("Click here to add more information about you before you start using our app.")

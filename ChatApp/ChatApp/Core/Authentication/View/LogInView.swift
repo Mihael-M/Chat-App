@@ -28,7 +28,7 @@ struct LogInView: View {
             VStack(alignment: .center, spacing: 15) {
                 Spacer()
                 
-                Text("Our App Name 🌟")
+                Text("Yapper")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                 
