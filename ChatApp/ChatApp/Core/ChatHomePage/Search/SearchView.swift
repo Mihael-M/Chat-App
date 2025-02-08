@@ -9,17 +9,26 @@ import SwiftUI
 
 struct SearchView: View {
     @State private var searchText = ""
-    
+    //    var filteredUsers:[String]
+    //    {
+    //        if userID.isEmpty {
+    //            return []
+    //        }
+    //        else{
+    //            return [].filter( $0.localisedCaseInsensitiveContains(userID))
+    //        }
+    //    }
     
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     // to do search for specific search requerements and add them to addchatview and add groupchatview
     //look up messaging logic/views
-    //also nitification/dark/active mode
-    
+
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     var body: some View {
         ScrollView {
+            CustomTextField_Circle(icon: "magnifyingglass", prompt: "Search user...", value: $searchText)
+                .padding()
             LazyVStack(spacing: 12) {
                 ForEach(0 ... 10, id: \.self) { user in
                     HStack {

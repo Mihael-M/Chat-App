@@ -6,7 +6,11 @@
 //
 
 import SwiftUI
+//-----------------------------------------------//
 
+//Need paid apple developer account to use..
+
+//-----------------------------------------------//
 struct EmailVerificationView: View {
     @ObservedObject var viewModel: RegistrationViewModel
     @Environment(\.dismiss) var dismiss

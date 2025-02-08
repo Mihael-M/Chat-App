@@ -8,8 +8,23 @@
 import SwiftUI
 
 struct NotificationsSettingsView: View {
+    @State private var isActiveNotifications: Bool = false
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+            VStack {
+                Section(){
+                    Toggle(isOn: $isActiveNotifications) {
+                        Text("Receive notifications")
+                    }
+                    .padding()
+                }
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
+                .padding()
+                Text("Recieve notifications when you are not in the app.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                Spacer()
+        }
     }
 }
 

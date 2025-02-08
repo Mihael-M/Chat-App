@@ -12,6 +12,15 @@ struct AddGroupChatView: View {
     @State private var groupName: String = ""
     @Environment(\.dismiss) private var dismiss
     @State private var profileImage: Image = Image(systemName: "person.circle")
+    //    var filteredUsers:[String]
+    //    {
+    //        if userID.isEmpty {
+    //            return []
+    //        }
+    //        else{
+    //            return [].filter( $0.localisedCaseInsensitiveContains(userID))
+    //        }
+    //    }
     var body: some View {
         VStack(spacing: 12) {
             RoundedRectangle(cornerRadius: 3)

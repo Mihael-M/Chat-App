@@ -4,6 +4,16 @@ struct AddChatView: View {
     @State private var userID: String = ""
     @Environment(\.dismiss) private var dismiss
     @State private var groupChat: Bool = false
+    // need to add the account logic and model to implement it
+//    var filteredUsers:[String]
+//    {
+//        if userID.isEmpty {
+//            return []
+//        }
+//        else{
+//            return [].filter( $0.localisedCaseInsensitiveContains(userID))
+//        }
+//    }
     var body: some View {
                 VStack(alignment: .center, spacing: 30) {
                     
