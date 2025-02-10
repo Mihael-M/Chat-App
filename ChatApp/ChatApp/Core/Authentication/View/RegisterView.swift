@@ -4,7 +4,7 @@
 //
 //  Created by Mishoni Mihaylov on 13.01.25.
 //
-//to finish the send link to email function need to figure out a name for the app
+
 import SwiftUI
 import Firebase
 import FirebaseAuth

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5391B0B42D5A364E0086AD77 /* ExyteChat in Frameworks */ = {isa = PBXBuildFile; productRef = 5391B0B32D5A364E0086AD77 /* ExyteChat */; };
 		F62D05442D36728B0094AA4B /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = F62D05432D36728B0094AA4B /* FirebaseAuth */; };
 		F62D05462D36728F0094AA4B /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = F62D05452D36728F0094AA4B /* FirebaseCore */; };
 		F62D05482D36729D0094AA4B /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = F62D05472D36729D0094AA4B /* FirebaseFirestore */; };
@@ -32,6 +33,7 @@
 			files = (
 				F62D05462D36728F0094AA4B /* FirebaseCore in Frameworks */,
 				F62D054A2D3672A40094AA4B /* FirebaseStorage in Frameworks */,
+				5391B0B42D5A364E0086AD77 /* ExyteChat in Frameworks */,
 				F62D05442D36728B0094AA4B /* FirebaseAuth in Frameworks */,
 				F62D05482D36729D0094AA4B /* FirebaseFirestore in Frameworks */,
 			);
@@ -88,6 +90,7 @@
 				F62D05452D36728F0094AA4B /* FirebaseCore */,
 				F62D05472D36729D0094AA4B /* FirebaseFirestore */,
 				F62D05492D3672A40094AA4B /* FirebaseStorage */,
+				5391B0B32D5A364E0086AD77 /* ExyteChat */,
 			);
 			productName = ChatApp;
 			productReference = 534F2A3E2D1DFE7800A3F168 /* ChatApp.app */;
@@ -119,6 +122,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				F62D05412D3672650094AA4B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				5391B0B22D5A364E0086AD77 /* XCRemoteSwiftPackageReference "Chat" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 534F2A3F2D1DFE7800A3F168 /* Products */;
@@ -352,6 +356,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		5391B0B22D5A364E0086AD77 /* XCRemoteSwiftPackageReference "Chat" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/exyte/Chat";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.4;
+			};
+		};
 		F62D05412D3672650094AA4B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -363,6 +375,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		5391B0B32D5A364E0086AD77 /* ExyteChat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5391B0B22D5A364E0086AD77 /* XCRemoteSwiftPackageReference "Chat" */;
+			productName = ExyteChat;
+		};
 		F62D05432D36728B0094AA4B /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F62D05412D3672650094AA4B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
