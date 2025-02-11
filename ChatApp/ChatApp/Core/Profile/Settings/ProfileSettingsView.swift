@@ -12,7 +12,7 @@ struct ProfileSettingsView: View {
     
     var body: some View {
         VStack {
-            ProfileHeaderView(isEditing:.constant(false))
+            ProfileHeaderView()
             List {
                 Section {
                     ForEach(SettingOption.allCases, id: \.self) { option in

@@ -11,6 +11,7 @@ import FirebaseAuth
 
 private enum FocusableField: Hashable {
     case email
+    case username
     case password
     case repeatPassword
 }
@@ -41,7 +42,7 @@ struct RegisterView : View{
                 CustomTextField(icon: "at", prompt: "Email", value: $viewModel.email)
                     .focused($focus, equals: .email)
                     .onSubmit {
-                        self.focus = .password
+                        self.focus = .username
                     }
                 
                 HStack {
@@ -53,7 +54,11 @@ struct RegisterView : View{
                         .foregroundColor(viewModel.isEmailValid ? .green : .red)
                 }
                 
-                
+                CustomTextField(icon: "person", prompt: "Username", value: $viewModel.username)
+                    .focused($focus, equals: .username)
+                    .onSubmit {
+                        self.focus = .password
+                    }
                 
                 CustomTextField(icon: "key", prompt: "Password", value: $viewModel.password)
                     .focused($focus, equals: .password)
@@ -96,6 +101,7 @@ struct RegisterView : View{
                     }
                 }
                 .font(.footnote)
+                
                 
                 
             }

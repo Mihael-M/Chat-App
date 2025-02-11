@@ -13,7 +13,7 @@ class AuthenticationService {
     
     @Published var userSession: FirebaseAuth.User?
     @Published var currentUser: User?
-    @Published var account: Account?
+    @Published var currentAccount: Account?
     
     //when creating account info toggle
     @Published var newUser = false
@@ -44,13 +44,20 @@ class AuthenticationService {
     }
     
     @MainActor
-    func register(withEmail email: String, password: String) async throws {
+    func register(withEmail email: String, username: String, password: String) async throws {
         do {
+            let isUnique = try await isUsernameUnique(username: username)
+                   
+            guard isUnique else {
+            throw NSError(domain: "UserError", code: 409, userInfo: [NSLocalizedDescriptionKey: "Username already taken. Please choose another one."])
+            }
+            
             let result = try await Auth.auth().createUser(withEmail: email, password: password)
             self.userSession = result.user
-            try await uploadUserData(email: email, uid: result.user.uid)
+            
+            try await uploadUserData(email: email, username: username, uid: result.user.uid)
+            try await uploadAccountData(data: [:])
             print("Created user with uid \(result.user.uid) successfully.")
-            print("Account is \(String(describing: account))")
         } catch let error as NSError {
             print("Failed to create user with error \(error.localizedDescription)")
             throw mapFirebaseError(error)
@@ -114,17 +121,15 @@ class AuthenticationService {
     }
     
     
-    func uploadUserData(email: String, uid: String) async throws {
-        let user = User(email: email)
+    func uploadUserData(email: String, username: String, uid: String) async throws {
+        let user = User(email: email, username: username)
         self.currentUser = user
         guard let encodedUser = try? Firestore.Encoder().encode(user) else { return }
         try await Firestore.firestore().collection("users").document(uid).setData(encodedUser)
     }
     
-    func updateUserData(email: String, uid: String) async throws {
-        let user = User(email: email)
-        guard let encodedUser = try? Firestore.Encoder().encode(user) else { return }
-        try await Firestore.firestore().collection("users").document(uid).updateData(encodedUser)
+    func updateUserData(data: [String: Any]) async throws {
+        try await Firestore.firestore().collection("users").document(userSession!.uid).updateData(data)
     }
     
     @MainActor
@@ -161,17 +166,25 @@ class AuthenticationService {
     func uploadAccountData(data: [String: Any]) async throws {
         try await Firestore.firestore().collection("accounts").document(userSession!.uid).setData(data)
         AuthenticationService.authenticator.newUser = false
-        print("New user with id \(String(describing: userSession?.uid)) and account data \(String(describing: account))")
     }
     
     func updateAccountData(data: [String: Any]) async throws {
         try await Firestore.firestore().collection("accounts").document(userSession!.uid).updateData(data)
+        print("New account data \(String(describing: currentAccount))")
     }
     
     func loadAccountData() async throws {
         guard let currentUID = userSession?.uid else { return }
         let snapshot = try await Firestore.firestore().collection("accounts").document(currentUID).getDocument()
-        self.account = try? snapshot.data(as: Account.self)
+        self.currentAccount = try? snapshot.data(as: Account.self)
+    }
+    
+    func isUsernameUnique(username: String) async throws -> Bool {
+        let snapshot = try await Firestore.firestore().collection("User")
+            .whereField("username", isEqualTo: username)
+            .getDocuments()
+        
+        return snapshot.documents.isEmpty // true if username is unique
     }
 }
 

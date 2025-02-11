@@ -38,10 +38,7 @@ class EditProfileViewModel: ObservableObject {
     
     func updateAccountData() async throws {
         var data = [String : Any]()
-        
-        if !username.isEmpty && account.username != username {
-            data["username"] = username
-        }
+
         if !nickname.isEmpty && account.nickname != nickname {
             data["nickname"] = nickname
         }
@@ -53,12 +50,7 @@ class EditProfileViewModel: ObservableObject {
         }
         
         if !data.isEmpty {
-            if AuthenticationService.authenticator.account == nil {
-                try await AuthenticationService.authenticator.uploadAccountData(data: data)
-            } else {
-                try await AuthenticationService.authenticator.updateAccountData(data: data)
-            }
+            try await AuthenticationService.authenticator.updateAccountData(data: data)
         }
     }
-
 }

@@ -12,8 +12,7 @@ import FirebaseFirestore
 
 struct Account: Codable, Identifiable, Hashable {
     @DocumentID var uid: String?
-    
-    var username: String
+
     var nickname: String
     var phone_number: String
     var date_of_birth: Date
@@ -29,8 +28,7 @@ struct Account: Codable, Identifiable, Hashable {
 
 extension Account {
     static var emptyAccount: Account {
-        Account(username: "user",
-                nickname: "user_example",
+        Account(nickname: "user_example",
                 phone_number: "XXX XXX XXX",
                 date_of_birth: .now,
                 profilePictureURL: "picture",

@@ -10,8 +10,7 @@ import PhotosUI
 
 struct EditProfileView : View {
     @StateObject var viewModel: EditProfileViewModel
-    @State var navigateToHome = false
-    @Environment(\.dismiss) var dismiss
+    @State var navigate: Bool = false
     
     init(account: Account) {
         self._viewModel = StateObject(wrappedValue:     EditProfileViewModel(account: account))
@@ -55,16 +54,14 @@ struct EditProfileView : View {
             Button {
                 Task {
                     try await viewModel.updateAccountData()
-                    navigateToHome = true
+                    navigate = true
                 }
             } label:{
                 Text("Save")
             }
             .padding()
         }
-        .navigationDestination(
-            isPresented: $navigateToHome,
-            destination: { ChatHomePageView()} )
+        .navigationDestination(isPresented: $navigate, destination: { ProfileSettingsView() })
         .navigationBarBackButtonHidden()
     }
 }

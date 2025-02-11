@@ -24,6 +24,7 @@ class RegistrationViewModel : ObservableObject {
             validatePassword()
         }
     }
+    @Published var username: String = ""
     
     @Published var isEmailValid: Bool = false
     @Published var isPasswordLengthValid: Bool = false
@@ -33,6 +34,8 @@ class RegistrationViewModel : ObservableObject {
     @Published var emailVerified: Bool = false
     @Published var registerError: String? = nil
     @Published var isEmailVerified: Bool = false
+    
+    
     private func validateEmail() {
         isEmailValid = isValidEmail(email)
     }
@@ -53,7 +56,7 @@ class RegistrationViewModel : ObservableObject {
     func register() async throws {
         do {
             AuthenticationService.authenticator.newUser = true
-            try await AuthenticationService.authenticator.register(withEmail: email, password: password)
+            try await AuthenticationService.authenticator.register(withEmail: email, username: username, password: password)
             registerError = nil // Clear error on successful register
         } catch let error as NSError {
             registerError = error.localizedDescription // Update error to show in UI

@@ -3,7 +3,6 @@ import SwiftUI
 struct ProfileHeaderView: View {
     @State private var activityStatus: Bool = false
     @State private var profileImageURL: String = "picture"
-    @Binding var isEditing: Bool
     private var formattedDate: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "d/MM/yyyy"
@@ -53,5 +52,5 @@ struct ProfileHeaderView: View {
 }
 
 #Preview {
-    ProfileHeaderView(isEditing: .constant(false))
+    ProfileHeaderView()
 }
