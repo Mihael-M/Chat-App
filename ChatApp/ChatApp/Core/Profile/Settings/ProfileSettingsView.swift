@@ -28,15 +28,24 @@ struct ProfileSettingsView: View {
                     }
                 }
                 Section {
-                    Button("Log out"){
+                    
+                    NavigationLink(destination: ContentView(), label: {
+                        Text("Log out")
+                            .foregroundStyle(.red)
+                    }).onTapGesture {
                         AuthenticationService.authenticator.signOut()
-                        dismiss()
                     }
-                    .foregroundStyle(.red)
                 }
             }
         }
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                NavigationLink(
+                    destination: {ChatHomePageView()},
+                    label: {
+                        Image(systemName: "chevron.left")
+                })
+            }
             ToolbarItem(placement: .principal) {
                 HStack {
                     Text("Your profile")
@@ -45,6 +54,7 @@ struct ProfileSettingsView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden()
     }
 }
 

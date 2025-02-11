@@ -109,6 +109,7 @@ class RegistrationViewModel : ObservableObject {
     
     func clearFields() {
         email = ""
+        username = ""
         password = ""
         repeatedPassword = ""
     }

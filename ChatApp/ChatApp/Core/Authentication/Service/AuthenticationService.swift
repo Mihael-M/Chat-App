@@ -11,6 +11,8 @@ import Combine
 
 class AuthenticationService {
     
+    //Auth service doesnt log in properly
+    
     @Published var userSession: FirebaseAuth.User?
     @Published var currentUser: User?
     @Published var currentAccount: Account?
@@ -49,7 +51,7 @@ class AuthenticationService {
             let isUnique = try await isUsernameUnique(username: username)
                    
             guard isUnique else {
-            throw NSError(domain: "UserError", code: 409, userInfo: [NSLocalizedDescriptionKey: "Username already taken. Please choose another one."])
+                throw NSError(domain: "UserError", code: AuthErrorCode.accountExistsWithDifferentCredential.rawValue, userInfo: [NSLocalizedDescriptionKey: "Username already taken. Please choose another one."])
             }
             
             let result = try await Auth.auth().createUser(withEmail: email, password: password)
@@ -158,6 +160,8 @@ class AuthenticationService {
                 return NSError(domain: "AuthError", code: errorCode.rawValue, userInfo: [NSLocalizedDescriptionKey: "This email is already in use. Please try logging in."])
             case .weakPassword:
                 return NSError(domain: "AuthError", code: errorCode.rawValue, userInfo: [NSLocalizedDescriptionKey: "The password is too weak. Please use a stronger password."])
+            case .accountExistsWithDifferentCredential:
+                return NSError(domain: "AuthError", code: errorCode.rawValue, userInfo: [NSLocalizedDescriptionKey: "This username is already taken. Please choose another."])
             default:
                 return NSError(domain: "AuthError", code: errorCode.rawValue, userInfo: [NSLocalizedDescriptionKey: "An unknown error occurred: \(error.localizedDescription)"])
             }
@@ -180,7 +184,7 @@ class AuthenticationService {
     }
     
     func isUsernameUnique(username: String) async throws -> Bool {
-        let snapshot = try await Firestore.firestore().collection("User")
+        let snapshot = try await Firestore.firestore().collection("users")
             .whereField("username", isEqualTo: username)
             .getDocuments()
         
