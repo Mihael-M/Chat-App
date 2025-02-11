@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ProfileSettingsView: View {
     @Environment(\.dismiss) var dismiss
-    
+    @State private var loggedOut = false
     var body: some View {
         VStack {
             ProfileHeaderView()
@@ -29,15 +29,21 @@ struct ProfileSettingsView: View {
                 }
                 Section {
                     
-                    NavigationLink(destination: ContentView(), label: {
+                    Button(role: .destructive)
+                    {
+                        Task{
+                            AuthenticationService.authenticator.signOut()
+                            loggedOut.toggle()
+                        }
+                    }
+                    label:{
                         Text("Log out")
-                            .foregroundStyle(.red)
-                    }).onTapGesture {
-                        AuthenticationService.authenticator.signOut()
                     }
                 }
+               
             }
         }
+        .navigationDestination(isPresented: $loggedOut, destination: {ContentView()})
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 NavigationLink(

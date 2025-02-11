@@ -8,12 +8,12 @@
 import SwiftUI
 import FirebaseFirestore
 
-struct User: Codable, Identifiable, Hashable {
+public struct User: Codable, Identifiable, Hashable {
     @DocumentID var uid: String?
-    let email: String
-    let username: String
+    public let email: String
+    public let username: String
     
-    var id: String {
+   public var id: String {
         return uid ?? NSUUID().uuidString
     }
     

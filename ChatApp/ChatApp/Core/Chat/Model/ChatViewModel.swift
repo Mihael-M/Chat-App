@@ -1,63 +1,62 @@
+////
+////  ChatViewModel.swift
+////  ChatApp
+////
+////  Created by Mishoni Mihaylov on 10.02.25.
+////
 //
-//  ChatViewModel.swift
-//  ChatApp
+//import Foundation
+//import FirebaseFirestore
 //
-//  Created by Mishoni Mihaylov on 10.02.25.
+//public struct Conversation: Identifiable, Hashable {
+//    public let id: String
+//    public let users: [User]
+//    public let usersUnreadCountInfo: [String: Int]
+//    public let isGroup: Bool
+//    public let pictureURL: URL?
+//    public let title: String
 //
-
-import FirebaseFirestore
-import FirebaseAuth
-
-class ChatViewModel: ObservableObject {
-    private let db = Firestore.firestore()
-
-      // Fetch all chats for a user
-      func fetchChats(for username: String, completion: @escaping ([Chat]) -> Void) {
-          db.collection("chats").whereField("usernames", arrayContains: username).order(by: "lastUpdated", descending: true)
-              .getDocuments { (snapshot, error) in
-                  guard let documents = snapshot?.documents, error == nil else {
-                      completion([])
-                      return
-                  }
-                  let chats = documents.compactMap { doc in
-                      Chat(from: doc.data(), id: doc.documentID)
-                  }
-                  completion(chats)
-              }
-      }
-
-      // Fetch messages for a chat
-      func fetchMessages(for chatId: String, completion: @escaping ([Message]) -> Void) {
-          db.collection("chats").document(chatId).collection("messages").order(by: "timestamp")
-              .getDocuments { (snapshot, error) in
-                  guard let documents = snapshot?.documents, error == nil else {
-                      completion([])
-                      return
-                  }
-                  let messages = documents.compactMap { doc in
-                      Message(from: doc.data(), id: doc.documentID)
-                  }
-                  completion(messages)
-              }
-      }
-
-      // Send a message
-      func sendMessage(chatId: String, message: Message, completion: @escaping (Bool) -> Void) {
-          let chatRef = db.collection("chats").document(chatId)
-          chatRef.collection("messages").addDocument(data: message.toDict()) { error in
-              if let error = error {
-                  print("Failed to send message: \(error)")
-                  completion(false)
-                  return
-              }
-              chatRef.updateData(["lastMessage": message.content, "lastUpdated": FieldValue.serverTimestamp()]) { error in
-                  if let error = error {
-                      print("Failed to update chat: \(error)")
-                      completion(false)
-                  } else {
-                      completion(true)
-                  }
-              }
-          }
-      }
-}
+//    public let latestMessage: LatestMessageInChat?
+//
+//    init(id: String, users: [User], usersUnreadCountInfo: [String: Int]? = nil, isGroup: Bool, pictureURL: URL? = nil, title: String = "", latestMessage: LatestMessageInChat? = nil) {
+//        self.id = id
+//        self.users = users
+//        self.usersUnreadCountInfo = usersUnreadCountInfo ?? Dictionary(uniqueKeysWithValues: users.map { ($0.id, 0) } )
+//        self.isGroup = isGroup
+//        self.pictureURL = pictureURL
+//        self.title = title
+//        self.latestMessage = latestMessage
+//    }
+//
+//    var notMeUsers: [User] {
+//        users.filter { $0.id != SessionManager.currentUserId }
+//    }
+//
+//    var displayTitle: String {
+//        if !isGroup, let user = notMeUsers.first {
+//            return user.name
+//        }
+//        return title
+//    }
+//}
+//
+//public struct LatestMessageInChat: Hashable {
+//    public var senderName: String
+//    public var createdAt: Date?
+//    public var text: String?
+//    public var subtext: String?
+//
+//    var isMyMessage: Bool {
+//        SessionManager.currentUser?.name == senderName
+//    }
+//}
+//
+//public struct FirestoreConversation: Codable, Identifiable, Hashable {
+//    @DocumentID public var id: String?
+//    public let users: [String]
+//    public let usersUnreadCountInfo: [String: Int]?
+//    public let isGroup: Bool
+//    public let pictureURL: String?
+//    public let title: String
+//    public let latestMessage: FirestoreMessage?
+//}
