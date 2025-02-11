@@ -7,45 +7,57 @@
 
 import FirebaseFirestore
 import FirebaseAuth
-import SwiftUI
 
 class ChatViewModel: ObservableObject {
-    @Published var messages: [Message] = []
-
     private let db = Firestore.firestore()
-    private var listener: ListenerRegistration?
 
-    func fetchMessages(chatId: String) {
-        listener = db.collection("chats").document(chatId)
-            .collection("messages")
-            .order(by: "timestamp", descending: false)
-            .addSnapshotListener { snapshot, error in
-                if let error = error {
-                    print("Error fetching messages: \(error)")
-                    return
-                }
-                
-                self.messages = snapshot?.documents.compactMap { doc in
-                    try? doc.data(as: Message.self)
-                } ?? []
-            }
-    }
+      // Fetch all chats for a user
+      func fetchChats(for username: String, completion: @escaping ([Chat]) -> Void) {
+          db.collection("chats").whereField("usernames", arrayContains: username).order(by: "lastUpdated", descending: true)
+              .getDocuments { (snapshot, error) in
+                  guard let documents = snapshot?.documents, error == nil else {
+                      completion([])
+                      return
+                  }
+                  let chats = documents.compactMap { doc in
+                      Chat(from: doc.data(), id: doc.documentID)
+                  }
+                  completion(chats)
+              }
+      }
 
-    func sendMessage(chatId: String, text: String) {
-        guard let userId = Auth.auth().currentUser?.uid else { return }
+      // Fetch messages for a chat
+      func fetchMessages(for chatId: String, completion: @escaping ([Message]) -> Void) {
+          db.collection("chats").document(chatId).collection("messages").order(by: "timestamp")
+              .getDocuments { (snapshot, error) in
+                  guard let documents = snapshot?.documents, error == nil else {
+                      completion([])
+                      return
+                  }
+                  let messages = documents.compactMap { doc in
+                      Message(from: doc.data(), id: doc.documentID)
+                  }
+                  completion(messages)
+              }
+      }
 
-        let message = Message(text: text, senderId: userId, timestamp: Date())
-        
-        do {
-            _ = try db.collection("chats").document(chatId)
-                .collection("messages")
-                .addDocument(from: message)
-        } catch {
-            print("Error sending message: \(error)")
-        }
-    }
-
-    deinit {
-        listener?.remove()
-    }
+      // Send a message
+      func sendMessage(chatId: String, message: Message, completion: @escaping (Bool) -> Void) {
+          let chatRef = db.collection("chats").document(chatId)
+          chatRef.collection("messages").addDocument(data: message.toDict()) { error in
+              if let error = error {
+                  print("Failed to send message: \(error)")
+                  completion(false)
+                  return
+              }
+              chatRef.updateData(["lastMessage": message.content, "lastUpdated": FieldValue.serverTimestamp()]) { error in
+                  if let error = error {
+                      print("Failed to update chat: \(error)")
+                      completion(false)
+                  } else {
+                      completion(true)
+                  }
+              }
+          }
+      }
 }
