@@ -5,58 +5,45 @@
 ////  Created by Mishoni Mihaylov on 10.02.25.
 ////
 //
-//import Foundation
-//import FirebaseFirestore
+//import SwiftUI
+//import ExyteChat
 //
-//public struct Conversation: Identifiable, Hashable {
-//    public let id: String
-//    public let users: [User]
-//    public let usersUnreadCountInfo: [String: Int]
-//    public let isGroup: Bool
-//    public let pictureURL: URL?
-//    public let title: String
+//class ConversationViewModel: ObservableObject {
+//    @Published var messages: [Message] = []
+//    
+//    
+//    let currentUser: User
 //
-//    public let latestMessage: LatestMessageInChat?
-//
-//    init(id: String, users: [User], usersUnreadCountInfo: [String: Int]? = nil, isGroup: Bool, pictureURL: URL? = nil, title: String = "", latestMessage: LatestMessageInChat? = nil) {
-//        self.id = id
-//        self.users = users
-//        self.usersUnreadCountInfo = usersUnreadCountInfo ?? Dictionary(uniqueKeysWithValues: users.map { ($0.id, 0) } )
-//        self.isGroup = isGroup
-//        self.pictureURL = pictureURL
-//        self.title = title
-//        self.latestMessage = latestMessage
+//    init() {
+//        self.currentUser = User(id: "you", name: "You", avatarURL: nil, isCurrentUser: true)
+//        let otherUser = User(id: "alice", name: "Alice", avatarURL: nil,isCurrentUser: false)
+//        
+//        self.messages = [
+//            Message(id: "1", user: otherUser,
+//                    createdAt: Date().addingTimeInterval(-60), text: "Hello!"),
+//            Message(id: "2", user: otherUser,
+//                    createdAt: Date().addingTimeInterval(-30), text: "How are you!"),
+//            Message(id: "1", user: otherUser,
+//                    createdAt: Date(), text: "I will be back!")
+//        ]
 //    }
-//
-//    var notMeUsers: [User] {
-//        users.filter { $0.id != SessionManager.currentUserId }
+//    
+//    /// Appends a new message (using the current user as sender).
+//    func sendMessage(_ draft: String) {
+//        let trimmed = draft.trimmingCharacters(in: .whitespacesAndNewlines)
+//        guard !trimmed.isEmpty else { return }
+//        
+//        let newMessage = Message(
+//            id: UUID().uuidString,
+//            user: currentUser,
+//            createdAt: Date(),
+//            text: trimmed
+//        )
+//        messages.append(newMessage)
 //    }
-//
-//    var displayTitle: String {
-//        if !isGroup, let user = notMeUsers.first {
-//            return user.name
-//        }
-//        return title
+//    
+//    /// Placeholder for resetting an unread counter.
+//    func resetUnreadCounter() {
+//        print("Reset unread counter")
 //    }
-//}
-//
-//public struct LatestMessageInChat: Hashable {
-//    public var senderName: String
-//    public var createdAt: Date?
-//    public var text: String?
-//    public var subtext: String?
-//
-//    var isMyMessage: Bool {
-//        SessionManager.currentUser?.name == senderName
-//    }
-//}
-//
-//public struct FirestoreConversation: Codable, Identifiable, Hashable {
-//    @DocumentID public var id: String?
-//    public let users: [String]
-//    public let usersUnreadCountInfo: [String: Int]?
-//    public let isGroup: Bool
-//    public let pictureURL: String?
-//    public let title: String
-//    public let latestMessage: FirestoreMessage?
 //}

@@ -6,60 +6,60 @@
 ////
 //
 //import SwiftUI
+//import ExyteChat
 //
-//struct ChatView: View {
-//    @ObservedObject var viewModel: ChatViewModel
+//struct ConversationView: View {
+//    @Environment(\.presentationMode) var presentationMode
+//    @StateObject var viewModel = ConversationViewModel()
 //    
 //    var body: some View {
-//        VStack {
-//            // Messages list with auto-scroll to the latest message
-//            ScrollViewReader { proxy in
-//                ScrollView {
-//                    LazyVStack(spacing: 8) {
-//                        ForEach(viewModel.messages) { message in
-//                            ChatMessageView(
-//                                message: message,
-//                                isCurrentUser: message.senderUsername == viewModel.currentUser
-//                            )
-//                            .id(message.id)
-//                        }
+//        NavigationStack {
+//            ChatView(messages: viewModel.messages) { draft in
+//                viewModel.sendMessage(draft.text)
+//            }
+//            // Media picker theme (customize the colors as needed)
+//            .mediaPickerTheme(
+//                main: .init(
+//                    text: .white,
+//                    albumSelectionBackground: Color.gray.opacity(0.5),
+//                    fullscreenPhotoBackground: Color.gray.opacity(0.5)
+//                ),
+//                selection: .init(
+//                    emptyTint: .white,
+//                    emptyBackground: Color.black.opacity(0.25),
+//                    selectedTint: .blue,
+//                    fullscreenTint: .white
+//                )
+//            )
+//            .onDisappear {
+//                viewModel.resetUnreadCounter()
+//            }
+//            .navigationBarBackButtonHidden()
+//            .toolbar {
+//                ToolbarItem(placement: .navigation) {
+//                    Button {
+//                        presentationMode.wrappedValue.dismiss()
+//                    } label: {
+//                        Image(systemName: "chevron.left")
 //                    }
-//                    .padding(.top)
 //                }
-//                .onChange(of: viewModel.messages) { _ in
-//                    if let lastMessage = viewModel.messages.last {
-//                        withAnimation {
-//                            proxy.scrollTo(lastMessage.id, anchor: .bottom)
-//                        }
-//                    }
+//                ToolbarItem(placement: .principal) {
+//                    Text("Conversation")
+//                        .font(.headline)
 //                }
 //            }
-//            
-//            Divider()
-//            
-//            // Input area for composing and sending messages
-//            HStack {
-//                TextField("Type your message...", text: $viewModel.newMessage)
-//                    .textFieldStyle(RoundedBorderTextFieldStyle())
-//                Button(action: {
-//                    viewModel.sendMessage()
-//                }) {
-//                    Image(systemName: "paperplane.fill")
-//                        .rotationEffect(.degrees(45))
-//                        .foregroundColor(.blue)
-//                }
-//            }
-//            .padding()
+//            .navigationTitle("Conversation")
+//            .navigationBarTitleDisplayMode(.inline)
 //        }
-//        .navigationTitle("Chat")
-//        .navigationBarTitleDisplayMode(.inline)
 //    }
 //}
 //
-//struct ChatView_Previews: PreviewProvider {
+//
+//
+//// MARK: - Previews
+//
+//struct ConversationView_Previews: PreviewProvider {
 //    static var previews: some View {
-//        NavigationStack {
-//            ChatView(viewModel: ChatViewModel())
-//        }
+//        ConversationView()
 //    }
 //}
