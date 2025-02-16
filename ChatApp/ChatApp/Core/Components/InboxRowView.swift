@@ -7,13 +7,10 @@
 
 import SwiftUI
 
-struct ChatRowComponent: View {
+struct InboxRowView: View {
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
-            Image(systemName: "person.circle.fill")
-                .resizable()
-                .frame(width: 64, height: 64)
-                .foregroundStyle(Color(.systemGray))
+            ProfilePictureComponent(pictureURL: MyUser.emptyUser.profilePicture, size: .medium, activityStatus: MyUser.emptyUser.activityStatus, showActivityStatus: true)
             
             VStack(alignment: .leading, spacing: 4) {
                 Text("Username")
@@ -40,5 +37,5 @@ struct ChatRowComponent: View {
 }
 
 #Preview {
-    ChatRowComponent()
+    InboxRowView()
 }

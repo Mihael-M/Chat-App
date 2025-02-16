@@ -4,7 +4,7 @@
 //
 //  Created by Mishoni Mihaylov on 16.01.25.
 //
-import Foundation
+
 import SwiftUI
 
 enum SettingOption: Int, CaseIterable, Identifiable{
@@ -43,12 +43,13 @@ enum SettingOption: Int, CaseIterable, Identifiable{
     
     @ViewBuilder
     var destination : some View {
-        switch self {
-        case .editProfile: EditProfileView(account: AuthenticationService.authenticator.currentAccount ?? .emptyAccount)
-        case .darkMode: DarkModeSettingsView()
-        case .notifications: NotificationsSettingsView()
-        case .activeStatus: ActiveStatusSettingsView()
-        }
+        EmptyView()
+//        switch self {
+//        case .editProfile: EditProfileView()
+//        case .darkMode: DarkModeSettingsView()
+//        case .notifications: NotificationsSettingsView()
+//        case .activeStatus: ActiveStatusSettingsView()
+//        }
     }
     
     var id: Int { return self.rawValue}

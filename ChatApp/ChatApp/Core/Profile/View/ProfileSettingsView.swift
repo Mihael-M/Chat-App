@@ -9,10 +9,13 @@ import SwiftUI
 
 struct ProfileSettingsView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var loggedOut = false
+    let user: MyUser
     var body: some View {
         VStack {
-            ProfileHeaderView()
+            //header
+            ProfileHeaderView(user: user)
+            
+            //settings
             List {
                 Section {
                     ForEach(SettingOption.allCases, id: \.self) { option in
@@ -31,32 +34,25 @@ struct ProfileSettingsView: View {
                     
                     Button(role: .destructive)
                     {
-                        Task{
-                            AuthenticationService.authenticator.signOut()
-                            loggedOut.toggle()
-                        }
+                        
                     }
                     label:{
                         Text("Log out")
                     }
+                    
                 }
-               
+                .foregroundStyle(Color(.red))
             }
         }
-        .navigationDestination(isPresented: $loggedOut, destination: {ContentView()})
+        .navigationTitle("Your profile")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                NavigationLink(
-                    destination: {ChatHomePageView()},
-                    label: {
-                        Image(systemName: "chevron.left")
-                })
-            }
-            ToolbarItem(placement: .principal) {
-                HStack {
-                    Text("Your profile")
-                        .font(.title)
-                        .fontWeight(.semibold)
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .foregroundStyle(Color(.black))
                 }
             }
         }
@@ -66,5 +62,7 @@ struct ProfileSettingsView: View {
 
 
 #Preview {
-    ProfileSettingsView()
+    NavigationStack {
+        ProfileSettingsView(user: MyUser.emptyUser)
+    }
 }

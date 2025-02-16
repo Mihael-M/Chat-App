@@ -27,7 +27,7 @@ struct SearchView: View {
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     var body: some View {
         ScrollView {
-            CustomTextField_Circle(icon: "magnifyingglass", prompt: "Search user...", value: $searchText)
+            CustomTextField(icon: "magnifyingglass", prompt: "Search user...", value: $searchText)
                 .padding()
             LazyVStack(spacing: 12) {
                 ForEach(0 ... 10, id: \.self) { user in
