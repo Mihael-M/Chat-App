@@ -39,8 +39,6 @@ struct CustomTextField: View {
                         .textInputAutocapitalization(.never)
                         .disableAutocorrection(true)
                 }
-                
-                Divider()
             })
             .overlay(alignment: .trailing) {
                 if isPassword {
@@ -58,4 +56,3 @@ struct CustomTextField: View {
         })
     }
 }
-

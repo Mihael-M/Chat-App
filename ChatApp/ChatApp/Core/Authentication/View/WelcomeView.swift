@@ -24,7 +24,7 @@ struct WelcomeView: View {
                 .padding(.horizontal, 24)
             
             NavigationLink {
-                EditProfileView(account: .emptyAccount)
+                EditProfileView(user: MyUser.emptyUser)
             } label: {
                 Text("Continue")
                     .font(.headline)

@@ -1,12 +1,19 @@
+//
+//  ProfileHeaderView.swift
+//  ChatApp
+//
+//  Created by Kamelia Toteva on 16.02.25.
+//
+
+
 import SwiftUI
 
 struct ProfileHeaderView: View {
-    @State private var activityStatus: Bool = false
-    @State private var profileImageURL: String = "picture"
+    let user: MyUser
     private var formattedDate: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "d/MM/yyyy"
-        return formatter.string(from: .now)
+        return formatter.string(from: user.date_of_birth)
     }
     
     var body: some View {
@@ -15,14 +22,15 @@ struct ProfileHeaderView: View {
             VStack(spacing: 10) {
                 //pic and stats
                 HStack {
-                    ProfilePictureComponent(profileImageURL: $profileImageURL, activityStatus: $activityStatus)
+                    ProfilePictureComponent(pictureURL: MyUser.emptyUser.profilePicture, size: .medium)
+                    .padding(.horizontal)
                     
                     Spacer()
                     
                     HStack(spacing: 8) {
-                        MessagesStatView(value: 0, title: "Sent messages")
+                        MessagesStatView(value: user.messagesSent, title: "Sent messages")
                         
-                        MessagesStatView(value: 0, title: "Received messages")
+                        MessagesStatView(value: user.messagesReceived, title: "Received messages")
                     }
                     
                     Spacer()
@@ -31,10 +39,10 @@ struct ProfileHeaderView: View {
                 
                 //user info
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("username")
+                    Text(user.base.name)
                         .font(.footnote)
                         .fontWeight(.semibold)
-                    Text("+XXX XXXX XXXX")
+                    Text(user.phone_number)
                         .font(.footnote)
                     Text("Birthday: \(formattedDate)")
                         .font(.footnote)
@@ -52,5 +60,5 @@ struct ProfileHeaderView: View {
 }
 
 #Preview {
-    ProfileHeaderView()
+    ProfileHeaderView(user: MyUser.emptyUser)
 }

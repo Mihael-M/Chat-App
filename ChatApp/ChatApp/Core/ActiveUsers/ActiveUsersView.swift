@@ -14,10 +14,7 @@ struct ActiveUsersView: View {
                 ForEach(0...10, id: \.self) { user in
                     VStack{
                         ZStack(alignment: .bottomTrailing) {
-                            Image(systemName: "person.circle.fill")
-                                .resizable()
-                                .frame(width:64, height: 64)
-                                .foregroundStyle(Color(.systemGray))
+                            ProfilePictureComponent(pictureURL: MyUser.emptyUser.profilePicture, size: .medium, activityStatus: MyUser.emptyUser.activityStatus, showActivityStatus: true)
                             
                             ZStack {
                                 Circle()

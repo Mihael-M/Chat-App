@@ -6,8 +6,6 @@
 //
 
 import SwiftUI
-import Firebase
-import FirebaseAuth
 
 private enum FocusableField: Hashable {
     case email
@@ -16,89 +14,103 @@ private enum FocusableField: Hashable {
     case repeatPassword
 }
 
-struct RegisterView : View{
-    @StateObject var viewModel = RegistrationViewModel()
+struct RegisterView : View {
+    @State private var isPressed: Bool = false
+    
+    @State private var email: String = ""
+    @State private var username: String = ""
+    @State private var password: String = ""
+    @State private var repeatPassword: String = ""
+    
     @Environment(\.dismiss) var dismiss
     
-    @State private var registrationComplete: Bool = false
-    @State private var showErrorAlert = false
-    @State private var isPressed = false
-   // @State private var showEmailVerify: Bool = false
-    
     @FocusState private var focus: FocusableField?
+    
     var body: some View {
         VStack(alignment: .center, spacing: 15) {
             
             Spacer()
             
+            //logo
             Text("Yapper🌟")
                 .font(.largeTitle)
                 .fontWeight(.bold)
             
             Spacer()
             
+            //text fields
             VStack(alignment: .leading, spacing: 20) {
                 
-                CustomTextField(icon: "at", prompt: "Email", value: $viewModel.email)
+                CustomTextField(icon: "at", prompt: "Email", value: $email)
                     .focused($focus, equals: .email)
                     .onSubmit {
                         self.focus = .username
                     }
                 
-                HStack {
-                    Image(systemName: viewModel.isEmailValid ? "checkmark.circle.fill" : "xmark.circle.fill")
-                        .foregroundColor(viewModel.isEmailValid ? .green : .red)
-                    Text("Must be a valid email format (e.g. user@example.com)")
-                        .font(.footnote)
-                        .textSelection(.disabled)
-                        .foregroundColor(viewModel.isEmailValid ? .green : .red)
-                }
+                Divider()
                 
-                CustomTextField(icon: "person", prompt: "Username", value: $viewModel.username)
+                //email validity
+//                HStack {
+//                    Image(systemName: viewModel.isEmailValid ? "checkmark.circle.fill" : "xmark.circle.fill")
+//                        .foregroundColor(viewModel.isEmailValid ? .green : .red)
+//                    Text("Must be a valid email format (e.g. user@example.com)")
+//                        .font(.footnote)
+//                        .textSelection(.disabled)
+//                        .foregroundColor(viewModel.isEmailValid ? .green : .red)
+//                }
+                
+                CustomTextField(icon: "person", prompt: "Username", value: $username)
                     .focused($focus, equals: .username)
                     .onSubmit {
                         self.focus = .password
                     }
                 
-                CustomTextField(icon: "key", prompt: "Password", value: $viewModel.password)
+                Divider()
+                
+                CustomTextField(icon: "key", prompt: "Password", isPassword: true, value: $password)
                     .focused($focus, equals: .password)
                     .onSubmit {
                         self.focus = .repeatPassword
                     }
-                CustomTextField(icon: "key", prompt: "Repeat password", value: $viewModel.repeatedPassword)
+                
+                Divider()
+                
+                CustomTextField(icon: "key", prompt: "Repeat password", isPassword: true, value: $repeatPassword)
                     .focused($focus, equals: .repeatPassword)
                     .onSubmit {
                         Task {
-                            try await viewModel.register()
                         }
                     }
                 
+                Divider()
+                
+                //password validity
                 VStack(alignment: .leading, spacing: 5) {
-                    HStack {
-                        Image(systemName: viewModel.isPasswordLengthValid ? "checkmark.circle.fill" : "xmark.circle.fill")
-                            .foregroundColor(viewModel.isPasswordLengthValid ? .green : .red)
-                        Text("At least 8 characters")
-                            .foregroundColor(viewModel.isPasswordLengthValid ? .green : .red)
-                    }
-                    HStack {
-                        Image(systemName: viewModel.containsUppercase ? "checkmark.circle.fill" : "xmark.circle.fill")
-                            .foregroundColor(viewModel.containsUppercase ? .green : .red)
-                        Text("At least one uppercase letter")
-                            .foregroundColor(viewModel.containsUppercase ? .green : .red)
-                    }
-                    HStack {
-                        Image(systemName: viewModel.containsNumber ? "checkmark.circle.fill" : "xmark.circle.fill")
-                            .foregroundColor(viewModel.containsNumber ? .green : .red)
-                        Text("At least one number")
-                            .foregroundColor(viewModel.containsNumber ? .green : .red)
-                    }
-                    
-                    HStack {
-                        Image(systemName: viewModel.passwordMatches ? "checkmark.circle.fill" : "xmark.circle.fill")
-                            .foregroundColor(viewModel.passwordMatches ? .green : .red)
-                        Text("Password must match")
-                            .foregroundColor(viewModel.passwordMatches ? .green : .red)
-                    }
+//                    HStack {
+//                        Image(systemName: viewModel.isPasswordLengthValid ? "checkmark.circle.fill" : "xmark.circle.fill")
+//                            .foregroundColor(viewModel.isPasswordLengthValid ? .green : .red)
+//                        Text("At least 8 characters")
+//                            .foregroundColor(viewModel.isPasswordLengthValid ? .green : .red)
+//                    }
+//                    HStack {
+//                        Image(systemName: viewModel.containsUppercase ? "checkmark.circle.fill" : "xmark.circle.fill")
+//                            .foregroundColor(viewModel.containsUppercase ? .green : .red)
+//                        Text("At least one uppercase letter")
+//                            .foregroundColor(viewModel.containsUppercase ? .green : .red)
+//                    }
+//                    HStack {
+//                        Image(systemName: viewModel.containsNumber ? "checkmark.circle.fill" : "xmark.circle.fill")
+//                            .foregroundColor(viewModel.containsNumber ? .green : .red)
+//                        Text("At least one number")
+//                            .foregroundColor(viewModel.containsNumber ? .green : .red)
+//                    }
+//
+//                    HStack {
+//                        Image(systemName: viewModel.passwordMatches ? "checkmark.circle.fill" : "xmark.circle.fill")
+//                            .foregroundColor(viewModel.passwordMatches ? .green : .red)
+//                        Text("Password must match")
+//                            .foregroundColor(viewModel.passwordMatches ? .green : .red)
+//                    }
                 }
                 .font(.footnote)
                 
@@ -107,48 +119,10 @@ struct RegisterView : View{
             }
             .font(.body)
             .padding()
-
-            Button(action:{
-                Task {
-                    try await viewModel.register()
-                    if viewModel.registerError != nil {
-                        showErrorAlert = true
-                    }
-                    else {
-//                        await AuthenticationService.authenticator.sendRegisterLink(withEmail: viewModel.email)
-//                                   showEmailVerify = true
-                        registrationComplete = true
-                    }
-                }
-            })
-            {
-                Text("Register")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding(.vertical, 12)
-                    .padding(.horizontal, 24)
-                    .background(
-                        LinearGradient(gradient: Gradient(colors: [.blue, .purple]), startPoint: .leading, endPoint: .trailing)
-                    )
-                    .cornerRadius(25)
-                    .shadow(radius: 10)
-                    .scaleEffect(isPressed ? 0.98 : 1.0)
-                    .animation(.spring(), value: isPressed)
-            }
-            .disabled(
-                !viewModel.isEmailValid ||
-                !viewModel.isPasswordLengthValid ||
-                !viewModel.containsUppercase ||
-                !viewModel.containsNumber
-            )
-            .onTapGesture {
-                isPressed.toggle()
-            }
             
-            Spacer()
-            
-            NavigationLink {
-                LogInView()
+            //handle register
+            Button {
+                print("register")
             } label: {
                 ZStack {
                     Circle()
@@ -156,7 +130,7 @@ struct RegisterView : View{
                         .frame(width:60, height: 60)
                         .scaleEffect(isPressed ? 0.98 : 1.0)
                         .animation(.spring(), value: isPressed)
-                    Image(systemName: "arrow.left")
+                    Image(systemName: "arrow.right")
                         .font(.title3)
                         .foregroundStyle(.white)
                 }
@@ -165,30 +139,32 @@ struct RegisterView : View{
                 isPressed.toggle()
             }
             
-            Text("Already have an account?")
-                .font(.callout)
+            Spacer()
             
-        }
-        .navigationDestination(
-            isPresented: $registrationComplete,
-            destination: { WelcomeView()} )
-        // not enough money for developer account!!!!
-        
-//        .sheet(isPresented: $showEmailVerify, content: {
-//            EmailVerificationView(viewModel: viewModel)
-//                .presentationDetents([.height(200)])
-//                .onDisappear {
-//                    if viewModel.emailVerified {
-//                        registrationComplete = true
-//                    }
-//                }
-//        })
-        .alert(isPresented: $showErrorAlert) {
-            Alert(
-                title: Text("Error!"),
-                message: Text((viewModel.registerError?.description)!),
-                dismissButton: .default(Text("Try again"), action: {viewModel.clearFields()})
-            )
+            //log in page
+            Button {
+                dismiss()
+            } label: {
+                VStack {
+                    ZStack {
+                        Circle()
+                            .fill(LinearGradient(gradient: Gradient(colors: [.blue, .purple]), startPoint: .leading, endPoint: .trailing))
+                            .frame(width:60, height: 60)
+                            .scaleEffect(isPressed ? 0.98 : 1.0)
+                            .animation(.spring(), value: isPressed)
+                        Image(systemName: "arrow.left")
+                            .font(.title3)
+                            .foregroundStyle(.white)
+                    }
+                    .padding(.vertical)
+                    Text("Already have an account?")
+                        .font(.footnote)
+                }
+            }
+            .padding(.vertical)
+            .onTapGesture {
+                isPressed.toggle()
+            }
         }
         .navigationBarBackButtonHidden()
         
@@ -198,6 +174,5 @@ struct RegisterView : View{
 
 
 #Preview {
-    
     RegisterView()
 }

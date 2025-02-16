@@ -6,10 +6,6 @@
 //
 
 import Foundation
-extension User{
-    
-}
-
 
 extension Date {
     func timeAgoFormat(numericDates: Bool = false) -> String {

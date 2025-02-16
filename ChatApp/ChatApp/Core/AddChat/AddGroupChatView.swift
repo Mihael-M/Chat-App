@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AddGroupChatView: View {
-    @State private var userID: String = ""
+    @State private var searchText: String = ""
     @State private var groupName: String = ""
     @Environment(\.dismiss) private var dismiss
     @State private var profileImage: Image = Image(systemName: "person.circle")
@@ -30,7 +30,8 @@ struct AddGroupChatView: View {
             CustomGroupChatNameView(text: $groupName, placeholder: "Enter group name (optional)",characterLimit: 25)
             
           Spacer()
-            CustomTextField_Circle(icon: "magnifyingglass", prompt: "Search user...", value: $userID)
+            CustomTextField(icon: "magnifyingglass", prompt: "Search user...", value: $searchText)
+                .background(Color.gray.cornerRadius(10).opacity(0.1).frame(height: 35))
 //            List(){
 //                HStack{
 //                    //currently added users
