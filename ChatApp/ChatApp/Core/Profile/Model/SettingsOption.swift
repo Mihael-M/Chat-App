@@ -44,12 +44,12 @@ enum SettingOption: Int, CaseIterable, Identifiable{
     @ViewBuilder
     var destination : some View {
         EmptyView()
-//        switch self {
-//        case .editProfile: EditProfileView()
-//        case .darkMode: DarkModeSettingsView()
-//        case .notifications: NotificationsSettingsView()
-//        case .activeStatus: ActiveStatusSettingsView()
-//        }
+        switch self {
+        case .editProfile: EditProfileView(user: MyUser.emptyUser)
+        case .darkMode: DarkModeSettingsView()
+        case .notifications: NotificationsSettingsView()
+        case .activeStatus: ActiveStatusSettingsView()
+        }
     }
     
     var id: Int { return self.rawValue}

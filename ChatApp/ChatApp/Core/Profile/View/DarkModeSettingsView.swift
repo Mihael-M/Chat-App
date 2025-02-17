@@ -17,6 +17,9 @@ enum DarkModeOption : String, CaseIterable,Identifiable {
 }
 struct DarkModeSettingsView: View {
     @State private var selectedMode : DarkModeOption = .system
+    
+    @Environment(\.dismiss) var dismiss
+    
     var body: some View {
         VStack
         {
@@ -33,6 +36,19 @@ struct DarkModeSettingsView: View {
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .padding(10)
+        }
+        .navigationTitle("Dark mode")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden()
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .foregroundStyle(Color(.black))
+                }
+            }
         }
     }
 }

@@ -11,23 +11,23 @@ import FirebaseAuth
 import Combine
 
 class ContentViewModel : ObservableObject {
-    @Published var userSession: FirebaseAuth.User?
-    @Published var currentUser: User?
     
+    private let authService = AuthenticationService.shared
     private var cancellables = Set<AnyCancellable>()
+    
+    @Published var userSession: FirebaseAuth.User?
     
     init() {
         setupSubscribers()
     }
     
     private func setupSubscribers() {
-        AuthenticationService.authenticator.$userSession.sink { [weak self] userSession in
+        authService.$userSession
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] userSession in
             self?.userSession = userSession
+            print("Received new userSession: \(String(describing: self?.userSession))")
         }.store(in: &cancellables)
         
-        AuthenticationService.authenticator.$currentUser.sink { [weak self] currentUser in
-            self?.currentUser = currentUser
-        }.store(in: &cancellables)
     }
-    
 }

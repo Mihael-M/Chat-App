@@ -9,6 +9,7 @@ import SwiftUI
 
 struct NotificationsSettingsView: View {
     @State private var isActiveNotifications: Bool = false
+    @Environment(\.dismiss) var dismiss
     var body: some View {
             VStack {
                 Section(){
@@ -25,6 +26,19 @@ struct NotificationsSettingsView: View {
                     .foregroundStyle(.secondary)
                 Spacer()
         }
+            .navigationTitle("Notifications")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden()
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .foregroundStyle(Color(.black))
+                    }
+                }
+            }
     }
 }
 

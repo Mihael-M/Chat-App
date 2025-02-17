@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct WelcomeView: View {
+    @EnvironmentObject var viewModel: RegistrationViewModel
     @State private var isPressed = false
     
     var body: some View {
         VStack(spacing: 10) {
             Spacer()
             
-            Text("Welcome to Yapper! ")
+            Text("Welcome to Yapper, \(viewModel.username)! ")
                 .font(.title2)
                 .fontWeight(.bold)
             Text("Click here to add more information about you before you start using our app.")
@@ -24,7 +25,7 @@ struct WelcomeView: View {
                 .padding(.horizontal, 24)
             
             NavigationLink {
-                EditProfileView(user: MyUser.emptyUser)
+                RegisterInfoView()
             } label: {
                 Text("Continue")
                     .font(.headline)
@@ -44,9 +45,12 @@ struct WelcomeView: View {
             }
             Spacer()
         }
+        .navigationBarBackButtonHidden()
     }
 }
 
 #Preview {
-    WelcomeView()
+    NavigationStack {
+        WelcomeView()
+    }
 }

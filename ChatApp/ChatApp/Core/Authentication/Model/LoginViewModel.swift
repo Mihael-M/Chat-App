@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseAuth
 
-@MainActor
+
 class LoginViewModel: ObservableObject {
     @Published var email: String = ""
     @Published var password: String = ""
@@ -16,10 +16,15 @@ class LoginViewModel: ObservableObject {
     
     func login() async throws{
         do {
-            try await AuthenticationService.authenticator.login(withEmail: email, password: password)
+            try await AuthenticationService.shared.login(withEmail: email, password: password)
             loginError = nil // Clear error on successful login
         } catch let error as NSError {
             loginError = error.localizedDescription // Update error to show in UI
         }
+    }
+    
+    func clearFields() {
+        self.email = ""
+        self.password = ""
     }
 }

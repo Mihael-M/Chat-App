@@ -1,41 +1,37 @@
 //
-//  EditView.swift
+//  RegisterInfoView.swift
 //  ChatApp
 //
-//  Created by Mishoni Mihaylov on 13.01.25.
+//  Created by Kamelia Toteva on 17.02.25.
 //
 
 import SwiftUI
 import PhotosUI
 
-struct EditProfileView: View {
-    @StateObject var viewModel = EditProfileViewModel()
+struct RegisterInfoView: View {
+    @EnvironmentObject var viewModel : RegistrationViewModel
     
     @State private var isPressed: Bool = false
+    @State private var showErrorAlert: Bool = false
     
-    let user : MyUser
-    
-    @Environment(\.dismiss) var dismiss
     var body: some View {
         VStack {
             Spacer()
-            //header
-            VStack {
-                PhotosPicker(selection: $viewModel.selectedItem) {
-                    if let image = viewModel.profileImage {
-                        image
-                            .resizable()
-                            .frame(width:200, height: 200)
-                            .scaledToFit()
-                            .clipShape(Circle())
-                    } else {
-                        ProfilePictureComponent(pictureURL: MyUser.emptyUser.profilePicture, size: .xlarge)
-                    }
+            PhotosPicker(selection: $viewModel.selectedItem) {
+                if let image = viewModel.profileImage {
+                    image
+                        .resizable()
+                        .frame(width:200, height: 200)
+                        .scaledToFit()
+                        .clipShape(Circle())
+                } else {
+                    ProfilePictureComponent(pictureURL: "defaultavatar", size: .xlarge)
                 }
             }
+            
             //fields
             VStack(alignment: .leading, spacing: 12) {
-
+                
                 CustomTextField(icon: "person.fill", prompt: "Nickname", value: $viewModel.nickname)
                 Divider()
                 CustomTextField(icon: "phone.fill", prompt: "Phone number", value: $viewModel.phone_number)
@@ -52,11 +48,14 @@ struct EditProfileView: View {
             }
             .font(.body)
             .padding()
-            
             //save button
             Button {
-                print("save info")
-                dismiss()
+                Task {
+                    try await viewModel.registerPart2()
+                    if viewModel.registerError != nil {
+                        showErrorAlert.toggle()
+                    }
+                }
             } label: {
                 ZStack {
                     Circle()
@@ -74,24 +73,17 @@ struct EditProfileView: View {
             }
             Spacer()
         }
-        .navigationTitle("Edit profile")
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden()
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .foregroundStyle(Color(.black))
-                }
-            }
+        .alert(isPresented: $showErrorAlert) {
+            Alert(
+                title: Text("Error!"),
+                message: Text((viewModel.registerError?.description)!),
+                dismissButton: .default(Text("Try again"), action: {viewModel.clearInfoFields()})
+            )
         }
+        .navigationBarBackButtonHidden()
     }
 }
 
 #Preview {
-    NavigationStack {
-        EditProfileView(user: MyUser.emptyUser)
-    }
+    RegisterInfoView()
 }

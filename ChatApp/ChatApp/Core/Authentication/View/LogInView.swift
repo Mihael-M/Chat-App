@@ -14,9 +14,9 @@ private enum FocusableField: Hashable {
 
 struct LogInView: View {
     @State private var isPressed: Bool = false
+    @State private var showErrorAlert: Bool = false
     
-    @State private var email:  String = ""
-    @State private var password: String = ""
+    @StateObject var viewModel = LoginViewModel()
     
     @FocusState private var focus: FocusableField?
     
@@ -36,7 +36,7 @@ struct LogInView: View {
 
                 //text fields
                 VStack(alignment: .center, spacing: 15) {
-                    CustomTextField(icon: "at", prompt: "Email", value: $email)
+                    CustomTextField(icon: "at", prompt: "Email", value: $viewModel.email)
                         .focused($focus, equals: .email)
                         .onSubmit {
                             self.focus = .password
@@ -44,7 +44,7 @@ struct LogInView: View {
                     
                     Divider()
                     
-                    CustomTextField(icon: "key", prompt: "Password",isPassword: true, value: $password)
+                    CustomTextField(icon: "key", prompt: "Password",isPassword: true, value: $viewModel.password)
                         .focused($focus, equals: .password)
                         .onSubmit {
                             
@@ -68,7 +68,9 @@ struct LogInView: View {
                 
                 //login button
                 Button {
-                        print("login")
+                    Task {
+                        try await viewModel.login()
+                    }
                 } label: {
                     ZStack {
                         Circle()
@@ -90,7 +92,7 @@ struct LogInView: View {
                 
                 //sign up link
                 NavigationLink {
-                    RegisterView()
+                    RegisterAuthView()
                 } label: {
                     VStack  {
                         ZStack {
@@ -113,6 +115,13 @@ struct LogInView: View {
                     isPressed.toggle()
                 }
             }
+        }
+        .alert(isPresented: $showErrorAlert) {
+            Alert(
+                title: Text("Error!"),
+                message: Text((viewModel.loginError?.description)!),
+                dismissButton: .default(Text("Try again"), action: {viewModel.clearFields()})
+            )
         }
     }
 }

@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ActiveStatusSettingsView: View {
     @State private var isActive: Bool = true
+    @Environment(\.dismiss) var dismiss
+    
     var body: some View {
         VStack {
             Section(){
@@ -28,6 +30,18 @@ struct ActiveStatusSettingsView: View {
             Spacer()
         }
         .navigationTitle("Active Status")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden()
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .foregroundStyle(Color(.black))
+                }
+            }
+        }
     }
 }
 

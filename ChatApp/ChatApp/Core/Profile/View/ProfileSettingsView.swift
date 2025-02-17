@@ -34,7 +34,7 @@ struct ProfileSettingsView: View {
                     
                     Button(role: .destructive)
                     {
-                        
+                        AuthenticationService.shared.signOut()
                     }
                     label:{
                         Text("Log out")

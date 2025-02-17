@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseAuth
+import PhotosUI
 
 class RegistrationViewModel : ObservableObject {
     @Published var email: String = "" {
@@ -25,6 +26,19 @@ class RegistrationViewModel : ObservableObject {
         }
     }
     @Published var username: String = ""
+    
+    @Published var selectedItem: PhotosPickerItem? {
+        didSet {
+            Task {
+                try await loadImage()
+            }
+        }
+    }
+    
+    @Published var profileImage: Image? = nil
+    @Published var nickname = ""
+    @Published var phone_number = ""
+    @Published var date_of_birth = Date.now
     
     @Published var isEmailValid: Bool = false
     @Published var isPasswordLengthValid: Bool = false
@@ -53,65 +67,51 @@ class RegistrationViewModel : ObservableObject {
         return emailPredicate.evaluate(with: email)
     }
     
-    func register() async throws {
+
+    func registerPart1() async throws {
         do {
-            AuthenticationService.authenticator.newUser = true
-            try await AuthenticationService.authenticator.register(withEmail: email, username: username, password: password)
+            try await AuthenticationService.shared.registerPart1(withEmail: email, username: username, password: password)
             registerError = nil // Clear error on successful register
         } catch let error as NSError {
             registerError = error.localizedDescription // Update error to show in UI
         }
     }
-    
 
-    func sendVerificationEmail() async {
+    func registerPart2() async throws {
         do {
-            try await AuthenticationService.authenticator.sendRegisterLink(withEmail: email)
-        } catch {
-            registerError = "Failed to send verification email. \(error.localizedDescription)"
-        }
-    }
-
-    func verifyEmail(link: String) async {
-        do {
-            try await AuthenticationService.authenticator.verifyEmailLink(link)
-            isEmailVerified = true
-        } catch {
-            registerError = "Failed to verify email. \(error.localizedDescription)"
-        }
-    }
-
-    func checkEmailVerifiedStatus() async {
-        do {
-            try await AuthenticationService.authenticator.checkEmailVerification()
-            isEmailVerified = true
-        } catch {
-            registerError = "Email is not verified. \(error.localizedDescription)"
-        }
-    }
-    
-    func verifyEmail() async throws {
-        guard let link = AuthenticationService.authenticator.emailLink else {
-            throw NSError(domain: "AuthError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid or missing email verification link."])
-        }
-        do {
-            let result = try await Auth.auth().signIn(withEmail: email, link: link)
-            self.emailVerified = result.user.isEmailVerified
-            if emailVerified {
-                AuthenticationService.authenticator.emailLink = nil // Clear the stored link
-            }
+            //logic for image upload
+            let data: [String : Any] = [
+                "avatarURL" : "https://via.placeholder.com/150",
+                "nickname" : self.nickname,
+                "phone_number" : self.phone_number,
+                "date_of_birth" : self.date_of_birth
+            ]
+            try await AuthenticationService.shared.registerPart2(data: data)
+            registerError = nil
         } catch let error as NSError {
-            print("Error verifying email: \(error.localizedDescription)")
+            registerError = error.localizedDescription
         }
     }
     
-                                         
+    func loadImage() async throws {
+        guard let item = selectedItem else { return }
+        guard let data = try? await item.loadTransferable(type: Data.self) else { return }
+        guard let uiImage = UIImage(data: data) else { return }
+        self.profileImage = Image(uiImage: uiImage)
+    }
     
-    func clearFields() {
+    func clearAuthFields() {
         email = ""
         username = ""
         password = ""
         repeatedPassword = ""
+    }
+    
+    func clearInfoFields() {
+        profileImage = nil
+        nickname = ""
+        phone_number = ""
+        date_of_birth = .now
     }
     
 }

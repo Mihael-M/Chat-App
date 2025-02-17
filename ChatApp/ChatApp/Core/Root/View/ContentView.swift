@@ -11,13 +11,11 @@ struct ContentView : View {
     @StateObject var viewModel = ContentViewModel()
     
     var body: some View {
-        NavigationStack() {
-            Group {
-                if viewModel.userSession == nil {
-                    LogInView()
-                } else {
-                    ChatInboxView()
-                }
+        Group {
+            if viewModel.userSession != nil {
+                ChatInboxView()
+            } else {
+                LogInView()
             }
         }
     }
