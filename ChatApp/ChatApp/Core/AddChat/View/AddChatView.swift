@@ -32,7 +32,7 @@ struct AddChatView: View {
                     .padding(20)
                     .foregroundStyle(.gray)
                 }
-                .navigationDestination(isPresented: $groupChat, destination: {AddGroupChatView()})
+                .navigationDestination(isPresented: $groupChat, destination: {AddGroupChatView(selectedUser: $selectedUser)})
                 
                 ForEach(viewModel.users) { user in
                     VStack {
