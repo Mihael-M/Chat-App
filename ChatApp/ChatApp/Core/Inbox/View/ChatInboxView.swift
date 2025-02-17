@@ -75,7 +75,7 @@ struct ChatInboxView: View {
                         }
                         
                         NavigationLink (value: user) {
-                            ProfilePictureComponent(user: user, size: .small)
+                            ProfilePictureComponent(user: user, size: .xsmall)
                         }
                     }
                 }

@@ -8,6 +8,7 @@
 import SwiftUI
 
 enum ProfileImageSize {
+    case xsmall
     case small
     case medium
     case large
@@ -15,7 +16,8 @@ enum ProfileImageSize {
     
     var dimension: CGFloat {
         switch self {
-        case .small: return 32
+        case .xsmall: return 32
+        case .small: return 48
         case .medium: return 64
         case .large: return 80
         case .xlarge: return 200
@@ -56,15 +58,15 @@ struct ProfilePictureComponent: View {
                 ZStack {
                     Circle()
                         .fill(.white)
-                        .frame(width: 20, height: 20)
+                        .frame(width: 0.25 * size.dimension, height: 0.25 * size.dimension)
                     if let activityStatus = user?.activityStatus {
                         Circle()
                             .fill(activityStatus ? Color(.systemGreen) : Color(.systemGray6))
-                            .frame(width: 15, height: 15)
+                            .frame(width: 0.2 * size.dimension, height: 0.2 * size.dimension)
                     } else {
                         Circle()
                             .fill(Color(.systemGray6))
-                            .frame(width: 15, height: 15)
+                            .frame(width: 0.2 * size.dimension, height: 0.2 * size.dimension)
                     }
                 }
             }

@@ -43,7 +43,7 @@ struct ConversationView: View {
                     }
                     
                     //add logic for groups
-                    ProfilePictureComponent(user: user, size: .small, showActivityStatus: true)
+                    ProfilePictureComponent(user: user, size: .xsmall, showActivityStatus: true)
                     VStack(alignment: .leading) {
                         Text(user.nickname)
                             .font(.body)
