@@ -4,6 +4,7 @@ struct AddChatView: View {
     @State private var searchText: String = ""
     @StateObject private var viewModel = AddChatViewModel()
     @Binding var selectedUser: MyUser?
+    @State private var groupChat: Bool = false
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -17,6 +18,21 @@ struct AddChatView: View {
                 }
                 .padding()
                 .padding(.horizontal, 16)
+                
+                Button {
+                    groupChat.toggle()
+                }
+                label:{
+                    HStack{
+                        Image(systemName: "person.3.sequence.fill")
+                        Text("Group Chat")
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                    }
+                    .padding(20)
+                    .foregroundStyle(.gray)
+                }
+                .navigationDestination(isPresented: $groupChat, destination: {AddGroupChatView()})
                 
                 ForEach(viewModel.users) { user in
                     VStack {
