@@ -25,7 +25,7 @@ struct RegisterInfoView: View {
                         .scaledToFit()
                         .clipShape(Circle())
                 } else {
-                    ProfilePictureComponent(pictureURL: "defaultavatar", size: .xlarge)
+                    ProfilePictureComponent(user: MyUser.emptyUser, size: .xlarge)
                 }
             }
             

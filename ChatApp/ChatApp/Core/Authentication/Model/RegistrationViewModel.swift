@@ -81,13 +81,15 @@ class RegistrationViewModel : ObservableObject {
         do {
             //logic for image upload
             let data: [String : Any] = [
-                "avatarURL" : "https://via.placeholder.com/150",
+                "avatarURL" : "",
                 "nickname" : self.nickname,
                 "phone_number" : self.phone_number,
                 "date_of_birth" : self.date_of_birth
             ]
             try await AuthenticationService.shared.registerPart2(data: data)
             registerError = nil
+            clearAuthFields()
+            clearInfoFields()
         } catch let error as NSError {
             registerError = error.localizedDescription
         }

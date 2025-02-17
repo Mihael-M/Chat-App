@@ -2,7 +2,8 @@ import SwiftUI
 
 struct AddChatView: View {
     @State private var searchText: String = ""
-    
+    @StateObject private var viewModel = AddChatViewModel()
+    @Binding var selectedUser: MyUser?
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -17,11 +18,11 @@ struct AddChatView: View {
                 .padding()
                 .padding(.horizontal, 16)
                 
-                ForEach(0...10, id: \.self) { user in
+                ForEach(viewModel.users) { user in
                     VStack {
                         HStack {
-                            ProfilePictureComponent(pictureURL: MyUser.emptyUser.profilePicture, size: .small, activityStatus: MyUser.emptyUser.activityStatus, showActivityStatus: true)
-                            Text("Username")
+                            ProfilePictureComponent(user: user, size: .small, showActivityStatus: true)
+                            Text(user.base.name)
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
                             
@@ -31,6 +32,10 @@ struct AddChatView: View {
                         
                         Divider()
                             .padding(.leading, 32)
+                    }
+                    .onTapGesture {
+                        selectedUser = user
+                        dismiss()
                     }
                 }
             }
@@ -52,6 +57,6 @@ struct AddChatView: View {
 
 #Preview {
     NavigationStack {
-        AddChatView()
+        AddChatView(selectedUser: .constant(MyUser.emptyUser))
     }
 }

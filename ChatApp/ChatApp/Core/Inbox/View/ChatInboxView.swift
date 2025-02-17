@@ -8,8 +8,14 @@
 import SwiftUI
 
 struct ChatInboxView: View {
-    @State var showAddChatView: Bool = false
-    @State private var user = MyUser.emptyUser
+    @State private var showAddChatView: Bool = false
+    @StateObject var viewModel = ChatInboxViewModel()
+    @State private var selectedUser: MyUser?
+    @State private var showChat: Bool = false
+    
+    private var user: MyUser? {
+        return viewModel.currentUser
+    }
     
     var body: some View {
         NavigationStack {
@@ -24,11 +30,19 @@ struct ChatInboxView: View {
                 .listStyle(PlainListStyle())
                 .frame(height: UIScreen.main.bounds.height - 128)
             }
+            .onChange(of: selectedUser, perform: { newValue in
+                showChat = (newValue != nil)
+            })
             .fullScreenCover(isPresented: $showAddChatView, content: {
-                AddChatView()
+                AddChatView(selectedUser: $selectedUser)
             })
             .navigationDestination(for: MyUser.self, destination: { user in
                 ProfileSettingsView(user: user)
+            })
+            .navigationDestination(isPresented: $showChat, destination: {
+                if let user = selectedUser {
+                    ConversationView(user: user)
+                }
             })
             .toolbar {
                 //search and title
@@ -61,7 +75,7 @@ struct ChatInboxView: View {
                         }
                         
                         NavigationLink (value: user) {
-                            ProfilePictureComponent(pictureURL: user.profilePicture, size: .small)
+                            ProfilePictureComponent(user: user, size: .small)
                         }
                     }
                 }

@@ -9,7 +9,8 @@ import SwiftUI
 import ExyteChat
 
 struct ConversationView: View {
-    @StateObject var viewModel: ConversationViewModel
+    @StateObject var viewModel = ConversationViewModel()
+    let user: MyUser
     
     @Environment(\.dismiss) var dismiss
     
@@ -42,11 +43,11 @@ struct ConversationView: View {
                     }
                     
                     //add logic for groups
-                    ProfilePictureComponent(pictureURL: MyUser.emptyUser.profilePicture, size: .small, activityStatus: MyUser.emptyUser.activityStatus, showActivityStatus: true)
+                    ProfilePictureComponent(user: user, size: .small, showActivityStatus: true)
                     VStack(alignment: .leading) {
-                        Text(MyUser.emptyUser.nickname)
+                        Text(user.nickname)
                             .font(.body)
-                        Text(MyUser.emptyUser.base.name)
+                        Text(user.base.name)
                             .font(.footnote)
                     }
                 }
@@ -66,6 +67,6 @@ struct ConversationView: View {
 #Preview {
     @Previewable @StateObject var viewModel = ConversationViewModel()
     NavigationStack {
-        ConversationView(viewModel: viewModel)
+        ConversationView(user: MyUser.emptyUser)
     }
 }

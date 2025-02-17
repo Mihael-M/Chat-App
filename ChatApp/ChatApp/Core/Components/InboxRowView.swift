@@ -10,7 +10,7 @@ import SwiftUI
 struct InboxRowView: View {
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
-            ProfilePictureComponent(pictureURL: MyUser.emptyUser.profilePicture, size: .medium, activityStatus: MyUser.emptyUser.activityStatus, showActivityStatus: true)
+            ProfilePictureComponent(user: MyUser.emptyUser, size: .medium, showActivityStatus: true)
             
             VStack(alignment: .leading, spacing: 4) {
                 Text("Username")

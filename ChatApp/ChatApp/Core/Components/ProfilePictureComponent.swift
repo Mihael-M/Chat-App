@@ -15,7 +15,7 @@ enum ProfileImageSize {
     
     var dimension: CGFloat {
         switch self {
-        case .small: return 48
+        case .small: return 32
         case .medium: return 64
         case .large: return 80
         case .xlarge: return 200
@@ -25,32 +25,47 @@ enum ProfileImageSize {
 
 struct ProfilePictureComponent: View {
     
-    let pictureURL: String
+    let user: MyUser?
     let size: ProfileImageSize
-    var activityStatus: Bool = false
     var showActivityStatus: Bool = false
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
-            Image(pictureURL)
-                .resizable()
-                .scaledToFit()
-                .frame(width: size.dimension, height: size.dimension)
-                .clipShape(Circle())
-                .overlay(
-                    Circle()
-                        .stroke(Color.gray, lineWidth: 2)
-                )
-                .foregroundStyle(Color.secondary)
+            if let pictureURL = user?.profilePicture {
+                Image(pictureURL)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: size.dimension, height: size.dimension)
+                    .clipShape(Circle())
+                    .overlay(
+                        Circle()
+                            .stroke(Color.gray, lineWidth: 2)
+                    )
+            } else {
+                Image("picture")
+                    .resizable()
+                    .frame(width: size.dimension, height: size.dimension)
+                    .overlay(
+                        Circle()
+                            .stroke(Color.gray, lineWidth: 2)
+                        )
+            }
+            
             
             if showActivityStatus {
                 ZStack {
                     Circle()
                         .fill(.white)
                         .frame(width: 20, height: 20)
-                    Circle()
-                        .fill(activityStatus ? Color(.systemGreen) : Color(.systemGray6))
-                        .frame(width: 15, height: 15)
+                    if let activityStatus = user?.activityStatus {
+                        Circle()
+                            .fill(activityStatus ? Color(.systemGreen) : Color(.systemGray6))
+                            .frame(width: 15, height: 15)
+                    } else {
+                        Circle()
+                            .fill(Color(.systemGray6))
+                            .frame(width: 15, height: 15)
+                    }
                 }
             }
         }
@@ -58,6 +73,6 @@ struct ProfilePictureComponent: View {
 }
 
 #Preview {
-    ProfilePictureComponent(pictureURL: MyUser.emptyUser.profilePicture, size: .large)
-    ProfilePictureComponent(pictureURL: MyUser.emptyUser.profilePicture, size: .large, activityStatus: true, showActivityStatus: true)
+    ProfilePictureComponent(user: MyUser.emptyUser, size: .large)
+    ProfilePictureComponent(user: MyUser.emptyUser, size: .large, showActivityStatus: true)
 }

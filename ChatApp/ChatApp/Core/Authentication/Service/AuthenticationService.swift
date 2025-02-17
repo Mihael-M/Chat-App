@@ -18,13 +18,15 @@ class AuthenticationService {
     init() {
         self.userSession = Auth.auth().currentUser
         print("User session id is \(userSession?.uid)")
+        
+        loadCurrentUserData()
     }
     
     func login(withEmail email: String, password: String) async throws {
         do {
             let result = try await Auth.auth().signIn(withEmail: email, password: password)
             self.userSession = result.user
-            try await DataStorageService.shared.loadUserData()
+            loadCurrentUserData()
             print("Logged in user with uid \(result.user.uid) successfully")
         } catch let error as NSError {
             print("Failed to log in user with error \(error.code)")
@@ -37,6 +39,7 @@ class AuthenticationService {
             try await isUsernameUnique(username: username)
             let result = try await Auth.auth().createUser(withEmail: email, password: password)
             try await uploadUserAuthData(email: email, username: username, uid: result.user.uid)
+            loadCurrentUserData()
             print("Created user with uid \(Auth.auth().currentUser!.uid) successfully.")
         } catch let error as NSError {
             print("Failed to create user with error \(error.localizedDescription)")
@@ -58,11 +61,11 @@ class AuthenticationService {
         }
     }
 
-
     func signOut() {
         do {
             try Auth.auth().signOut()
             self.userSession = nil
+            DataStorageService.shared.currentUser = nil
             print("Logged out successfully!")
         } catch let error as NSError {
             print("Failed to sign out user with error \(error.localizedDescription)")
@@ -103,13 +106,19 @@ class AuthenticationService {
             }
         }
     
-    func isUsernameUnique(username: String) async throws {
+    private func isUsernameUnique(username: String) async throws {
         let snapshot = try await Firestore.firestore().collection("users")
             .whereField("username", isEqualTo: username)
             .getDocuments()
         
         if !snapshot.documents.isEmpty {
             throw NSError(domain: "UserError", code: AuthErrorCode.accountExistsWithDifferentCredential.rawValue, userInfo: [NSLocalizedDescriptionKey: "Username already taken. Please choose another one."])
+        }
+    }
+    
+    private func loadCurrentUserData() {
+        Task {
+            try await DataStorageService.shared.loadCurrentUserData()
         }
     }
 }

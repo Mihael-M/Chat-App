@@ -14,7 +14,7 @@ struct ActiveUsersView: View {
                 ForEach(0...10, id: \.self) { user in
                     VStack{
                         ZStack(alignment: .bottomTrailing) {
-                            ProfilePictureComponent(pictureURL: MyUser.emptyUser.profilePicture, size: .medium, activityStatus: MyUser.emptyUser.activityStatus, showActivityStatus: true)
+                            ProfilePictureComponent(user: MyUser.emptyUser,size: .medium, showActivityStatus: true)
                             
                             ZStack {
                                 Circle()

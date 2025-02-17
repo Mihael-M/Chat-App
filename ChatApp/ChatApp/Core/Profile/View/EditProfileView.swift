@@ -29,7 +29,7 @@ struct EditProfileView: View {
                             .scaledToFit()
                             .clipShape(Circle())
                     } else {
-                        ProfilePictureComponent(pictureURL: MyUser.emptyUser.profilePicture, size: .xlarge)
+                        ProfilePictureComponent(user: MyUser.emptyUser, size: .xlarge)
                     }
                 }
             }

@@ -22,7 +22,7 @@ struct ProfileHeaderView: View {
             VStack(spacing: 10) {
                 //pic and stats
                 HStack {
-                    ProfilePictureComponent(pictureURL: MyUser.emptyUser.profilePicture, size: .medium)
+                    ProfilePictureComponent(user: user, size: .medium)
                     .padding(.horizontal)
                     
                     Spacer()
