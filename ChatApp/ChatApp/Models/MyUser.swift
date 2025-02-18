@@ -9,10 +9,10 @@ import SwiftUI
 import ExyteChat
 import FirebaseCore
 
-struct MyUser : Hashable, Identifiable, Codable {
+public struct MyUser : Hashable, Identifiable, Codable {
     let base: User //ExyteChat's model
     
-    var id: String {
+    public var id: String {
         base.id
     }
     var email: String

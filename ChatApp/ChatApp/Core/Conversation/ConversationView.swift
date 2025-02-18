@@ -9,20 +9,20 @@ import SwiftUI
 import ExyteChat
 
 struct ConversationView: View {
-    @StateObject var viewModel = ConversationViewModel()
-    let user: MyUser
     
     @Environment(\.dismiss) var dismiss
     
-        var body: some View {
-        ChatView(messages: viewModel.messages, chatType: .comments, replyMode: .answer) {  _ in
-            //viewmodel logic
+    @StateObject var viewModel: ConversationViewModel
+    
+    var body: some View {
+        ChatView(messages: viewModel.messages, chatType: .conversation, replyMode: .answer) { draft in
+            viewModel.sendMessage(draft)
         }
         .mediaPickerTheme(
             main: .init(
                 text: .white,
-                albumSelectionBackground: Color(.systemGray6),
-                fullscreenPhotoBackground: Color(.systemGray6)
+                albumSelectionBackground: Color(.darkGray),
+                fullscreenPhotoBackground: Color(.darkGray)
             ),
             selection: .init(
                 emptyTint: .white,
@@ -31,6 +31,9 @@ struct ConversationView: View {
                 fullscreenTint: .white
             )
         )
+        .onDisappear {
+            viewModel.resetUnreadCounter()
+        }
         .navigationBarBackButtonHidden()
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -42,13 +45,19 @@ struct ConversationView: View {
                             .foregroundStyle(Color(.black))
                     }
                     
-                    //add logic for groups
-                    ProfilePictureComponent(user: user, size: .xsmall, showActivityStatus: true)
-                    VStack(alignment: .leading) {
-                        Text(user.nickname)
+                    if let conversation = viewModel.conversation, conversation.isGroup {
+                        ProfilePictureComponent(conversation: conversation, size: .xsmall)
+                        Text(conversation.title)
                             .font(.body)
-                        Text(user.base.name)
-                            .font(.footnote)
+                    } else if let user = viewModel.users.first {
+                        ProfilePictureComponent(user: user, size: .xsmall, showActivityStatus: true)
+                        VStack(alignment: .leading) {
+                            Text(user.nickname)
+                                .font(.body)
+                            Text(user.base.name)
+                                .font(.footnote)
+                        }
+                        
                     }
                 }
             }
@@ -65,8 +74,8 @@ struct ConversationView: View {
 }
 
 #Preview {
-    @Previewable @StateObject var viewModel = ConversationViewModel()
+    
     NavigationStack {
-        ConversationView(user: MyUser.emptyUser)
+        ConversationView(viewModel: ConversationViewModel(user: MyUser.emptyUser))
     }
 }

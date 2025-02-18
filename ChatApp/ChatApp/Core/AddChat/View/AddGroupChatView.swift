@@ -8,85 +8,64 @@
 import SwiftUI
 
 struct AddGroupChatView: View {
-    @State private var searchText: String = ""
-    @State private var groupName: String = ""
-    @Environment(\.dismiss) private var dismiss
-    @State private var profileImage: Image = Image(systemName: "person.circle")
-    @Binding var selectedUser: MyUser?
-    @StateObject private var viewModel = AddChatViewModel()
-    //    var filteredUsers:[String]
-    //    {
-    //        if userID.isEmpty {
-    //            return []
-    //        }
-    //        else{
-    //            return [].filter( $0.localisedCaseInsensitiveContains(userID))
-    //        }
-    //    }
+
+    @Environment(\.dismiss) var dismiss
+
+    @StateObject var viewModel: AddChatViewModel
+    @Binding var isPresented: Bool
+    @Binding var navPath: NavigationPath
+
     var body: some View {
-        VStack(spacing: 12) {
-//            RoundedRectangle(cornerRadius: 3)
-//                              .frame(width: 40, height: 5)
-//                              .foregroundColor(.gray.opacity(0.5))
-//                              .padding(.top, 8)
-            CustomGroupChatNameView(text: $groupName, placeholder: "Enter group name (optional)",characterLimit: 25)
-            
-          
-            CustomTextField(icon: "magnifyingglass", prompt: "Search user...", value: $searchText)
-                .background(Color.gray.cornerRadius(10).opacity(0.1).frame(height: 35))
-            Spacer()
-//            List(){
-//                HStack{
-//                    //currently added users
-//                    ScrollView{
-//                        CustomUserView(profileImage: profileImage)
-//                    }
-//                    
-//                    
-//                }
-//            }
-            
-            ForEach(viewModel.users) { user in
-                VStack {
+        VStack {
+            CustomTextField(icon: "person.3.fill", prompt: "Search here...", value: $viewModel.searchableText)
+                .padding(.horizontal, 16)
+
+            ZStack(alignment: .bottom) {
+                List(viewModel.filteredUsers) { user in
                     HStack {
-                        ProfilePictureComponent(user: user, size: .small, showActivityStatus: true)
+                        ProfilePictureComponent(user: user, size: .small)
                         Text(user.base.name)
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
+                            .font(.headline)
+                            .fontWeight(.medium)
                         
                         Spacer()
+                        
+                        (viewModel.selectedUsers.contains(user) ? Image(systemName: "circle.fill") : Image(systemName: "circle"))
                     }
-                    .padding(.leading)
-                    
-                    Divider()
-                        .padding(.leading, 32)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        viewModel.selectedUsers.contains(user) ?
+                        viewModel.selectedUsers.removeAll(where: { $0.id == user.id }) :
+                        viewModel.selectedUsers.append(user)
+                    }
+                    .listRowSeparator(.hidden)
                 }
-                .onTapGesture {
-                    selectedUser = user
-                    dismiss()
+                .padding(.bottom, 60)
+
+                NavigationLink("Next") {
+                    CreateGroupView(viewModel: viewModel, isPresented: $isPresented, navPath: $navPath)
                 }
+                .disabled(viewModel.selectedUsers.count < 1)
+                .padding(.horizontal, 12)
+                .padding(.bottom, 10)
             }
-            
         }
-        .navigationTitle("Add Group chat")
+        .listStyle(.plain)
+        .navigationTitle("Create Group")
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
+        .navigationBarBackButtonHidden()
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
+            ToolbarItem(placement: .navigation) {
                 Button {
                     dismiss()
                 } label: {
-                    Image(systemName: "chevron.left")
-                        .foregroundStyle(Color(.black))
+                    Image("chevron.left")
                 }
             }
         }
-        .padding(.horizontal, 25)
-        .padding(.vertical, 15)
-        
     }
 }
 
 #Preview {
-    AddGroupChatView(selectedUser: .constant(MyUser.emptyUser))
+    //AddGroupChatView(selectedUser: .constant(MyUser.emptyUser))
 }

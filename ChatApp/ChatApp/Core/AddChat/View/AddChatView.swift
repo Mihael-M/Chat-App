@@ -1,10 +1,13 @@
 import SwiftUI
 
 struct AddChatView: View {
+    @ObservedObject var dataStorage = DataStorageService.shared
     @State private var searchText: String = ""
     @StateObject private var viewModel = AddChatViewModel()
-    @Binding var selectedUser: MyUser?
-    @State private var groupChat: Bool = false
+    
+    @Binding var isPresented: Bool
+    @Binding var navPath: NavigationPath
+    
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -18,40 +21,47 @@ struct AddChatView: View {
                 }
                 .padding()
                 .padding(.horizontal, 16)
-                
-                Button {
-                    groupChat.toggle()
-                }
-                label:{
-                    HStack{
-                        Image(systemName: "person.3.sequence.fill")
-                        Text("Group Chat")
-                        Spacer()
-                        Image(systemName: "chevron.right")
+                List {
+                    NavigationLink {
+                        AddGroupChatView(viewModel: viewModel, isPresented: $isPresented, navPath: $navPath)
                     }
-                    .padding(20)
-                    .foregroundStyle(.gray)
-                }
-                .navigationDestination(isPresented: $groupChat, destination: {AddGroupChatView(selectedUser: $selectedUser)})
-                
-                ForEach(viewModel.users) { user in
-                    VStack {
-                        HStack {
-                            ProfilePictureComponent(user: user, size: .small, showActivityStatus: true)
-                            Text(user.base.name)
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
-                            
+                    label:{
+                        HStack{
+                            Image(systemName: "person.3.sequence.fill")
+                            Text("Group Chat")
                             Spacer()
+                            Image(systemName: "chevron.right")
                         }
-                        .padding(.leading)
-                        
-                        Divider()
-                            .padding(.leading, 32)
+                        .padding(20)
+                        .foregroundStyle(.gray)
                     }
-                    .onTapGesture {
-                        selectedUser = user
-                        dismiss()
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets())
+                    .padding(.top, 8)
+                    .padding(.horizontal, 16)
+                    
+                    Rectangle()
+                        .foregroundColor(.black)
+                        .frame(height: 1)
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets())
+                    
+                    ForEach(viewModel.filteredUsers) { user in
+                        VStack {
+                            HStack {
+                                ProfilePictureComponent(user: user, size: .small, showActivityStatus: true)
+                                Text(user.base.name)
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                
+                                Spacer()
+                            }
+                            .padding(.leading)
+                            
+                            Divider()
+                                .padding(.leading, 32)
+                        }
+                        
                     }
                 }
             }
@@ -73,6 +83,6 @@ struct AddChatView: View {
 
 #Preview {
     NavigationStack {
-        AddChatView(selectedUser: .constant(MyUser.emptyUser))
+        //AddChatView(selectedUser: .constant(MyUser.emptyUser))
     }
 }

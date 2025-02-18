@@ -65,7 +65,7 @@ class AuthenticationService {
         do {
             try Auth.auth().signOut()
             self.userSession = nil
-            DataStorageService.shared.currentUser = nil
+            DataStorageService.shared.reset()
             print("Logged out successfully!")
         } catch let error as NSError {
             print("Failed to sign out user with error \(error.localizedDescription)")

@@ -28,30 +28,34 @@ enum ProfileImageSize {
 struct ProfilePictureComponent: View {
     
     let user: MyUser?
+    let conversation: Conversation?
     let size: ProfileImageSize
     var showActivityStatus: Bool = false
     
+    init(user: MyUser?, size: ProfileImageSize, showActivityStatus: Bool = false) {
+        self.user = user
+        self.conversation = nil
+        self.size = size
+        self.showActivityStatus = showActivityStatus
+    }
+    init(conversation: Conversation?, size: ProfileImageSize) {
+        self.user = nil
+        self.conversation = conversation
+        self.size = size
+        self.showActivityStatus = false
+    }
+    
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
-            if let pictureURL = user?.profilePicture {
-                Image(pictureURL)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: size.dimension, height: size.dimension)
-                    .clipShape(Circle())
-                    .overlay(
-                        Circle()
-                            .stroke(Color.gray, lineWidth: 2)
-                    )
-            } else {
-                Image("picture")
-                    .resizable()
-                    .frame(width: size.dimension, height: size.dimension)
-                    .overlay(
-                        Circle()
-                            .stroke(Color.gray, lineWidth: 2)
-                        )
-            }
+            image
+                .resizable()
+                .scaledToFit()
+                .frame(width: size.dimension, height: size.dimension)
+                .clipShape(Circle())
+                .overlay(
+                    Circle()
+                        .stroke(Color.gray, lineWidth: 2)
+                )
             
             
             if showActivityStatus {
@@ -70,6 +74,15 @@ struct ProfilePictureComponent: View {
                     }
                 }
             }
+        }
+    }
+    var image: Image {
+        if let picture = user?.profilePicture {
+            Image(picture)
+        } else if let picture = conversation?.picture {
+            Image(picture)
+        } else {
+            Image("defaultavatar")
         }
     }
 }
