@@ -21,6 +21,7 @@ class AddChatViewModel: ObservableObject {
     var filteredUsers: [MyUser] {
         if searchableText.isEmpty {
             return DataStorageService.shared.users
+            
         }
         return DataStorageService.shared.users.filter {
             $0.base.name.lowercased().contains(searchableText.lowercased())

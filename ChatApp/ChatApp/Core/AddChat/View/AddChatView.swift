@@ -2,7 +2,6 @@ import SwiftUI
 
 struct AddChatView: View {
     @ObservedObject var dataStorage = DataStorageService.shared
-    @State private var searchText: String = ""
     @StateObject private var viewModel = AddChatViewModel()
     
     @Binding var isPresented: Bool
@@ -12,60 +11,65 @@ struct AddChatView: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
-                //groupchat logic
-                
-                VStack {
-                    CustomTextField(icon: "magnifyingglass", prompt: "Search user...", value: $searchText)
-                        .background(Color.gray.cornerRadius(10).opacity(0.1).frame(height: 35))
+            //           ScrollView {
+            //groupchat logic
+            
+            VStack {
+                CustomTextField(icon: "magnifyingglass", prompt: "Search user...", value: $viewModel.searchableText)
+                    .background(Color.gray.cornerRadius(10).opacity(0.1).frame(height: 35))
+            }
+            .padding()
+            .padding(.horizontal, 16)
+            
+            List {
+                NavigationLink {
+                    AddGroupChatView(viewModel: viewModel, isPresented: $isPresented, navPath: $navPath)
                 }
-                .padding()
-                .padding(.horizontal, 16)
-                List {
-                    NavigationLink {
-                        AddGroupChatView(viewModel: viewModel, isPresented: $isPresented, navPath: $navPath)
+                label:{
+                    HStack{
+                        Image(systemName: "person.3.sequence.fill")
+                        Text("Group Chat")
+                        Spacer()
+                        //Image(systemName: "chevron.right")
                     }
-                    label:{
-                        HStack{
-                            Image(systemName: "person.3.sequence.fill")
-                            Text("Group Chat")
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                        }
-                        .padding(20)
-                        .foregroundStyle(.gray)
+                }
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets())
+                .padding(.top, 8)
+                .padding(.horizontal, 16)
+                
+                Rectangle()
+                    .foregroundColor(.black)
+                    .frame(height: 1)
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets())
+                
+                ForEach(viewModel.filteredUsers) { user in
+                    HStack {
+                        ProfilePictureComponent(user: user, size: .small)
+                        Text(user.base.name)
+                            .font(.headline)
+                            .fontWeight(.medium)
                     }
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets())
-                    .padding(.top, 8)
-                    .padding(.horizontal, 16)
-                    
-                    Rectangle()
-                        .foregroundColor(.black)
-                        .frame(height: 1)
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets())
-                    
-                    ForEach(viewModel.filteredUsers) { user in
-                        VStack {
-                            HStack {
-                                ProfilePictureComponent(user: user, size: .small, showActivityStatus: true)
-                                Text(user.base.name)
-                                    .font(.subheadline)
-                                    .fontWeight(.semibold)
-                                
-                                Spacer()
+                    .padding([.horizontal, .bottom], 16)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        Task {
+                            if let conversation = await viewModel.conversationForUsers([user]) {
+                                navPath.append(conversation)
+                            } else {
+                                navPath.append(user)
                             }
-                            .padding(.leading)
-                            
-                            Divider()
-                                .padding(.leading, 32)
+                            isPresented = false
                         }
-                        
                     }
                 }
             }
-            .navigationTitle("Add chat")
+            .listStyle(.plain)
+            //            }
+            .navigationTitle("New message")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
