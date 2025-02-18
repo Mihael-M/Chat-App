@@ -21,28 +21,38 @@ struct ChatInboxView: View {
     var body: some View {
         NavigationStack(path: $navPath) {
             ScrollView {
-                ActiveUsersView()
-                
-                List (viewModel.filteredConversations) { conversation in
-                    InboxRowView(conversation: conversation)
-                        .background(
-                            NavigationLink("", value: conversation)
-                                .opacity(0)
-                        )
-                        .listRowSeparator(.hidden)
+                if viewModel.filteredConversations.isEmpty {
+                    Text("Add friends from the + tab")
+                        .padding(.vertical,UIScreen.main.bounds.height/2.5)
+                        .foregroundStyle(.secondary)
+                        .font(.caption)
                 }
-                
-                .listStyle(PlainListStyle())
-                .frame(height: UIScreen.main.bounds.height - 128)
+                else{
+                    ActiveUsersView()
+                    
+                    List (viewModel.filteredConversations) { conversation in
+                        InboxRowView(conversation: conversation)
+                            .background(
+                                NavigationLink("", value: conversation)
+                                    .opacity(0)
+                            )
+                            .listRowSeparator(.hidden)
+                    }
+                    
+                    .listStyle(PlainListStyle())
+                    .frame(height: UIScreen.main.bounds.height - 128)
+                }
             }
             .refreshable {
                 await viewModel.getData()
             }
+            .onAppear {
+                Task{
+                    await viewModel.getData()
+                }
+            }
             .fullScreenCover(isPresented: $showAddChatView, content: {
                 AddChatView(isPresented: $showAddChatView, navPath: $navPath)
-            })
-            .navigationDestination(for: MyUser.self, destination: { user in
-                ProfileSettingsView(user: user)
             })
             .navigationDestination(for: Conversation.self) { conversation in
                 ConversationView(viewModel: ConversationViewModel(conversation: conversation))
@@ -79,10 +89,7 @@ struct ChatInboxView: View {
                                 .frame(width: 28, height: 28)
                                 .foregroundStyle(Color(.systemGray))
                         }
-                        
-                        NavigationLink (value: user) {
-                            ProfilePictureComponent(user: user, size: .xsmall)
-                        }
+                        NavigationLink(destination: {ProfileSettingsView(user: user ?? MyUser.emptyUser)}, label: {ProfilePictureComponent(user: user, size: .xsmall)})
                     }
                 }
             }
