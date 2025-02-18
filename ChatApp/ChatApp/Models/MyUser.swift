@@ -36,7 +36,7 @@ public struct MyUser : Hashable, Identifiable, Codable {
         self.activityStatus = activityStatus
     }
     
-    init?(dictionary: [String: Any]) {
+    init?(dictionary: [String: Any], isCurrentUser: Bool) {
         // Unwrap required string values
         guard let uid = dictionary["uid"] as? String,
               let username = dictionary["username"] as? String,
@@ -49,9 +49,9 @@ public struct MyUser : Hashable, Identifiable, Codable {
         }
         //avatar is optional
         if let avatarString = dictionary["avatarURL"] as? String {
-            self.base = User(id: uid, name: username, avatarURL: URL(string: avatarString), isCurrentUser: true)
+            self.base = User(id: uid, name: username, avatarURL: URL(string: avatarString), isCurrentUser: isCurrentUser)
         } else {
-            self.base = User(id: uid, name: username, avatarURL: nil, isCurrentUser: true)
+            self.base = User(id: uid, name: username, avatarURL: nil, isCurrentUser: isCurrentUser)
         }
         self.email = email
         self.nickname = nickname

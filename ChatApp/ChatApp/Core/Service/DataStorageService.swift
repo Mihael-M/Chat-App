@@ -30,12 +30,7 @@ class DataStorageService: ObservableObject {
     func loadCurrentUserData() async throws {
         guard let currentUID = AuthenticationService.shared.userSession?.uid else { return }
         let snapshot = try await Firestore.firestore().collection("users").document(currentUID).getDocument()
-        self.currentUser = MyUser(dictionary: snapshot.data() ?? [:])
-    }
-    
-    func loadAllUserData() async throws -> [MyUser] {
-        let snapshot = try await Firestore.firestore().collection("users").getDocuments()
-        return snapshot.documents.compactMap({ MyUser(dictionary: $0.data()) })
+        self.currentUser = MyUser(dictionary: snapshot.data() ?? [:], isCurrentUser: true)
     }
     
     func getUsers() async {
@@ -83,7 +78,16 @@ class DataStorageService: ObservableObject {
         guard let currentUser = self.currentUser else { return }
         DispatchQueue.main.async { [weak self] in
             let users: [MyUser] = snapshot?.documents
-                .compactMap { MyUser(dictionary: $0.data()) } ?? []
+                .compactMap { document in
+                    let dict = document.data()
+                    if document.documentID == currentUser.id {
+                        return nil // skip current user
+                    }
+                    if let name = dict["nickname"] as? String {
+                        let avatarURL = dict["avatarURL"] as? String
+                        return MyUser(dictionary: dict, isCurrentUser: false)
+                    }
+                    return nil } ?? []
             
             self?.users = users
             self?.allUsers = users + [currentUser]

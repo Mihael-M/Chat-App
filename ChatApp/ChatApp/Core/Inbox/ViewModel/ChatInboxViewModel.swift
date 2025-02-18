@@ -9,6 +9,7 @@ import SwiftUI
 import Firebase
 import Combine
 
+@MainActor
 class ChatInboxViewModel : ObservableObject {
     @Published var currentUser: MyUser?
     @Published var conversations: [Conversation] = []
