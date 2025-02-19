@@ -156,53 +156,78 @@ class ConversationViewModel: ObservableObject {
 
     func sendMessage(_ draft: DraftMessage) {
         Task {
-            /// create conversation in Firestore if needed
-            // only create individual conversation when first message is sent
-            // group conversation was created before (UsersViewModel)
-            if conversation == nil,
-               users.count == 1,
-               let user = users.first,
-               let conversation = await createIndividualConversation(user) {
+            /// Create conversation in Firestore if needed
+            if conversation == nil, users.count == 1, let user = users.first, let conversation = await createIndividualConversation(user) {
                 updateForConversation(conversation)
             }
 
-            /// precreate message with fixed id and .sending status
-            guard let user = DataStorageService.shared.currentUser else { return }
-            let id = UUID().uuidString
-            let message = await Message.makeMessage(id: id, user: user.base, status: .sending, draft: draft)
+            /// Precreate user message
+            guard let currentUser = DataStorageService.shared.currentUser else { return }
+            let messageId = UUID().uuidString
+            let userMessage = await Message.makeMessage(id: messageId, user: currentUser.base, status: .sending, draft: draft)
+            
             lock.withLock {
-                messages.append(message)
+                messages.append(userMessage)
             }
 
-            /// convert to Firestore dictionary: replace users with userIds, upload medias and get urls, replace urls with strings
-            let dict = await makeDraftMessageDictionary(draft)
+            /// Convert to Firestore dictionary
+            let messageDict = await makeDraftMessageDictionary(draft)
 
-            /// upload dictionary with the same id we fixed earlier, so Chat knows it's still the same message
+            /// Save user message in Firestore
             do {
-                try await messagesCollection?.document(id).setData(dict)
-                // no need to set .sent status, every message coming from firestore has .sent status (it was set at line 133). so as soon as this message gets to firestore, subscription will update messages array with this message with .sent status
+                try await messagesCollection?.document(messageId).setData(messageDict)
             } catch {
-                print("Error adding document: \(error)")
+                print("Error sending message: \(error)")
                 lock.withLock {
-                    if let index = messages.lastIndex(where: { $0.id == id }) {
+                    if let index = messages.lastIndex(where: { $0.id == messageId }) {
                         messages[index].status = .error(draft)
                     }
                 }
             }
 
-            /// update latest message in current conversation to be this one
-            if let id = conversation?.id {
-                try await Firestore.firestore()
-                    .collection("conversations")
-                    .document(id)
-                    .updateData(["latestMessage" : dict])
-            }
+            /// Generate AI response using AIManager
+            let (_, aiResponseText) = await AIManager.shared.getBotResponse(draft.text)
+                   await saveAIMessage(aiResponseText)
 
-            /// update unread message counters for other participants
+            /// Update unread message counters for other participants
             bumpUnreadCounters()
         }
     }
 
+    func saveAIMessage(_ responseText: String) async {
+        guard let aiUser = await DataStorageService.shared.getAIUser() else { return } 
+
+        let messageId = UUID().uuidString
+        let aiMessage = Message(
+            id: messageId,
+            user: aiUser.base,
+            status: .sent,
+            createdAt: Date(),
+            text: responseText,
+            attachments: [],
+            recording: nil,
+            replyMessage: nil
+        )
+
+        lock.withLock {
+            messages.append(aiMessage)
+        }
+
+        let messageDict: [String: Any] = [
+            "userId": aiUser.id,
+            "createdAt": Timestamp(date: Date()),
+            "text": responseText,
+            "attachments": []
+        ]
+
+        do {
+            try await messagesCollection?.document(messageId).setData(messageDict)
+            print("✅ AI message saved to Firestore.")
+        } catch {
+            print("❌ Error saving AI message: \(error)")
+        }
+    }
+    
     private func makeDraftMessageDictionary(_ draft: DraftMessage) async -> [String: Any] {
         guard let user = DataStorageService.shared.currentUser else { return [:] }
         var attachments = [[String: Any]]()

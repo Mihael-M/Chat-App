@@ -6,6 +6,53 @@
 //
 
 import Foundation
+import FirebaseFirestore
+
+extension DataStorageService {
+    func getAIUser() async -> MyUser? {
+        let aiUserId = "AI_Bot"
+        let userRef = Firestore.firestore().collection("users").document(aiUserId)
+
+        do {
+            let document = try await userRef.getDocument()
+            if let data = document.data() {
+                return MyUser(dictionary: data, isCurrentUser: false)
+            }
+        } catch {
+            print("❌ Error fetching AI User: \(error)")
+        }
+        return nil
+    }
+}
+
+extension DataStorageService {
+    func ensureAIUserExists() async {
+        let aiUserId = "AI_Bot" // Fixed ID for AI Assistant
+        let userRef = Firestore.firestore().collection("users").document(aiUserId)
+
+        do {
+            let document = try await userRef.getDocument()
+            if !document.exists { 
+                let aiUserData: [String: Any] = [
+                    "uid": aiUserId,
+                    "username": "AI Assistant",
+                    "email": "ai@assistant.com",
+                    "nickname": "AI Assistant",
+                    "phone_number": "N/A",
+                    "date_of_birth": Timestamp(date: Date(timeIntervalSince1970: 0)),
+                    "activityStatus": true,
+                    "profilePicture": "" // Optional
+                ]
+                try await userRef.setData(aiUserData)
+                print("✅ AI User added to Firestore.")
+            } else {
+                print("✅ AI User already exists.")
+            }
+        } catch {
+            print("❌ Error checking/creating AI User: \(error)")
+        }
+    }
+}
 
 extension Date {
     func timeAgoFormat(numericDates: Bool = false) -> String {

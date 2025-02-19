@@ -66,3 +66,15 @@ extension MyUser {
         MyUser(base: User(id: "0", name: "user", avatarURL: URL(string: "picture"), isCurrentUser: true), email: "user@example.com", nickname: "user", phone_number: "xxxxxxxxx", date_of_birth: .now, activityStatus: false)
     }
 }
+extension MyUser {
+    static var aiUser: MyUser {
+        MyUser(
+            base: User(id: "AI_Bot", name: "AI Assistant", avatarURL: nil, isCurrentUser: false),
+            email: "ai@assistant.com",
+            nickname: "AI Assistant",
+            phone_number: "N/A",
+            date_of_birth: Date.distantPast,
+            activityStatus: true
+        )
+    }
+}

@@ -79,12 +79,13 @@ class RegistrationViewModel : ObservableObject {
 
     func registerPart2() async throws {
         do {
-            //logic for image upload
-            let data: [String : Any] = [
-                "avatarURL" : "",
-                "nickname" : self.nickname,
-                "phone_number" : self.phone_number,
-                "date_of_birth" : self.date_of_birth
+            //logic fot image upload
+            let data: [String: Any] = [
+                "avatarURL": "",
+                "nickname": self.nickname,
+                "phone_number": self.phone_number,
+                "date_of_birth": self.date_of_birth,
+                "thread_id": ""  // Placeholder for AI thread
             ]
             try await AuthenticationService.shared.registerPart2(data: data)
             registerError = nil

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5305113B2D65F3A50065B7D8 /* ExyteOpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 5305113A2D65F3A50065B7D8 /* ExyteOpenAI */; };
 		F62D05442D36728B0094AA4B /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = F62D05432D36728B0094AA4B /* FirebaseAuth */; };
 		F62D05462D36728F0094AA4B /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = F62D05452D36728F0094AA4B /* FirebaseCore */; };
 		F62D05482D36729D0094AA4B /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = F62D05472D36729D0094AA4B /* FirebaseFirestore */; };
@@ -44,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5305113B2D65F3A50065B7D8 /* ExyteOpenAI in Frameworks */,
 				F62D05462D36728F0094AA4B /* FirebaseCore in Frameworks */,
 				F62D054A2D3672A40094AA4B /* FirebaseStorage in Frameworks */,
 				F65E53932D5BE97700528D82 /* ExyteChat in Frameworks */,
@@ -104,6 +106,7 @@
 				F62D05472D36729D0094AA4B /* FirebaseFirestore */,
 				F62D05492D3672A40094AA4B /* FirebaseStorage */,
 				F65E53922D5BE97700528D82 /* ExyteChat */,
+				5305113A2D65F3A50065B7D8 /* ExyteOpenAI */,
 			);
 			productName = ChatApp;
 			productReference = 534F2A3E2D1DFE7800A3F168 /* ChatApp.app */;
@@ -136,6 +139,7 @@
 			packageReferences = (
 				F62D05412D3672650094AA4B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				F65E53912D5BE97700528D82 /* XCRemoteSwiftPackageReference "Chat" */,
+				530511392D65F3A50065B7D8 /* XCRemoteSwiftPackageReference "OpenAI" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 534F2A3F2D1DFE7800A3F168 /* Products */;
@@ -299,15 +303,13 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ChatApp/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Application uses camera to take and send photo attachments";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Application uses photo library to send photo attachments";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
-                INFOPLIST_KEY_NSCameraUsageDescription =
-                "Application uses camera to take and send photo attachments";
-                INFOPLIST_KEY_NSPhotoLibraryUsageDescription =
-                "Application uses photo library to send photo attachments";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -333,15 +335,13 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ChatApp/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Application uses camera to take and send photo attachments";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Application uses photo library to send photo attachments";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
-                INFOPLIST_KEY_NSCameraUsageDescription =
-                "Application uses camera to take and send photo attachments";
-                INFOPLIST_KEY_NSPhotoLibraryUsageDescription =
-                "Application uses photo library to send photo attachments";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -379,6 +379,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		530511392D65F3A50065B7D8 /* XCRemoteSwiftPackageReference "OpenAI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/exyte/OpenAI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.3;
+			};
+		};
 		F62D05412D3672650094AA4B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -398,6 +406,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		5305113A2D65F3A50065B7D8 /* ExyteOpenAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 530511392D65F3A50065B7D8 /* XCRemoteSwiftPackageReference "OpenAI" */;
+			productName = ExyteOpenAI;
+		};
 		F62D05432D36728B0094AA4B /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F62D05412D3672650094AA4B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

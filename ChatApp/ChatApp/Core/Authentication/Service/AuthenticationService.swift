@@ -16,11 +16,16 @@ class AuthenticationService {
     static let shared = AuthenticationService()
     
     init() {
-        self.userSession = Auth.auth().currentUser
-        print("User session id is \(userSession?.uid)")
-        
-        loadCurrentUserData()
-    }
+           self.userSession = Auth.auth().currentUser
+           print("User session id is \(userSession?.uid ?? "No user")")
+           
+           loadCurrentUserData()
+
+           // ✅ Ensure AI user exists at startup
+           Task {
+               await DataStorageService.shared.ensureAIUserExists()
+           }
+       }
     
     func login(withEmail email: String, password: String) async throws {
         do {
@@ -73,12 +78,13 @@ class AuthenticationService {
     }
     
     func uploadUserAuthData(email: String, username: String, uid: String) async throws {
-        let data : [String: Any] = [
-            "uid" : uid,
-            "email" : email,
-            "username" : username
+        let data: [String: Any] = [
+            "uid": uid,
+            "email": email,
+            "username": username,
+            "thread_id": ""  // Initialize thread_id (empty, will be assigned later)
         ]
-        try await Firestore.firestore().collection("users").document(uid).setData(data)
+        try await Firestore.firestore().collection("users").document(uid).setData(data, merge: true)
     }
 
     private func mapFirebaseError(_ error: NSError) -> Error {

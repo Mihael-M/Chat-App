@@ -1,5 +1,5 @@
 {
-  "originHash" : "73755a9f2ea40a48cbe1f8d8be3ff9efe581a03465232ef8f7f26a3040e57a31",
+  "originHash" : "f39d6ac3bd235340b36fd66478a4646eb6558cf9150fe5d07eac5058bbf3fcd8",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -35,6 +35,15 @@
       "state" : {
         "revision" : "0445c72f9153c5b2788ac0092b5187beb8ca1d7a",
         "version" : "2.1.4"
+      }
+    },
+    {
+      "identity" : "eventsourcehttpbody",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/exyte/EventSourceHttpBody.git",
+      "state" : {
+        "revision" : "b000e62b83206dd6e00f2066cf08c96f232a4168",
+        "version" : "0.1.5"
       }
     },
     {
@@ -134,6 +143,15 @@
       "state" : {
         "revision" : "b7e1104502eca3a213b46303391ca4d3bc8ddec1",
         "version" : "2.30910.0"
+      }
+    },
+    {
+      "identity" : "openai",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/exyte/OpenAI",
+      "state" : {
+        "revision" : "dc8972cadc66de2defa8d1ecd603b46247000152",
+        "version" : "1.0.3"
       }
     },
     {
