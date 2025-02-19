@@ -30,7 +30,6 @@ class ChatInboxViewModel : ObservableObject {
         }.store(in: &cancellables)
         DataStorageService.shared.$conversations.sink { [weak self] conversations in
             self?.conversations = conversations
-            print("Received new conversations: \(String(describing: self?.conversations))")
         }.store(in: &cancellables)
     }
     

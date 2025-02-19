@@ -157,7 +157,8 @@ class ConversationViewModel: ObservableObject {
     func sendMessage(_ draft: DraftMessage) {
         Task {
             /// Create conversation in Firestore if needed
-            if conversation == nil, users.count == 1, let user = users.first, let conversation = await createIndividualConversation(user) {
+            if conversation == nil, users.count == 1, let user = users.first,
+                let conversation = await createIndividualConversation(user) {
                 updateForConversation(conversation)
             }
 
@@ -165,11 +166,11 @@ class ConversationViewModel: ObservableObject {
             guard let currentUser = DataStorageService.shared.currentUser else { return }
             let messageId = UUID().uuidString
             let userMessage = await Message.makeMessage(id: messageId, user: currentUser.base, status: .sending, draft: draft)
-            
+           
             lock.withLock {
                 messages.append(userMessage)
             }
-
+            
             /// Convert to Firestore dictionary
             let messageDict = await makeDraftMessageDictionary(draft)
 
@@ -184,18 +185,22 @@ class ConversationViewModel: ObservableObject {
                     }
                 }
             }
-
-            /// Generate AI response using AIManager
-            let (_, aiResponseText) = await AIManager.shared.getBotResponse(draft.text)
-                   await saveAIMessage(aiResponseText)
-
+            
+            /// update latest message in current conversation to be this one
+                        if let id = conversation?.id {
+                            try await Firestore.firestore()
+                                .collection("conversations")
+                                .document(id)
+                                .updateData(["latestMessage" : messageDict])
+                        }
+            
             /// Update unread message counters for other participants
             bumpUnreadCounters()
         }
     }
 
-    func saveAIMessage(_ responseText: String) async {
-        guard let aiUser = await DataStorageService.shared.getAIUser() else { return } 
+    func sendAIMessage(_ responseText: String) async throws{
+        guard let aiUser = await DataStorageService.shared.getAIUser() else { return }
 
         let messageId = UUID().uuidString
         let aiMessage = Message(
@@ -225,6 +230,17 @@ class ConversationViewModel: ObservableObject {
             print("✅ AI message saved to Firestore.")
         } catch {
             print("❌ Error saving AI message: \(error)")
+        }
+        do{
+            if let id = conversation?.id {
+                try await Firestore.firestore()
+                    .collection("conversations")
+                    .document(id)
+                    .updateData(["latestMessage" : messageDict])
+            }
+        }
+        catch{
+            print("Erro obtaining id: \(error)")
         }
     }
     

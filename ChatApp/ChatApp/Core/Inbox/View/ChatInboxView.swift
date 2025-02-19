@@ -24,6 +24,7 @@ struct ChatInboxView: View {
                 if viewModel.filteredConversations.isEmpty {
                     Text("Add friends from the + tab")
                         .padding(.vertical,UIScreen.main.bounds.height/2.5)
+                        .padding(.horizontal, 200)
                         .foregroundStyle(.secondary)
                         .font(.caption)
                 }

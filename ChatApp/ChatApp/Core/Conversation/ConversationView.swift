@@ -13,10 +13,17 @@ struct ConversationView: View {
     @Environment(\.dismiss) var dismiss
     
     @StateObject var viewModel: ConversationViewModel
-    
+ 
     var body: some View {
         ChatView(messages: viewModel.messages, chatType: .conversation, replyMode: .answer) { draft in
             viewModel.sendMessage(draft)
+            if viewModel.users.contains(where: {$0.base.id == "AI_Bot"}) {
+                Task{
+                    /// Generate AI response using AIManager
+                    let (_, aiResponseText) = await AIManager.shared.getBotResponse(draft.text)
+                    try await viewModel.sendAIMessage(aiResponseText)
+                }
+            }
         }
         .mediaPickerTheme(
             main: .init(
