@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PhotosUI
+import ExyteMediaPicker
 
 struct RegisterInfoView: View {
     @EnvironmentObject var viewModel : RegistrationViewModel
@@ -14,20 +15,24 @@ struct RegisterInfoView: View {
     @State private var isPressed: Bool = false
     @State private var showErrorAlert: Bool = false
     
+    @State private var showPicker = false
+    @State private var avatarURL: URL?
+    
     var body: some View {
         VStack {
             Spacer()
-            PhotosPicker(selection: $viewModel.selectedItem) {
-                if let image = viewModel.profileImage {
-                    image
-                        .resizable()
-                        .frame(width:200, height: 200)
-                        .scaledToFit()
-                        .clipShape(Circle())
-                } else {
-                    ProfilePictureComponent(user: MyUser.emptyUser, size: .xlarge)
-                }
-            }
+//            PhotosPicker(selection: $viewModel.selectedItem) {
+//                if let image = viewModel.profileImage {
+//                    image
+//                        .resizable()
+//                        .frame(width:200, height: 200)
+//                        .scaledToFit()
+//                        .clipShape(Circle())
+//                } else {
+//                    ProfilePictureComponent(user: MyUser.emptyUser, size: .xlarge)
+//                }
+//            }
+            pickImageView
             
             //fields
             VStack(alignment: .leading, spacing: 12) {
@@ -80,7 +85,36 @@ struct RegisterInfoView: View {
                 dismissButton: .default(Text("Try again"), action: {viewModel.clearInfoFields()})
             )
         }
+        .fullScreenCover(isPresented: $showPicker) {
+            MediaPicker(isPresented: $showPicker) { media in
+                viewModel.picture = media.first
+                Task {
+                    await avatarURL = viewModel.picture?.getURL()
+                }
+            }
+            .mediaSelectionLimit(1)
+            .mediaSelectionType(.photo)
+            .showLiveCameraCell()
+        }
         .navigationBarBackButtonHidden()
+    }
+    var pickImageView: some View {
+        AsyncImage(url: avatarURL) { image in
+            image
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+        } placeholder: {
+            ZStack {
+                Color(.systemGray)
+                Image("defaultavatar")
+            }
+        }
+        .frame(width: 200, height: 200)
+        .clipShape(Circle())
+        .contentShape(Circle())
+        .onTapGesture {
+            showPicker = true
+        }
     }
 }
 

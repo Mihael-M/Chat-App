@@ -39,7 +39,7 @@ struct ProfileHeaderView: View {
                 
                 //user info
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(user.base.name)
+                    Text(user.nickname)
                         .font(.footnote)
                         .fontWeight(.semibold)
                     Text(user.phone_number)
@@ -54,7 +54,7 @@ struct ProfileHeaderView: View {
             }
             
         }
-        .navigationTitle("Profile")
+        .navigationTitle(user.base.name)
         .navigationBarTitleDisplayMode(.inline)
     }
 }

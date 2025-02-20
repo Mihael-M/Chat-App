@@ -7,13 +7,14 @@
 
 import SwiftUI
 import PhotosUI
+import ExyteMediaPicker
 
 struct EditProfileView: View {
     @StateObject var viewModel = EditProfileViewModel()
     
     @State private var isPressed: Bool = false
-    
-    let user : MyUser
+    @State private var showPicker = false
+    //@State private var avatarURL: URL?
     
     @Environment(\.dismiss) var dismiss
     var body: some View {
@@ -21,17 +22,19 @@ struct EditProfileView: View {
             Spacer()
             //header
             VStack {
-                PhotosPicker(selection: $viewModel.selectedItem) {
-                    if let image = viewModel.profileImage {
-                        image
-                            .resizable()
-                            .frame(width:200, height: 200)
-                            .scaledToFit()
-                            .clipShape(Circle())
-                    } else {
-                        ProfilePictureComponent(user: MyUser.emptyUser, size: .xlarge)
-                    }
-                }
+//                PhotosPicker(selection: $viewModel.selectedItem) {
+//                    if let image = viewModel.profileImage {
+//                        image
+//                            .resizable()
+//                            .frame(width:200, height: 200)
+//                            .scaledToFit()
+//                            .clipShape(Circle())
+//                    } else {
+//                        ProfilePictureComponent(user: MyUser.emptyUser, size: .xlarge)
+//                    }
+//                }
+                
+                    pickImageView
             }
             //fields
             VStack(alignment: .leading, spacing: 12) {
@@ -55,7 +58,9 @@ struct EditProfileView: View {
             
             //save button
             Button {
-                print("save info")
+                Task {
+                    try await viewModel.updateCurrentUser()
+                }
                 dismiss()
             } label: {
                 ZStack {
@@ -87,11 +92,43 @@ struct EditProfileView: View {
                 }
             }
         }
+        .fullScreenCover(isPresented: $showPicker) {
+            MediaPicker(isPresented: $showPicker) { media in
+                viewModel.picture = media.first
+//                Task {
+//                    await avatarURL = viewModel.picture?.getURL()
+//                }
+            }
+            .mediaSelectionLimit(1)
+            .mediaSelectionType(.photo)
+            .showLiveCameraCell()
+        }
+    }
+    var pickImageView: some View {
+        AsyncImage(url: viewModel.user.base.avatarURL) { image in
+            image
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+        } placeholder: {
+            ZStack {
+                ProgressView()
+            }
+        }
+        .frame(width: 200, height: 200)
+        .clipShape(Circle())
+        .overlay(
+            Circle()
+                .stroke(Color.gray, lineWidth: 2)
+        )
+        .contentShape(Circle())
+        .onTapGesture {
+            showPicker = true
+        }
     }
 }
 
 #Preview {
     NavigationStack {
-        EditProfileView(user: MyUser.emptyUser)
+        EditProfileView()
     }
 }

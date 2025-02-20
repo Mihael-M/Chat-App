@@ -45,7 +45,7 @@ enum SettingOption: Int, CaseIterable, Identifiable{
     var destination : some View {
         EmptyView()
         switch self {
-        case .editProfile: EditProfileView(user: MyUser.emptyUser)
+        case .editProfile: EditProfileView()
         case .darkMode: DarkModeSettingsView()
         case .notifications: NotificationsSettingsView()
         case .activeStatus: ActiveStatusSettingsView()

@@ -104,7 +104,7 @@ struct ChatInboxView: View {
                                 .frame(width: 28, height: 28)
                                 .foregroundStyle(Color(.systemGray))
                         }
-                        NavigationLink(destination: {ProfileSettingsView(user: user ?? MyUser.emptyUser)}, label: {ProfilePictureComponent(user: user, size: .xsmall)})
+                        NavigationLink(destination: {ProfileSettingsView()}, label: {ProfilePictureComponent(user: user, size: .xsmall)})
                     }
                 }
             }

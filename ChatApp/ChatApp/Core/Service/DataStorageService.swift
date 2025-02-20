@@ -33,6 +33,10 @@ class DataStorageService: ObservableObject {
         self.currentUser = MyUser(dictionary: snapshot.data() ?? [:], isCurrentUser: true)
     }
     
+    func updateCurrentUserData(data: [String: Any]) async throws {
+        try await Firestore.firestore().collection("users").document(DataStorageService.currentUserID).updateData(data)
+    }
+    
     func getUsers() async {
         
         let snapshot = try? await Firestore.firestore()
@@ -58,6 +62,19 @@ class DataStorageService: ObservableObject {
         }
         
         print("🔄 Subscribing to Firestore updates...")
+        
+        Firestore.firestore()
+            .collection("users")
+            .document(DataStorageService.currentUserID)
+            .addSnapshotListener { [weak self] (snapshot, error) in
+                guard let self = self else { return }
+                if let error = error {
+                    print("❌ Error fetching users updates: \(error.localizedDescription)")
+                    return
+                }
+                self.currentUser = MyUser(dictionary: snapshot?.data() ?? [:], isCurrentUser: true)
+                print("✅ UPDATES: Users snapshot received: current user updated")
+            }
         
         Firestore.firestore()
             .collection("users")

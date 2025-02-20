@@ -48,7 +48,6 @@ struct ProfilePictureComponent: View {
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             image
-                .resizable()
                 .scaledToFit()
                 .frame(width: size.dimension, height: size.dimension)
                 .clipShape(Circle())
@@ -76,13 +75,24 @@ struct ProfilePictureComponent: View {
             }
         }
     }
-    var image: Image {
-        if let picture = user?.profilePicture {
-            Image(picture)
-        } else if let picture = conversation?.picture {
-            Image(picture)
+    @ViewBuilder
+    private var image: some View {
+        if let urlString = user?.profilePicture ?? conversation?.picture, let url = URL(string: urlString) {
+            AsyncImage(url: url) { phase in
+                switch phase {
+                case .empty:
+                    ProgressView()
+                        .frame(width: size.dimension, height: size.dimension)
+                case .success(let image):
+                    image.resizable()
+                case .failure:
+                    Image("defaultavatar").resizable()
+                @unknown default:
+                    Image("defaultavatar").resizable()
+                }
+            }
         } else {
-            Image("defaultavatar")
+            Image("defaultavatar").resizable()
         }
     }
 }

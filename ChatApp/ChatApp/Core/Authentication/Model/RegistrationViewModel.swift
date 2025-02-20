@@ -8,7 +8,9 @@
 import SwiftUI
 import FirebaseAuth
 import PhotosUI
+import ExyteMediaPicker
 
+@MainActor
 class RegistrationViewModel : ObservableObject {
     @Published var email: String = "" {
         didSet {
@@ -27,15 +29,17 @@ class RegistrationViewModel : ObservableObject {
     }
     @Published var username: String = ""
     
-    @Published var selectedItem: PhotosPickerItem? {
-        didSet {
-            Task {
-                try await loadImage()
-            }
-        }
-    }
+//    @Published var selectedItem: PhotosPickerItem? {
+//        didSet {
+//            Task {
+//                try await loadImage()
+//            }
+//        }
+//    }
     
-    @Published var profileImage: Image? = nil
+    //@Published var profileImage: Image? = nil
+    
+    @Published var picture: Media?
     @Published var nickname = ""
     @Published var phone_number = ""
     @Published var date_of_birth = Date.now
@@ -80,8 +84,9 @@ class RegistrationViewModel : ObservableObject {
     func registerPart2() async throws {
         do {
             //logic fot image upload
+            let avatarURL = await UploadingService.uploadImageMedia(picture)
             let data: [String: Any] = [
-                "avatarURL": "",
+                "avatarURL": avatarURL?.absoluteString ?? "https://firebasestorage.googleapis.com/v0/b/swiftuicoursechatapp.firebasestorage.app/o/defaultavatar.jpg?alt=media&token=95f07a5d-bca7-460c-b7c9-1b30ebeb2def",
                 "nickname": self.nickname,
                 "phone_number": self.phone_number,
                 "date_of_birth": self.date_of_birth,
@@ -96,12 +101,12 @@ class RegistrationViewModel : ObservableObject {
         }
     }
     
-    func loadImage() async throws {
-        guard let item = selectedItem else { return }
-        guard let data = try? await item.loadTransferable(type: Data.self) else { return }
-        guard let uiImage = UIImage(data: data) else { return }
-        self.profileImage = Image(uiImage: uiImage)
-    }
+//    func loadImage() async throws {
+//        guard let item = selectedItem else { return }
+//        guard let data = try? await item.loadTransferable(type: Data.self) else { return }
+//        guard let uiImage = UIImage(data: data) else { return }
+//        self.profileImage = Image(uiImage: uiImage)
+//    }
     
     func clearAuthFields() {
         email = ""
@@ -111,7 +116,8 @@ class RegistrationViewModel : ObservableObject {
     }
     
     func clearInfoFields() {
-        profileImage = nil
+        //profileImage = nil
+        picture=nil
         nickname = ""
         phone_number = ""
         date_of_birth = .now

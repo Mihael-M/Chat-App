@@ -9,11 +9,11 @@ import SwiftUI
 
 struct ProfileSettingsView: View {
     @Environment(\.dismiss) var dismiss
-    let user: MyUser
+    @ObservedObject var dataStorage = DataStorageService.shared
     var body: some View {
         VStack {
             //header
-            ProfileHeaderView(user: user)
+            ProfileHeaderView(user: dataStorage.currentUser ?? MyUser.emptyUser)
             
             //settings
             List {
@@ -63,6 +63,6 @@ struct ProfileSettingsView: View {
 
 #Preview {
     NavigationStack {
-        ProfileSettingsView(user: MyUser.emptyUser)
+        ProfileSettingsView()
     }
 }
