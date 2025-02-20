@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct ActiveUsersView: View {
+    let conversation: Conversation
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 32) {
                 ForEach(0...10, id: \.self) { user in
                     VStack{
                         ZStack(alignment: .bottomTrailing) {
-                            ProfilePictureComponent(user: MyUser.emptyUser,size: .medium, showActivityStatus: true)
+                            ProfilePictureComponent(conversation: conversation, size: .small)
                             
                             ZStack {
                                 Circle()
@@ -39,5 +40,5 @@ struct ActiveUsersView: View {
 }
 
 #Preview {
-    ActiveUsersView()
+    //ActiveUsersView()
 }

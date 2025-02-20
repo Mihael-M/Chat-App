@@ -19,7 +19,7 @@ struct CustomTextField: View {
             Image(systemName: icon)
                 .foregroundStyle(iconColor)
                 .frame(width: 30)
-                .offset(y: 5)
+                
             
             VStack(alignment: .leading, spacing: 15, content: {
                 if isPassword {

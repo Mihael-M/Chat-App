@@ -15,7 +15,7 @@ private enum FocusableField: Hashable {
 struct LogInView: View {
     @State private var isPressed: Bool = false
     @State private var showErrorAlert: Bool = false
-    
+    @State private var forgottenPassword: Bool = false
     @StateObject var viewModel = LoginViewModel()
     
     @FocusState private var focus: FocusableField?
@@ -57,6 +57,7 @@ struct LogInView: View {
                 //forgot password
                 Button {
                     print("forgot password")
+                    forgottenPassword.toggle()
                 } label: {
                     Text("Forgot your password?")
                         .font(.footnote)
@@ -65,7 +66,7 @@ struct LogInView: View {
                         .padding(.trailing, 32)
                 }
                 .frame(maxWidth: .infinity, alignment: .trailing)
-                
+                .navigationDestination(isPresented: $forgottenPassword, destination: {ForgottenPasswordView()})
                 //login button
                 Button {
                     Task {

@@ -9,22 +9,6 @@ import SwiftUI
 
 struct SearchView: View {
     @State private var searchText = ""
-    //    var filteredUsers:[String]
-    //    {
-    //        if userID.isEmpty {
-    //            return []
-    //        }
-    //        else{
-    //            return [].filter( $0.localisedCaseInsensitiveContains(userID))
-    //        }
-    //    }
-    
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    // to do search for specific search requerements and add them to addchatview and add groupchatview
-    //look up messaging logic/views
-
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     var body: some View {
         ScrollView {
             CustomTextField(icon: "magnifyingglass", prompt: "Search user...", value: $searchText)

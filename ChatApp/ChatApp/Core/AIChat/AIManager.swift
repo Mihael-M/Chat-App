@@ -10,7 +10,7 @@ final class AIManager {
     
     //          need to secure before push!!!               //
     private let apiKey: String = "API_KEY"
-    private let assistantId: String = "ASSISTANT_ID"
+private let assistantId: String = "ASSISTANT_ID"
     
     private let client: OpenAI
     private var threadId: String = ""
