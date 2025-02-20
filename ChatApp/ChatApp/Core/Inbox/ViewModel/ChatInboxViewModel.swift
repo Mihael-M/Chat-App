@@ -20,7 +20,6 @@ class ChatInboxViewModel : ObservableObject {
     init() {
         Task {
             setupSubscribers()
-            await getData()
         }
     }
     
@@ -42,12 +41,7 @@ class ChatInboxViewModel : ObservableObject {
         }
     }
     
-    func getData() async {
-        await DataStorageService.shared.getUsers()
-        await DataStorageService.shared.getConversations()
-    }
-
-    func subscribeToUpdates() {
-        DataStorageService.shared.subscribeToUpdates()
+    func getData() {
+        DataStorageService.shared.getData()
     }
 }

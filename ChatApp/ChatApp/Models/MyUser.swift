@@ -63,7 +63,7 @@ public struct MyUser : Hashable, Identifiable, Codable {
 
 extension MyUser {
     static var emptyUser : MyUser {
-        MyUser(base: User(id: "0", name: "user", avatarURL: URL(string: "picture"), isCurrentUser: true), email: "user@example.com", nickname: "user", phone_number: "xxxxxxxxx", date_of_birth: .now, activityStatus: false)
+        MyUser(base: User(id: "0", name: "user", avatarURL: URL(string: "defaultavatar"), isCurrentUser: true), email: "user@example.com", nickname: "user", phone_number: "xxxxxxxxx", date_of_birth: .now, activityStatus: false)
     }
 }
 extension MyUser {

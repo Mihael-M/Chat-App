@@ -9,7 +9,7 @@ import FirebaseFirestore
 import FirebaseAuth
 
 class DataStorageService: ObservableObject {
-    @Published var currentUser: MyUser?
+    @Published var currentUser: MyUser? 
     
     static var currentUserID: String {
         shared.currentUser?.id ?? ""
@@ -23,7 +23,7 @@ class DataStorageService: ObservableObject {
     @Published var conversations: [Conversation] = []
     
     init() {
-        getData()
+    
     }
     
     @MainActor
@@ -34,10 +34,12 @@ class DataStorageService: ObservableObject {
     }
     
     func getUsers() async {
+        
         let snapshot = try? await Firestore.firestore()
             .collection("users")
             .getDocuments()
         storeUsers(snapshot)
+        print("✅ GET USERS: Users snapshot received: \(snapshot?.documents.count ?? 0) users updated")
     }
     
     func getConversations() async {
@@ -46,14 +48,28 @@ class DataStorageService: ObservableObject {
             .whereField("users", arrayContains: DataStorageService.currentUserID)
             .getDocuments()
         storeConversations(snapshot)
+        print("✅ GET CONVOS: Conversations snapshot received: \(snapshot?.documents.count ?? 0) conversations updated")
     }
     
     func subscribeToUpdates() {
+        guard !DataStorageService.currentUserID.isEmpty else {
+            print("⚠️ No user logged in, skipping Firestore subscription")
+            return
+        }
+        
+        print("🔄 Subscribing to Firestore updates...")
+        
         Firestore.firestore()
             .collection("users")
-            .addSnapshotListener { [weak self] (snapshot, _) in
-                guard let self else { return }
+            .addSnapshotListener { [weak self] (snapshot, error) in
+                guard let self = self else { return }
+                if let error = error {
+                    print("❌ Error fetching users updates: \(error.localizedDescription)")
+                    return
+                }
+                
                 self.storeUsers(snapshot)
+                print("✅ UPDATES: Users snapshot received: \(snapshot?.documents.count ?? 0) users updated")
                 Task {
                     await self.getConversations() // update in case some new user didn't make it in time for conversations subscription
                 }
@@ -62,8 +78,14 @@ class DataStorageService: ObservableObject {
         Firestore.firestore()
             .collection("conversations")
             .whereField("users", arrayContains: DataStorageService.currentUserID)
-            .addSnapshotListener() { [weak self] (snapshot, _) in
+            .addSnapshotListener() { [weak self] (snapshot, error) in
+                if let error = error {
+                    print("❌ Error fetching conversations updates: \(error.localizedDescription)")
+                    return
+                }
+                
                 self?.storeConversations(snapshot)
+                print("✅ UPDATES: Conversations snapshot received: \(snapshot?.documents.count ?? 0) conversations updated")
             }
     }
     
@@ -148,7 +170,7 @@ class DataStorageService: ObservableObject {
         return conversation
     }
     
-    private func getData() {
+    public func getData() {
         Task {
             await getUsers()
             await getConversations()

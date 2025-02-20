@@ -19,7 +19,7 @@ class AuthenticationService {
            self.userSession = Auth.auth().currentUser
            print("User session id is \(userSession?.uid ?? "No user")")
            
-           loadCurrentUserData()
+           loadData()
 
            Task {
                await DataStorageService.shared.ensureAIUserExists()
@@ -30,7 +30,7 @@ class AuthenticationService {
         do {
             let result = try await Auth.auth().signIn(withEmail: email, password: password)
             self.userSession = result.user
-            loadCurrentUserData()
+            loadData()
             print("Logged in user with uid \(result.user.uid) successfully")
         } catch let error as NSError {
             print("Failed to log in user with error \(error.code)")
@@ -43,7 +43,7 @@ class AuthenticationService {
             try await isUsernameUnique(username: username)
             let result = try await Auth.auth().createUser(withEmail: email, password: password)
             try await uploadUserAuthData(email: email, username: username, uid: result.user.uid)
-            loadCurrentUserData()
+            loadData()
             print("Created user with uid \(Auth.auth().currentUser!.uid) successfully.")
         } catch let error as NSError {
             print("Failed to create user with error \(error.localizedDescription)")
@@ -56,7 +56,7 @@ class AuthenticationService {
             try await Firestore.firestore().collection("users").document(Auth.auth().currentUser!.uid).updateData(data)
             
             self.userSession = Auth.auth().currentUser
-            
+            loadData()
             print("Added info about user with uid \(userSession!.uid) successfully.")
         } catch let error as NSError {
             try await Auth.auth().currentUser?.delete()
@@ -121,9 +121,11 @@ class AuthenticationService {
         }
     }
     
-    private func loadCurrentUserData() {
+    private func loadData() {
         Task {
             try await DataStorageService.shared.loadCurrentUserData()
+            DataStorageService.shared.getData()
+            DataStorageService.shared.subscribeToUpdates()
         }
     }
 }

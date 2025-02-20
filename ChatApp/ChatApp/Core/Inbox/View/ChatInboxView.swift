@@ -44,12 +44,7 @@ struct ChatInboxView: View {
                 }
             }
             .refreshable {
-                await viewModel.getData()
-            }
-            .onAppear {
-                Task{
-                    await viewModel.getData()
-                }
+                viewModel.getData()
             }
             .fullScreenCover(isPresented: $showAddChatView, content: {
                 AddChatView(isPresented: $showAddChatView, navPath: $navPath)
@@ -93,9 +88,6 @@ struct ChatInboxView: View {
                     }
                 }
             }
-        }
-        .task {
-            viewModel.subscribeToUpdates()
         }
     }
 }
