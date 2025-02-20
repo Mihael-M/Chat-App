@@ -14,8 +14,9 @@ struct AddGroupChatView: View {
     @StateObject var viewModel: AddChatViewModel
     @Binding var isPresented: Bool
     @Binding var navPath: NavigationPath
-    @State var navigate: Bool = false
-    
+    @State private var isPressed: Bool = false
+    @State private var showPicker = false
+    @State private var avatarURL: URL?
     var body: some View {
         VStack {
             VStack {
@@ -25,6 +26,12 @@ struct AddGroupChatView: View {
             .padding()
             .padding(.horizontal, 16)
             
+            pickImageView
+                .padding(.top, 32)
+
+            CustomTextField(icon: "person.3.fill", prompt: "Group name", value: $viewModel.title)
+                .padding(.top, 32)
+
             List(viewModel.filteredUsers) { user in
                 HStack {
                     ProfilePictureComponent(user: user, size: .small)
@@ -38,25 +45,47 @@ struct AddGroupChatView: View {
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    viewModel.selectedUsers.contains(user) ?
-                    viewModel.selectedUsers.removeAll(where: { $0.id == user.id }) :
-                    viewModel.selectedUsers.append(user)
+                    if viewModel.selectedUsers.contains(user)
+                    {
+                        print("maham user")
+                        viewModel.selectedUsers.removeAll(where: { $0.id == user.id })
+                    }
+                    else{
+                        print("dobavqm user")
+
+                        viewModel.selectedUsers.append(user)
+                    }
                 }
                 .listRowSeparator(.hidden)
             }
             .padding(.bottom, 60)
             
-            Button(action: {
-                navigate.toggle()
-            }, label: {Text("Next")})
-            .disabled(viewModel.selectedUsers.count < 1)
-            .padding(.horizontal, 12)
-            .padding(.bottom, 10)
+            Button{
+                Task {
+                    if let conversation = await viewModel.createConversation(viewModel.selectedUsers) {
+                        viewModel.selectedUsers = []
+                        isPresented = false
+                        navPath.append(conversation)
+                    }
+                }
+                
+            }
+            label:{
+                ZStack {
+                    Circle()
+                        .fill(LinearGradient(gradient: Gradient(colors: [.blue, .purple]), startPoint: .leading, endPoint: .trailing))
+                        .frame(width:60, height: 60)
+                        .scaleEffect(isPressed ? 0.98 : 1.0)
+                        .animation(.spring(), value: isPressed)
+                    Image(systemName: "person.2.circle.fill")
+                        .font(.title3)
+                        .foregroundStyle(.white)
+                }
+            }
         }
         .listStyle(.plain)
         .navigationTitle("Create Group")
         .navigationBarTitleDisplayMode(.inline)
-        .navigationDestination(isPresented: $navigate, destination: {CreateGroupView(viewModel: viewModel, isPresented: $isPresented, navPath: $navPath)})
         .navigationBarBackButtonHidden()
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -67,6 +96,24 @@ struct AddGroupChatView: View {
                         .foregroundStyle(Color(.black))
                 }
             }
+        }
+    }
+    var pickImageView: some View {
+        AsyncImage(url: avatarURL) { image in
+            image
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+        } placeholder: {
+            ZStack {
+                Color(.systemGray)
+                Image("defaultavatar")
+            }
+        }
+        .frame(width: 200, height: 200)
+        .clipShape(Circle())
+        .contentShape(Circle())
+        .onTapGesture {
+            showPicker = true
         }
     }
 }

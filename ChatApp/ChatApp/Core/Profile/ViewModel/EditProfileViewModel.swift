@@ -25,8 +25,22 @@ class EditProfileViewModel: ObservableObject {
     @Published var picture: Media?
     @Published var nickname = ""
     @Published var phone_number = ""
+    {
+        didSet{
+            validatePhone_number()
+        }
+    }
     @Published var date_of_birth = Date.now
-    
+    @Published var isValidPhoneNumber: Bool = false
+    private func validatePhone_number() {
+        isValidPhoneNumber = validatePhoneNumber(phone_number)
+    }
+    private func validatePhoneNumber(_ phoneNumber: String) -> Bool {
+        let phoneNumberRegex = "^(?:\\+359|0)\\d{9}$"
+        let phonePredicate = NSPredicate(format: "SELF MATCHES %@", phoneNumberRegex)
+        return phonePredicate.evaluate(with: phoneNumber)
+        
+    }
     init() {
         picture = nil
         nickname = user.nickname
@@ -55,6 +69,7 @@ class EditProfileViewModel: ObservableObject {
             try await DataStorageService.shared.updateCurrentUserData(data: data)
         }
     }
+ 
     
 //    func loadImage() async throws {
 //        guard let item = selectedItem else { return }

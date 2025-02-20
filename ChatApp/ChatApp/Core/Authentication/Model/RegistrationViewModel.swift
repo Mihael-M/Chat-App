@@ -42,6 +42,11 @@ class RegistrationViewModel : ObservableObject {
     @Published var picture: Media?
     @Published var nickname = ""
     @Published var phone_number = ""
+    {
+        didSet {
+            validatePhone_number()
+        }
+    }
     @Published var date_of_birth = Date.now
     
     @Published var isEmailValid: Bool = false
@@ -52,12 +57,20 @@ class RegistrationViewModel : ObservableObject {
     @Published var emailVerified: Bool = false
     @Published var registerError: String? = nil
     @Published var isEmailVerified: Bool = false
-    
+    @Published var isValidPhoneNumber: Bool = false
     
     private func validateEmail() {
         isEmailValid = isValidEmail(email)
     }
-    
+    private func validatePhone_number() {
+        isValidPhoneNumber = validatePhoneNumber(phone_number)
+    }
+    private func validatePhoneNumber(_ phoneNumber: String) -> Bool {
+        let phoneNumberRegex = "^(?:\\+359|0)\\d{9}$"
+        let phonePredicate = NSPredicate(format: "SELF MATCHES %@", phoneNumberRegex)
+        return phonePredicate.evaluate(with: phoneNumber)
+        
+    }
     private func validatePassword() {
         isPasswordLengthValid = password.count >= 8
         containsUppercase = password.contains(where: { $0.isUppercase })
@@ -70,6 +83,7 @@ class RegistrationViewModel : ObservableObject {
         let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
         return emailPredicate.evaluate(with: email)
     }
+    
     
 
     func registerPart1() async throws {

@@ -41,6 +41,14 @@ struct RegisterInfoView: View {
                 Divider()
                 CustomTextField(icon: "phone.fill", prompt: "Phone number", value: $viewModel.phone_number)
                     .keyboardType(.numberPad)
+                HStack {
+                    Image(systemName: viewModel.isValidPhoneNumber ? "checkmark.circle.fill" : "xmark.circle.fill")
+                        .foregroundColor(viewModel.isValidPhoneNumber ? .green : .red)
+                    Text("Enter valid phone number")
+                        .font(.footnote)
+                        .textSelection(.disabled)
+                        .foregroundColor(viewModel.isValidPhoneNumber ? .green : .red)
+                }
                 Divider()
                 HStack(spacing: 15) {
                     Image(systemName: "birthday.cake.fill")
