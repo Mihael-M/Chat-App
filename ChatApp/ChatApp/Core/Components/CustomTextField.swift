@@ -56,3 +56,7 @@ struct CustomTextField: View {
         })
     }
 }
+#Preview {
+    @State var text:String = ""
+    CustomTextField(icon: "person.circle",prompt: "Enter your name",value: $text)
+}

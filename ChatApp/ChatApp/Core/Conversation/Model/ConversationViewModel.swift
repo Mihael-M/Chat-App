@@ -66,7 +66,6 @@ class ConversationViewModel: ObservableObject {
             .document(conversationId)
             .collection("messages")
     }
-
     func resetUnreadCounter() {
         if var usersUnreadCountInfo = conversation?.usersUnreadCountInfo {
             usersUnreadCountInfo[DataStorageService.currentUserID] = 0

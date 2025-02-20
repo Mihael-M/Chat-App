@@ -10,10 +10,9 @@ import SwiftUI
 struct ChatInboxView: View {
     @ObservedObject var dataStorage = DataStorageService.shared
     @StateObject var viewModel = ChatInboxViewModel()
-
     @State private var showAddChatView: Bool = false
+    @State private var showSearchView: Bool = false
     @State var navPath = NavigationPath()
-    @State private var search: Bool = true
     @State private var text : String = ""
     private var user: MyUser? {
         return viewModel.currentUser
@@ -53,6 +52,10 @@ struct ChatInboxView: View {
             .fullScreenCover(isPresented: $showAddChatView, content: {
                 AddChatView(isPresented: $showAddChatView, navPath: $navPath)
             })
+            .fullScreenCover(isPresented: $showSearchView, content: {
+                SearchView()
+                    
+            })
             .navigationDestination(for: Conversation.self) { conversation in
                 ConversationView(viewModel: ConversationViewModel(conversation: conversation))
             }
@@ -62,10 +65,9 @@ struct ChatInboxView: View {
             .toolbar {
                 //search and title
                 ToolbarItem(placement: .topBarLeading) {
-                    if search{
                         HStack {
                             Button{
-                                search.toggle()
+                                showSearchView.toggle()
                             }
                             label:{
                                 Image(systemName: "magnifyingglass")
@@ -78,19 +80,6 @@ struct ChatInboxView: View {
                                 .font(.title)
                                 .fontWeight(.semibold)
                         }
-                    }
-                    else{
-                        CustomTextField(icon: "magnifyingglass", prompt: "Search user...", value: $viewModel.searchText)
-                            .background(Color.gray.cornerRadius(10).opacity(0.1).frame(height: 35))
-                            .animation(.smooth.speed(5))
-                            .onSubmit
-                            {
-                                search.toggle()
-                                viewModel.searchText = ""
-                            }
-                            
-                    }
-                    
                 }
                 //add chat and profile
                 ToolbarItem(placement: .topBarTrailing) {
