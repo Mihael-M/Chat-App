@@ -21,7 +21,6 @@ class AuthenticationService {
            
            loadCurrentUserData()
 
-           // ✅ Ensure AI user exists at startup
            Task {
                await DataStorageService.shared.ensureAIUserExists()
            }

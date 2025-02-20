@@ -14,12 +14,13 @@ struct InboxRowView: View {
         HStack(alignment: .top, spacing: 16) {
             ProfilePictureComponent(conversation: conversation, size: .small)
             
-            if let latest = conversation.latestMessage {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(conversation.displayTitle)
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                    
+            
+            VStack(alignment: .leading, spacing: 4) {
+                
+                Text(conversation.displayTitle)
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                if let latest = conversation.latestMessage {
                     HStack(spacing: 0) {
                         if latest.isMyMessage {
                             Text("You: ")
@@ -41,11 +42,14 @@ struct InboxRowView: View {
                                     .lineLimit(1)
                                     .font(.subheadline)
                                     .foregroundStyle(Color(.systemGray))
-                                    //.frame(maxWidth: UIScreen.main.bounds.width - 120, alignment: .leading)
+                                //.frame(maxWidth: UIScreen.main.bounds.width - 120, alignment: .leading)
                             }
                         }
                     }
                 }
+           
+            }
+            if let latest = conversation.latestMessage {
                 Spacer()
                 if let date = latest.createdAt?.timeAgoFormat(){
                     HStack {

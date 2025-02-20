@@ -157,10 +157,10 @@ class ConversationViewModel: ObservableObject {
     func sendMessage(_ draft: DraftMessage) {
         Task {
             /// Create conversation in Firestore if needed
-            if conversation == nil, users.count == 1, let user = users.first,
-                let conversation = await createIndividualConversation(user) {
-                updateForConversation(conversation)
-            }
+//            if conversation == nil, users.count == 1, let user = users.first,
+//                let conversation = await createIndividualConversation(user) {
+//                updateForConversation(conversation)
+//            }
 
             /// Precreate user message
             guard let currentUser = DataStorageService.shared.currentUser else { return }
@@ -187,7 +187,7 @@ class ConversationViewModel: ObservableObject {
             }
             
             /// update latest message in current conversation to be this one
-                        if let id = conversation?.id {
+            if let id = conversation?.id {
                             try await Firestore.firestore()
                                 .collection("conversations")
                                 .document(id)

@@ -56,19 +56,25 @@ struct AddChatView: View {
                     .padding([.horizontal, .bottom], 16)
                     .contentShape(Rectangle())
                     .onTapGesture {
-                        Task {
-                            if let conversation = await viewModel.conversationForUsers([user]) {
-                                navPath.append(conversation)
-                            } else {
-                                navPath.append(user)
+                        if viewModel.selectedUsers.count == 0 {
+                            viewModel.selectedUsers.append(user)
+                           
+                            Task{
+                                if let conversation = await viewModel.conversationForUsers([user]) {
+                                    navPath.append(conversation)
+                                    viewModel.selectedUsers = []
+                                    isPresented = false
+                                } else if let conversation = await viewModel.createIndividualConversation(viewModel.selectedUsers) {
+                                    viewModel.selectedUsers = []
+                                    isPresented = false
+                                    navPath.append(conversation)
+                                }
                             }
-                            isPresented = false
                         }
                     }
                 }
             }
             .listStyle(.plain)
-            //            }
             .navigationTitle("New message")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

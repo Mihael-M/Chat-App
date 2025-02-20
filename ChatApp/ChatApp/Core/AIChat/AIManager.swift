@@ -7,8 +7,10 @@ import ExyteOpenAI
 final class AIManager {
     static let shared = AIManager()
     
-    private let apiKey: String = "API-Key"
-    private let assistantId: String = "ASSISTANT-ID"
+    
+    //          need to secure before push!!!               //
+    private let apiKey: String = "API_KEY"
+    private let assistantId: String = "ASSISTANT_ID"
     
     private let client: OpenAI
     private var threadId: String = ""

@@ -61,27 +61,53 @@ class AddChatViewModel: ObservableObject {
 
     private func createConversation(_ users: [MyUser], _ pictureURL: URL?) async -> Conversation? {
         let allUserIds = users.map { $0.id } + [DataStorageService.currentUserID]
-        let dict: [String : Any] = [
-            "users": allUserIds,
-            "usersUnreadCountInfo": Dictionary(uniqueKeysWithValues: allUserIds.map { ($0, 0) } ),
-            "isGroup": true,
-            "pictureURL": pictureURL?.absoluteString ?? "",
-            "title": title
-        ]
-
-        return await withCheckedContinuation { continuation in
-            var ref: DocumentReference? = nil
-            ref = Firestore.firestore()
-                .collection("conversations")
-                .addDocument(data: dict) { err in
-                    if let _ = err {
-                        continuation.resume(returning: nil)
-                    } else if let id = ref?.documentID {
-                        if let current = DataStorageService.shared.currentUser {
-                            continuation.resume(returning: Conversation(id: id, users: users + [current], isGroup: true, pictureURL: pictureURL, title: self.title))
+      
+            let dict: [String : Any] = [
+                "users": allUserIds,
+                "usersUnreadCountInfo": Dictionary(uniqueKeysWithValues: allUserIds.map { ($0, 0) } ),
+                "isGroup": true,
+                "pictureURL": pictureURL?.absoluteString ?? "",
+                "title": title
+            ]
+            return await withCheckedContinuation { continuation in
+                var ref: DocumentReference? = nil
+                ref = Firestore.firestore()
+                    .collection("conversations")
+                    .addDocument(data: dict) { err in
+                        if let _ = err {
+                            continuation.resume(returning: nil)
+                        } else if let id = ref?.documentID {
+                            if let current = DataStorageService.shared.currentUser {
+                                continuation.resume(returning: Conversation(id: id, users: users + [current], isGroup: true, pictureURL: pictureURL, title: self.title))
+                            }
                         }
                     }
-                }
         }
+        
+    }
+    func createIndividualConversation(_ users: [MyUser]) async -> Conversation? {
+        let allUserIds = users.map { $0.id } + [DataStorageService.currentUserID]
+
+            let dict: [String : Any] = [
+                "users": allUserIds,
+                "usersUnreadCountInfo": Dictionary(uniqueKeysWithValues: allUserIds.map { ($0, 0) } ),
+                "isGroup": false,
+                "title": users.first!.base.name
+            ]
+            return await withCheckedContinuation { continuation in
+                var ref: DocumentReference? = nil
+                ref = Firestore.firestore()
+                    .collection("conversations")
+                    .addDocument(data: dict) { err in
+                        if let _ = err {
+                            continuation.resume(returning: nil)
+                        } else if let id = ref?.documentID {
+                            if let current = DataStorageService.shared.currentUser {
+                                continuation.resume(returning: Conversation(id: id, users: users + [current], isGroup: false))
+                            }
+                        }
+                    }
+            }
     }
 }
+
