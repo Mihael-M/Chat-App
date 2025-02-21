@@ -84,7 +84,7 @@ struct ProfilePictureComponent: View {
             if conversation.isGroup {
                 AsynchronousImage(url: conversation.pictureURL, size: self.size)
             } else {
-                let url = conversation.users.first(where: { $0.id != DataStorageService.currentUserID})!.base.avatarURL
+                let url = URL(string: conversation.users.first(where: { $0.id != DataStorageService.currentUserID})!.profilePicture)
                 AsynchronousImage(url: url, size: self.size)
             }
         } else {

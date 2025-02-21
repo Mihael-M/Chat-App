@@ -187,38 +187,9 @@ class DataStorageService: ObservableObject {
         return conversation
     }
     
-    private func deleteEmptyConversations() async {
-        do {
-            let snapshot = try await Firestore.firestore()
-                .collection("conversations")
-                .whereField("users", arrayContains: DataStorageService.currentUserID)
-                .getDocuments()
-
-            for document in snapshot.documents {
-                let messagesCollection = Firestore.firestore()
-                    .collection("conversations")
-                    .document(document.documentID)
-                    .collection("messages")
-
-                let messagesSnapshot = try await messagesCollection.limit(to: 1).getDocuments()
-
-                if messagesSnapshot.isEmpty {
-                    print("🗑 Deleting empty conversation: \(document.documentID)")
-                    try await Firestore.firestore()
-                        .collection("conversations")
-                        .document(document.documentID)
-                        .delete()
-                }
-            }
-        } catch {
-            print("❌ Error deleting empty conversations: \(error)")
-        }
-    }
-    
     public func getData() {
         Task {
             await getUsers()
-            await deleteEmptyConversations()
             await getConversations()
         }
     }

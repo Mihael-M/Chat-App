@@ -20,6 +20,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 @main
 struct ChatAppApp: App {
+    @AppStorage("darkModeOption") private var selectedMode: DarkModeOption = .system
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject var registrationViewModel = RegistrationViewModel()
     
@@ -27,6 +28,8 @@ struct ChatAppApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(registrationViewModel)
+                .preferredColorScheme(selectedMode.colorScheme)
+
         }
     }
 }

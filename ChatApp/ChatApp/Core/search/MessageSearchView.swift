@@ -52,6 +52,7 @@ struct SearchView: View {
                     }
                 }
             }
+            .dismissKeyboardOnDrag()
             .navigationTitle("Search")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -60,7 +61,7 @@ struct SearchView: View {
                         dismiss()
                     } label: {
                         Image(systemName: "chevron.left")
-                            .foregroundStyle(Color(.black))
+                            .foregroundStyle(Color(.systemGray))
                     }
                 }
             }

@@ -87,6 +87,7 @@ struct RegisterInfoView: View {
             }
             Spacer()
         }
+        .dismissKeyboardOnDrag()
         .alert(isPresented: $showErrorAlert) {
             Alert(
                 title: Text("Error!"),

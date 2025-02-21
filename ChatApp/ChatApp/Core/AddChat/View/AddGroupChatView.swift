@@ -94,10 +94,11 @@ struct AddGroupChatView: View {
                     dismiss()
                 } label: {
                     Image(systemName: "chevron.left")
-                        .foregroundStyle(Color(.black))
+                        .foregroundStyle(Color(.systemGray))
                 }
             }
         }
+        .dismissKeyboardOnDrag()
         .fullScreenCover(isPresented: $showPicker) {
             MediaPicker(isPresented: $showPicker) { media in
                 viewModel.picture = media.first

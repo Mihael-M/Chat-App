@@ -52,10 +52,7 @@ struct ProfileHeaderView: View {
                 
                 
             }
-            
         }
-        .navigationTitle(user.base.name)
-        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

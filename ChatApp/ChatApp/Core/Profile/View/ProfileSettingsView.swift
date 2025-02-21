@@ -44,7 +44,7 @@ struct ProfileSettingsView: View {
                 .foregroundStyle(Color(.red))
             }
         }
-        .navigationTitle("Your profile")
+        .navigationTitle(dataStorage.currentUser?.base.name ?? MyUser.emptyUser.base.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -52,7 +52,7 @@ struct ProfileSettingsView: View {
                     dismiss()
                 } label: {
                     Image(systemName: "chevron.left")
-                        .foregroundStyle(Color(.black))
+                        .foregroundStyle(Color(.systemGray))
                 }
             }
         }

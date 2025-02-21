@@ -104,6 +104,8 @@ class RegistrationViewModel : ObservableObject {
                 "nickname": self.nickname,
                 "phone_number": self.phone_number,
                 "date_of_birth": self.date_of_birth,
+                "messagesSent": 0,
+                "messagesReceived": 0,
                 "thread_id": ""  // Placeholder for AI thread
             ]
             try await AuthenticationService.shared.registerPart2(data: data)

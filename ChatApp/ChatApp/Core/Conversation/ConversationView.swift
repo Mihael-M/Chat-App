@@ -13,6 +13,8 @@ struct ConversationView: View {
     @Environment(\.dismiss) var dismiss
     
     @StateObject var viewModel: ConversationViewModel
+    
+    @State var showChatSettings: Bool = false
  
     var body: some View {
         ChatView(messages: viewModel.messages, chatType: .conversation, replyMode: .answer) { draft in
@@ -25,6 +27,7 @@ struct ConversationView: View {
                 }
             }
         }
+        .dismissKeyboardOnDrag()
         .mediaPickerTheme(
             main: .init(
                 text: .white,
@@ -41,6 +44,12 @@ struct ConversationView: View {
         .onDisappear {
             viewModel.resetUnreadCounter()
         }
+        .overlay(
+            ChatProfileView(isPresented: $showChatSettings, user: viewModel.users.first ?? MyUser.emptyUser)
+                .offset(y: showChatSettings ?  -80 : -UIScreen.main.bounds.height) // Slide in from top
+                .animation(.spring(), value: showChatSettings),
+                            alignment: .top
+                )
         .navigationBarBackButtonHidden()
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -49,7 +58,7 @@ struct ConversationView: View {
                         dismiss()
                     } label: {
                         Image(systemName: "chevron.left")
-                            .foregroundStyle(Color(.black))
+                            .foregroundStyle(Color(.systemGray))
                     }
                     
                     if let conversation = viewModel.conversation, conversation.isGroup {
@@ -67,13 +76,11 @@ struct ConversationView: View {
                         
                     }
                 }
-            }
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    print("chat settings")
-                } label:  {
-                    Image(systemName: "ellipsis")
-                        .foregroundStyle(Color(.black))
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    withAnimation {
+                        showChatSettings = true
+                    }
                 }
             }
         }

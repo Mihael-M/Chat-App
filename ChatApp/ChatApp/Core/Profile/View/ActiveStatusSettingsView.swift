@@ -38,7 +38,7 @@ struct ActiveStatusSettingsView: View {
                     dismiss()
                 } label: {
                     Image(systemName: "chevron.left")
-                        .foregroundStyle(Color(.black))
+                        .foregroundStyle(Color(.systemGray))
                 }
             }
         }

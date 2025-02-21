@@ -178,6 +178,7 @@ struct RegisterAuthView : View {
                 isPressed.toggle()
             }
         }
+        .dismissKeyboardOnDrag()
         .navigationBarBackButtonHidden()
         .navigationDestination(isPresented: $navigateNext, destination: {
             WelcomeView()

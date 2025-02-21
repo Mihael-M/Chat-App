@@ -41,6 +41,7 @@ struct LogInView: View {
                         .onSubmit {
                             self.focus = .password
                         }
+                        
                     
                     Divider()
                     
@@ -49,9 +50,11 @@ struct LogInView: View {
                         .onSubmit {
                             
                         }
+                        
                     
                     Divider()
                 }
+
                 .padding(.horizontal)
                 
                 //forgot password
@@ -117,6 +120,7 @@ struct LogInView: View {
                 }
             }
         }
+        .dismissKeyboardOnDrag()
         .alert(isPresented: $showErrorAlert) {
             Alert(
                 title: Text("Error!"),

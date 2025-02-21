@@ -43,7 +43,9 @@ public struct MyUser : Hashable, Identifiable, Codable {
               let email = dictionary["email"] as? String,
               let nickname = dictionary["nickname"] as? String,
               let dateTimestamp = dictionary["date_of_birth"] as? Timestamp,
-              let phone_number = dictionary["phone_number"] as? String
+              let phone_number = dictionary["phone_number"] as? String,
+              let messagesSent = dictionary["messagesSent"] as? Int,
+              let messagesReceived = dictionary["messagesReceived"] as? Int
         else {
             return nil
         }
@@ -58,6 +60,8 @@ public struct MyUser : Hashable, Identifiable, Codable {
         self.date_of_birth = dateTimestamp.dateValue()
         self.phone_number = phone_number
         self.activityStatus = dictionary["activityStatus"] as? Bool ?? false
+        self.messagesSent = messagesSent
+        self.messagesReceived = messagesReceived
     }
 }
 

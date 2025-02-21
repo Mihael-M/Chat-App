@@ -56,6 +56,7 @@ struct InboxRowView: View {
                         Text(date)
                         
                         Image(systemName: "chevron.right")
+                            .foregroundStyle(Color(.systemGray))
                     }
                     .font(.footnote)
                     .foregroundStyle(Color(.systemGray))

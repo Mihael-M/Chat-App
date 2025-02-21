@@ -30,7 +30,7 @@ struct AddChatView: View {
                         Image(systemName: "person.3.sequence.fill")
                         Text("Group Chat")
                         Spacer()
-                        //Image(systemName: "chevron.right")
+                        
                     }
                 }
                 .listRowSeparator(.hidden)
@@ -39,7 +39,7 @@ struct AddChatView: View {
                 .padding(.horizontal, 16)
                 
                 Rectangle()
-                    .foregroundColor(.black)
+                    .foregroundColor(Color(.systemGray))
                     .frame(height: 1)
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets())
@@ -74,6 +74,7 @@ struct AddChatView: View {
                     }
                 }
             }
+            .dismissKeyboardOnDrag()
             .listStyle(.plain)
             .navigationTitle("New message")
             .navigationBarTitleDisplayMode(.inline)
@@ -83,7 +84,7 @@ struct AddChatView: View {
                         dismiss()
                     } label: {
                         Image(systemName: "chevron.left")
-                            .foregroundStyle(Color(.black))
+                            .foregroundStyle(Color(.systemGray))
                     }
                 }
             }
