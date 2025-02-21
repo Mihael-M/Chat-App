@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ExyteMediaPicker
 
 struct AddGroupChatView: View {
     
@@ -96,6 +97,17 @@ struct AddGroupChatView: View {
                         .foregroundStyle(Color(.black))
                 }
             }
+        }
+        .fullScreenCover(isPresented: $showPicker) {
+            MediaPicker(isPresented: $showPicker) { media in
+                viewModel.picture = media.first
+                Task {
+                    await avatarURL = viewModel.picture?.getURL()
+                }
+            }
+            .mediaSelectionLimit(1)
+            .mediaSelectionType(.photo)
+            .showLiveCameraCell()
         }
     }
     var pickImageView: some View {

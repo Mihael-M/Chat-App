@@ -74,3 +74,64 @@ struct SearchView: View {
     }
 }
 
+//import SwiftUI
+//import ExyteChat
+//
+//struct SearchView: View {
+//    @State private var searchText = ""
+//    @StateObject private var viewModel = ChatInboxViewModel()
+//    @StateObject private var viewModelConversation = ConversationViewModel()
+//    var body: some View {
+//        NavigationView {
+//            VStack {
+//                // Search Bar
+//                TextField("Search messages...", text: $searchText)
+//                    .padding(10)
+//                    .background(Color(.systemGray6))
+//                    .cornerRadius(10)
+//                    .padding(.horizontal)
+//
+//                // Display search results
+//                ScrollView {
+//                    VStack(spacing: 10) {
+//                        ForEach(viewModel.searchMessage(searchText), id: \.id) { message in
+//                            NavigationLink(destination: ConversationView(viewModel: viewModelConversation)) {
+//                                HStack {
+//                                    VStack(alignment: .leading) {
+//                                        Text(message.text)
+//                                            .font(.body)
+//                                            .foregroundColor(.black)
+//                                            .bold()
+//                                        Text(formatTimestamp(message.createdAt))
+//                                            .font(.footnote)
+//                                            .foregroundColor(.gray)
+//                                    }
+//                                    Spacer()
+//                                }
+//                                .padding()
+//                                .background(Color.white)
+//                                .cornerRadius(10)
+//                                .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
+//                                .padding(.horizontal)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//            .navigationTitle("Search")
+//            .onAppear {
+//                Task {
+//                    await viewModel.fetchAllMessages()
+//                }
+//            }
+//        }
+//    }
+//
+//    func formatTimestamp(_ date: Date?) -> String {
+//        guard let date = date else { return "" }
+//        let formatter = DateFormatter()
+//        formatter.dateStyle = .short
+//        formatter.timeStyle = .short
+//        return formatter.string(from: date)
+//    }
+//}

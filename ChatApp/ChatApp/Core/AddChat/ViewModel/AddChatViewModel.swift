@@ -66,7 +66,7 @@ class AddChatViewModel: ObservableObject {
                 "users": allUserIds,
                 "usersUnreadCountInfo": Dictionary(uniqueKeysWithValues: allUserIds.map { ($0, 0) } ),
                 "isGroup": true,
-                "pictureURL": pictureURL?.absoluteString ?? "",
+                "pictureURL": pictureURL?.absoluteString ?? "defaultavatar",
                 "title": title
             ]
             return await withCheckedContinuation { continuation in

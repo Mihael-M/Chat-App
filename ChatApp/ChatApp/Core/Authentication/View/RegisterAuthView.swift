@@ -145,8 +145,7 @@ struct RegisterAuthView : View {
                             !viewModel.isEmailValid ||
                             !viewModel.isPasswordLengthValid ||
                             !viewModel.containsUppercase ||
-                            !viewModel.containsNumber ||
-                            !viewModel.isValidPhoneNumber
+                            !viewModel.containsNumber
                         )
             .onTapGesture {
                 isPressed.toggle()

@@ -41,7 +41,7 @@ extension DataStorageService {
                     "phone_number": "N/A",
                     "date_of_birth": Timestamp(date: Date(timeIntervalSince1970: 0)),
                     "activityStatus": true,
-                    "profilePicture": "" // Optional
+                    "avatarURL": "https://firebasestorage.googleapis.com/v0/b/swiftuicoursechatapp.firebasestorage.app/o/aibotavatar.png?alt=media&token=fd7d5401-9b94-4b49-85d2-ed6cc521b3e2"
                 ]
                 try await userRef.setData(aiUserData)
                 print("✅ AI User added to Firestore.")

@@ -38,6 +38,7 @@ struct ProfilePictureComponent: View {
         self.size = size
         self.showActivityStatus = showActivityStatus
     }
+    
     init(conversation: Conversation?, size: ProfileImageSize) {
         self.user = nil
         self.conversation = conversation
@@ -77,22 +78,38 @@ struct ProfilePictureComponent: View {
     }
     @ViewBuilder
     private var image: some View {
-        if let urlString = user?.profilePicture ?? conversation?.picture, let url = URL(string: urlString) {
-            AsyncImage(url: url) { phase in
-                switch phase {
-                case .empty:
-                    ProgressView()
-                        .frame(width: size.dimension, height: size.dimension)
-                case .success(let image):
-                    image.resizable()
-                case .failure:
-                    Image("defaultavatar").resizable()
-                @unknown default:
-                    Image("defaultavatar").resizable()
-                }
+        if let user = user, let url = user.base.avatarURL {
+            AsynchronousImage(url: url, size: self.size)
+        } else if let conversation = conversation {
+            if conversation.isGroup {
+                AsynchronousImage(url: conversation.pictureURL, size: self.size)
+            } else {
+                let url = conversation.users.first(where: { $0.id != DataStorageService.currentUserID})!.base.avatarURL
+                AsynchronousImage(url: url, size: self.size)
             }
         } else {
             Image("defaultavatar").resizable()
+        }
+    }
+}
+
+struct AsynchronousImage : View {
+    @State var url: URL?
+    @State var size: ProfileImageSize
+    
+    var body: some View {
+        AsyncImage(url: url) { phase in
+            switch phase {
+            case .empty:
+                ProgressView()
+                    .frame(width: size.dimension, height: size.dimension)
+            case .success(let image):
+                image.resizable()
+            case .failure:
+                Image("defaultavatar").resizable()
+            @unknown default:
+                Image("defaultavatar").resizable()
+            }
         }
     }
 }

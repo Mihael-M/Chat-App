@@ -46,6 +46,9 @@ struct ChatInboxView: View {
                     .frame(height: UIScreen.main.bounds.height - 128)
                 }
             }
+            .onAppear(){
+                viewModel.getData()
+            }
             .refreshable {
                 viewModel.getData()
             }

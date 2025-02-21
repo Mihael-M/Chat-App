@@ -81,6 +81,7 @@ struct RegisterInfoView: View {
                         .foregroundStyle(.white)
                 }
             }
+            .disabled(!viewModel.isValidPhoneNumber)
             .onTapGesture {
                 isPressed.toggle()
             }
