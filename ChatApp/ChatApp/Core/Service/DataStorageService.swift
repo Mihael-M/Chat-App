@@ -122,8 +122,8 @@ class DataStorageService: ObservableObject {
                     if document.documentID == currentUser.id {
                         return nil // skip current user
                     }
-                    if let name = dict["nickname"] as? String {
-                        let avatarURL = dict["avatarURL"] as? String
+                    if dict["nickname"] is String {
+                        _ = dict["avatarURL"] as? String
                         return MyUser(dictionary: dict, isCurrentUser: false)
                     }
                     return nil } ?? []

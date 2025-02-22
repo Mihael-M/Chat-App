@@ -333,27 +333,4 @@ class ConversationViewModel: ObservableObject {
         return nil
     }
 
-    private func createIndividualConversation(_ user: MyUser) async -> Conversation? {
-        subscriptionToConversationCreation = nil
-        let allUserIds = allUsers.map { $0.id }
-        let dict: [String : Any] = [
-            "users": allUserIds,
-            "usersUnreadCountInfo": Dictionary(uniqueKeysWithValues: allUserIds.map { ($0, 0) } ),
-            "isGroup": false,
-            "title": user.base.name
-        ]
-
-        return await withCheckedContinuation { continuation in
-            var ref: DocumentReference? = nil
-            ref = Firestore.firestore()
-                .collection("conversations")
-                .addDocument(data: dict) { err in
-                    if let _ = err {
-                        continuation.resume(returning: nil)
-                    } else if let id = ref?.documentID {
-                        continuation.resume(returning: Conversation(id: id, users: self.allUsers, isGroup: false))
-                    }
-                }
-        }
-    }
 }
