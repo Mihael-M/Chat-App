@@ -57,6 +57,8 @@ A real-time chat application for iOS built with SwiftUI and Firebase.
 
     •    Frontend: SwiftUI
     •    Backend: Firebase (Firestore, Authentication, Cloud Storage)
+    •    Exyte / Chat
+    •    Exyte / OpenAi
 
 ## Requirements
 
