@@ -33,25 +33,25 @@ A real-time chat application for iOS built with SwiftUI and Firebase.
 ## 🔧 Installation
 
 ### **1️⃣ Clone the Repository**
-    ```sh
+    
     git clone https://github.com/Mihael-M/Chat-App.git
+    
    SwiftUI Package Manager
-    ```
-    ``` sh
    
     dependencies: [
     .package(url: "https://github.com/exyte/Chat.git")]
     
-    ```
     
    Install Dependencies via Swift Package Manager (SPM)
+   
     1.    Open Xcode.
+    
     2.    Navigate to File → Add Packages.
+    
     3.    In the dialog that appears, enter the following Firebase Swift Package Manager URL:
     
-    ` sh
-    https://github.com/firebase/firebase-ios-sdk
-    `
+    
+    https://github.com/firebase/firebase-ios-sd
 
 ## Tech Stack
 
@@ -61,6 +61,7 @@ A real-time chat application for iOS built with SwiftUI and Firebase.
 ## Requirements
 
 iOS 18+
+
 Xcode 14+
 
 
