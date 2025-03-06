@@ -12,7 +12,7 @@ A real-time chat application for iOS built with SwiftUI and Firebase.
     
 ## 📸 Example images
 
-    <div style="overflow-x: auto; white-space: nowrap;">
+<div style="overflow-x: auto; white-space: nowrap;">
   <img src="Assets/IMG_0471.PNG" width="250" style="border-radius: 15px; margin-right: 10px;">
   <img src="Assets/IMG_0472.PNG" width="250" style="border-radius: 15px; margin-right: 10px;">
   <img src="Assets/IMG_0464.PNG" width="250" style="border-radius: 15px; margin-right: 10px;">
