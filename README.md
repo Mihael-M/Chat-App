@@ -1,4 +1,4 @@
-# ![Screenshot](/Users/mishonimihaylov/Documents/Chat-App/ChatApp/ChatApp/Assets.xcassets/AppIcon.appiconset/1024.png) Chat-App
+# ![Screenshot](1024.png) Chat-App
 
 A real-time chat application for iOS built with SwiftUI and Firebase.
 
