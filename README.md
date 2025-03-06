@@ -1,4 +1,4 @@
-# ![Demo](Assets/1024.png) Chat-App
+# <img src="Assets/1024.png" width="250" style="border-radius: 15px; display: block; margin: auto;"> Chat-App
 
 A real-time chat application for iOS built with SwiftUI and Firebase.
 
