@@ -31,7 +31,7 @@ A real-time chat application for iOS built with SwiftUI and Firebase.
 
 ## 🔧 Installation
 
-### ** Clone the Repository**
+### Clone the Repository
     
     git clone https://github.com/Mihael-M/Chat-App.git
     
